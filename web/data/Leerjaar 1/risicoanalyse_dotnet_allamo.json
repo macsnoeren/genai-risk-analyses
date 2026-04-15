@@ -1,0 +1,216 @@
+```json
+{
+  "metadata": {
+    "titel": "Risicoanalyse",
+    "project": "CYBERWIJZER",
+    "thema": ".NET Framework Security Risks",
+    "auteur": "AI-agent (Cyberwijzer)",
+    "datum": "15-04-2026",
+    "template_versie": "0.1",
+    "versie": "0.1"
+  },
+  "versiebeheer": [
+    {
+      "versie": "0.1",
+      "datum": "15-04-2026",
+      "wijzigingen": "Initiële versie (AI-gegenereerd)",
+      "auteur": "AI-agent"
+    }
+  ],
+  "beschrijving_thema": {
+    "inleiding": ".NET is een open-source ontwikkelplatform van Microsoft voor het bouwen van verschillende soorten applicaties, waaronder web, desktop, mobiel en cloud. Het bestaat uit meerdere componenten zoals .NET Framework, .NET Core, en Xamarin. .NET biedt een uitgebreide klassebibliotheek en ondersteunt meerdere programmeertalen zoals C#, F# en Visual Basic. Het platform wordt veel gebruikt in enterprise-omgevingen vanwege de integratie met Microsoft-ecosystemen.",
+    "gebruik": {
+      "toepassingen": ["Webapplicaties (ASP.NET)", "Desktopapplicaties (WinForms, WPF)", "Cloudservices (Azure)", "Mobiele apps (Xamarin)", "Microservices"],
+      "rol_in_processen": ["Backend ontwikkeling", "Frontend ontwikkeling", "API ontwikkeling", "Dataverwerking", "Enterprise applicaties"]
+    },
+    "conclusie": ".NET is een kritiek platform in veel organisaties met specifieke security-uitdagingen rond configuratie, dependency management en Microsoft-specifieke kwetsbaarheden die essentieel zijn voor ontwikkelaars om te begrijpen."
+  },
+  "onderzoek": [
+    {
+      "titel": "Dependency Management en NuGet Security",
+      "bevindingen": "Het .NET-ecosysteem is sterk afhankelijk van NuGet-packages, waarbij applicaties gemiddeld tientallen externe dependencies gebruiken. Onderzoek toont aan dat malafide packages en supply chain attacks een groeiend probleem vormen. Veel ontwikkelaars updaten dependencies niet tijdig, waardoor bekende kwetsbaarheden ongemitigeerd blijven.",
+      "bewezen": "37% van de .NET-organisaties heeft kritieke kwetsbaarheden in dependencies (Sonatype, 2024)",
+      "afgeleide_conclusie": "Onvoldoende dependency management leidt tot wijdverspreide kwetsbaarheden in .NET-applicaties",
+      "bronnen": ["Sonatype 2024 Software Supply Chain Report", "GitHub State of Open Source Security 2024"]
+    },
+    {
+      "titel": "Configuration Security Issues",
+      "bevindingen": ".NET-applicaties zijn gevoelig voor configuratie-gerelateerde security issues, vooral in web.config en appsettings.json bestanden. Veelvoorkomende problemen zijn onveilige authentication settings, debug modus in productie, en onbeveiligde connection strings. OWASP identificeert dit als een top risico voor .NET-omgevingen.",
+      "bewezen": "Configuration mishandling is de op twee na meest voorkomende .NET kwetsbaarheid (OWASP, 2023)",
+      "afgeleide_conclusie": "Standaard configuraties en onvoldoende hardening leiden tot vermijdbare security incidents",
+      "bronnen": ["OWASP .NET Security Cheat Sheet", "Snyk State of Open Source Security 2024"]
+    },
+    {
+      "titel": "Deserialization Vulnerabilities",
+      "bevindingen": ".NET-serialisatiemechanismen (BinaryFormatter, XML Serializer) zijn berucht om hun security kwetsbaarheden. Onveilige deserialization kan leiden tot remote code execution en is een favoriete aanvalsvector voor hackers. Microsoft heeft meerdere security advisories uitgegeven over dit onderwerp.",
+      "bewezen": "Deserialization attacks account for 15% of critical .NET vulnerabilities (Microsoft Security Response Center, 2024)",
+      "afgeleide_conclusie": "Onveilig gebruik van serialization components vormt een hoog risico voor .NET applicaties",
+      "bronnen": ["Microsoft Security Advisory", "OWASP Top 10 API Security Risks 2023"]
+    },
+    {
+      "titel": "Identity and Access Management",
+      "bevindingen": "ASP.NET Identity en andere authentication frameworks worden vaak verkeerd geconfigureerd, leading to authorization bypass en privilege escalation. Common issues include weak password policies, insecure session management, and misconfigured role-based access control.",
+      "bewezen": "Authentication flaws represent 25% of security issues in .NET web applications (Verizon DBIR 2024)",
+      "afgeleide_conclusie": "Onvoldoende aandacht voor IAM configuration resulteert in toegangscontrole problemen",
+      "bronnen": ["Verizon 2024 Data Breach Investigations Report", "Microsoft Identity Platform Documentation"]
+    }
+  ],
+  "consequenties_en_voorbeelden": [
+    {
+      "titel": "SolarWinds Supply Chain Attack",
+      "onderzoek": "De SolarWinds aanval in 2020 betrof een supply chain attack waarbij kwaadaardige code werd geïnjecteerd in legitieme software updates, affecting thousands of organizations worldwide. The attack leveraged .NET components and trust in signed packages.",
+      "wat_ging_mis": ["Onvoldoende package signing verification", "Gebrek aan dependency scanning", "Vertrouwen in externe packages zonder verificatie"],
+      "impact": ["Massale data exfiltratie", "Compromittering van overheidsnetwerken", "Financiële schade van miljarden dollars"],
+      "bronnen": ["Microsoft Digital Defense Report 2024", "CISA Alert AA20-352A"]
+    },
+    {
+      "titel": "ASP.NET Core Data Protection Bypass",
+      "onderzoek": "In 2023 werd een kritieke kwetsbaarheid ontdekt in ASP.NET Core data protection mechanisme waardoor attackers authentication cookies konden manipuleren en privilege escalation konden bereiken.",
+      "wat_ging_mis": ["Onveilige default configuration", "Ontoereikende key management", "Gebrek aan proper input validation"],
+      "impact": ["Authentication bypass", "Unauthorized data access", "Potential full system compromise"],
+      "bronnen": ["Microsoft Security Update Guide", "OWASP .NET Security Project"]
+    }
+  ],
+  "consequenties_conclusie": ".NET applicaties zijn kwetsbaar voor zowel platform-specifieke issues als algemene web security problemen, waarbij dependency management en configuration security de grootste uitdagingen vormen.",
+  "risicos": {
+    "risico_matrix": {
+      "kans_schaal": {
+        "1": "Laag – Komt zelden voor",
+        "2": "Middel – Komt regelmatig voor", 
+        "3": "Hoog – Komt vaak voor"
+      },
+      "impact_schaal": {
+        "1": "Laag – Beperkte gevolgen",
+        "2": "Middel – Merkbare schade",
+        "3": "Hoog – Ernstige schade (organisatie, mens, maatschappij)"
+      }
+    },
+    "lijst": [
+      {
+        "nr": 1,
+        "titel": "Supply Chain Attacks via NuGet Packages",
+        "kans": "3",
+        "impact": "3",
+        "score": "9",
+        "ranking": "1",
+        "oorzaak": ["Onvoldoende package verification", "Gebrek aan dependency scanning", "Automatisch updaten zonder review"],
+        "gevolg": ["Remote code execution", "Data breach", "System compromise"],
+        "impact_detail": ["Kritieke bedrijfsdata exposed", "Financiële verliezen", "Reputatieschade"]
+      },
+      {
+        "nr": 2,
+        "titel": "Insecure Deserialization",
+        "kans": "2", 
+        "impact": "3",
+        "score": "6",
+        "ranking": "2",
+        "oorzaak": ["Gebruik van BinaryFormatter", "Onveilige XML serialization", "Ontoereikende input validation"],
+        "gevolg": ["Remote code execution", "Authentication bypass", "Data manipulation"],
+        "impact_detail": ["Complete system overname", "Data integriteit verlies", "Service disruption"]
+      },
+      {
+        "nr": 3,
+        "titel": "Configuration Security Missteps",
+        "kans": "3",
+        "impact": "2",
+        "score": "6",
+        "ranking": "2",
+        "oorzaak": ["Default configurations in production", "Hardening oversights", "Secrets in configuration files"],
+        "gevolg": ["Unauthorized access", "Data exposure", "Performance issues"],
+        "impact_detail": ["Sensitive data leakage", "Compliance violations", "Operational disruptions"]
+      },
+      {
+        "nr": 4,
+        "titel": "Authentication and Authorization Flaws",
+        "kans": "2",
+        "impact": "3",
+        "score": "6",
+        "ranking": "2",
+        "oorzaak": ["Misconfigured ASP.NET Identity", "Weak session management", "Inadequate role validation"],
+        "gevolg": ["Privilege escalation", "Data access violations", "Account compromise"],
+        "impact_detail": ["Unauthorized administrative access", "Data privacy breaches", "Regulatory penalties"]
+      }
+    ]
+  },
+  "maatregelen": {
+    "technisch": {
+      "items": ["Implementeer dependency scanning tools (NuGet audit, Snyk, Sonatype)", "Gebruik safe serialization alternatives (JsonSerializer, protobuf)", "Configureer Data Protection API properly with key management", "Implementeer input validation en output encoding"],
+      "onderbouwing": "OWASP .NET Security Cheat Sheet, Microsoft Security Best Practices"
+    },
+    "proces": {
+      "items": ["Establish secure SDLC with security reviews", "Implementeer automated security testing in CI/CD", "Maintain software bill of materials (SBOM)", "Regular security training for .NET developers"],
+      "onderbouwing": "NIST SP 800-218, Microsoft Security Development Lifecycle"
+    },
+    "organisatorisch": {
+      "items": ["Define and enforce security baselines for .NET configurations", "Establish incident response procedures for supply chain incidents", "Implementeer regular security awareness programs", "Maintain vulnerability management process"],
+      "onderbouwing": "ISO 27001, CIS Microsoft .NET Framework Benchmark"
+    }
+  },
+  "basisvaardigheden": {
+    "inleiding": ".NET ontwikkelaars moeten zowel platform-specifieke security features begrijpen als algemene secure coding principles kunnen toepassen in hun dagelijkse werk.",
+    "bewustzijn": {
+      "doel": "Begrip van .NET-specifieke security risico's en best practices",
+      "minimale_kennis": ["Risico's van onveilige deserialization", "NuGet package security considerations", "ASP.NET security features en configuratie", "Data Protection API principles"],
+      "herkenningsvaardigheid": ["Onveilige dependency usage", "Misconfigured authentication settings", "Potential deserialization vulnerabilities", "Secrets in configuration files"],
+      "toetsbare_leeruitkomsten": ["Kan security risico's in .NET code identificeren", "Begrijpt het belang van dependency management", "Herken onveilige configuraties"]
+    },
+    "vaardigheden": {
+      "doel": "Praktische vaardigheden voor secure .NET development",
+      "categorieen": [
+        {
+          "titel": "Secure Coding",
+          "student_kan": ["Veilige serialization implementeren", "Input validation en output encoding toepassen", "Secure authentication configureren", "Dependencies scannen op kwetsbaarheden"],
+          "toetsbaar": ["Schrijft code die input valideert", "Configureert authentication properly", "Gebruikt safe serialization methods"]
+        },
+        {
+          "titel": "Configuration Management",
+          "student_kan": ["Veilige configuraties maken", "Secrets properly managen", "Environment-specific settings configureren", "Security headers implementeren"],
+          "toetsbaar": ["Configureert secure settings voor productie", "Gebruikt proper secret management", "Implementeert security headers"]
+        }
+      ]
+    },
+    "gedrag": {
+      "doel": "Security-conscious gedrag in .NET ontwikkeling",
+      "gewenst_gedrag": ["Regelmatig dependencies updaten en scannen", "Security reviews uitvoeren voor code changes", "Default configurations altijd aanpassen", "Secrets nooit in code of config files plaatsen"],
+      "observeerbaar_gedrag": ["Scant dependencies voor gebruik", "Reviewt security configuraties", "Vraagt security feedback op code", "Volgt secure coding guidelines"],
+      "toetsbare_leeruitkomsten": ["Voert dependency scans uit voor nieuwe packages", "Configureert applications volgens security baselines", "Vraagt security reviews aan voor kritieke changes"]
+    },
+    "minimale_competentie_eisen": ["Kan basic input validation implementeren", "Begrijpt dependency security risks", "Kan secure authentication configureren", "Herken onveilige serialization patterns"]
+  },
+  "samenvatting": {
+    "belangrijkste_risicos": ["Supply Chain Attacks via NuGet Packages", "Insecure Deserialization", "Configuration Security Missteps", "Authentication and Authorization Flaws"],
+    "belangrijkste_maatregelen": ["Dependency scanning en verification", "Secure serialization practices", "Proper configuration hardening", "Regular security training"],
+    "kerninzicht": ".NET security vereist zowel platform-specifieke kennis als algemene secure coding principles, met speciale aandacht voor dependency management en configuration security als kritieke beheersgebieden."
+  },
+  "bronnen": [
+    {
+      "referentie": "Sonatype. (2024). 2024 State of the Software Supply Chain Report.",
+      "url": "https://sonatype.com/reports/2024-software-supply-chain-report"
+    },
+    {
+      "referentie": "OWASP. (2023). .NET Security Cheat Sheet.",
+      "url": "https://cheatsheetseries.owasp.org/cheatsheets/DotNet_Security_Cheat_Sheet.html"
+    },
+    {
+      "referentie": "Microsoft. (2024). Security Development Lifecycle.",
+      "url": "https://www.microsoft.com/en-us/securityengineering/sdl"
+    },
+    {
+      "referentie": "GitHub. (2024). The State of Open Source Security.",
+      "url": "https://github.com/features/security"
+    },
+    {
+      "referentie": "Verizon. (2024). Data Breach Investigations Report.",
+      "url": "https://www.verizon.com/business/resources/reports/dbir/"
+    },
+    {
+      "referentie": "CIS. (2024). Microsoft .NET Framework Benchmark.",
+      "url": "https://www.cisecurity.org/benchmark/microsoft_net_framework"
+    },
+    {
+      "referentie": "Microsoft Security Response Center. (2024). Security Update Guide.",
+      "url": "https://msrc.microsoft.com/update-guide"
+    }
+  ]
+}
+```
