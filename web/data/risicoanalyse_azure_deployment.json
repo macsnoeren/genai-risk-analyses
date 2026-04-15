@@ -1,0 +1,622 @@
+{
+  "metadata": {
+    "titel": "Risicoanalyse",
+    "project": "CYBERWIJZER",
+    "thema": "Deployment met Azure (en overige cloudplatformen)",
+    "auteur": "AI-agent (Cyberwijzer)",
+    "datum": "15-04-2026",
+    "template_versie": "0.1",
+    "versie": "0.1"
+  },
+  "versiebeheer": [
+    {
+      "versie": "0.1",
+      "datum": "15-04-2026",
+      "wijzigingen": "Initiële versie (AI-gegenereerd)",
+      "auteur": "AI-agent"
+    }
+  ],
+  "beschrijving_thema": {
+    "inleiding": "Deployment via cloudplatformen zoals Microsoft Azure, maar ook AWS en Google Cloud, houdt in dat softwareapplicaties en infrastructuur worden uitgerold naar een gedeelde, beheerde omgeving buiten de eigen servers van de organisatie. Azure biedt daartoe diensten op IaaS-, PaaS- en SaaS-niveau, waaronder virtuele machines, App Services, Azure Kubernetes Service (AKS) en Azure DevOps voor CI/CD-pipelines. De verantwoordelijkheid voor beveiliging is bij cloud-deployment verdeeld tussen de cloudaanbieder en de afnemer: Microsoft is verantwoordelijk voor de beveiliging van de infrastructuur zelf, terwijl de klant verantwoordelijk is voor de configuratie, identiteitsbeheer, data en applicaties die daarop draaien. Dit gedeelde verantwoordelijkheidsmodel wordt in de praktijk regelmatig verkeerd begrepen, wat leidt tot ernstige beveiligingsincidenten. Naarmate meer organisaties kritische werklasten naar de cloud migreren, wordt een correcte en veilige deployment steeds meer een kerncompetentie voor softwareontwikkelaars.",
+    "gebruik": {
+      "toepassingen": [
+        "Uitrollen van webapplicaties via Azure App Service of Azure Functions",
+        "Containergebaseerde deployment via Azure Kubernetes Service (AKS) en Azure Container Registry",
+        "Infrastructuur als code (IaC) met Bicep, Terraform of ARM-templates",
+        "CI/CD-automatisering via Azure DevOps Pipelines of GitHub Actions met Azure-integratie",
+        "Beheer van omgevingsvariabelen en secrets via Azure Key Vault",
+        "Cloudopslag en databases via Azure Blob Storage, Azure SQL en Cosmos DB",
+        "Identiteits- en toegangsbeheer via Microsoft Entra ID (voorheen Azure Active Directory)"
+      ],
+      "rol_in_processen": [
+        "Automatisch bouwen, testen en uitrollen van software naar productie",
+        "Schaalbaar hosten van applicaties zonder eigen serverbeheer",
+        "Opslaan van gevoelige configuratiegegevens en secrets buiten de codebase",
+        "Vastleggen van rollen en rechten voor ontwikkelaars, pipelines en services",
+        "Bewaken van draaiende applicaties via Azure Monitor en Application Insights",
+        "Naleving van regelgeving (AVG/GDPR, ISO 27001) via ingebouwde compliancetools"
+      ]
+    },
+    "conclusie": "Omdat deployment op Azure raakt aan infrastructuur, identiteitsbeheer, gegevensopslag en automatisering tegelijk, vormt het een breed aanvalsoppervlak waarbij een enkele fout in configuratie of toegangsbeheer kan leiden tot grootschalige datalekken of systeemstoringen. Studenten softwareontwikkeling die leren deployen naar de cloud moeten daarom de beveiligingsaspecten van het platform kennen als onderdeel van hun basisvaardigheden."
+  },
+  "onderzoek": [
+    {
+      "titel": "Misconfiguratie van cloudresources als primaire aanvalsvector",
+      "bevindingen": "Uit meerdere industrie- en beveiligingsrapporten blijkt dat misconfiguratie de meest voorkomende oorzaak is van cloudbeveiligingsincidenten. De Cloud Security Alliance (CSA) noemt 'Misconfiguration and inadequate change control' als het nummer één cloudrisico in 2024. IBM X-Force Threat Intelligence Index 2024 stelt dat misconfigured cloudservices betrokken waren bij circa 25% van alle cloudbeveiligingsincidenten. Gartner voorspelt dat 99% van alle cloudfouten veroorzaakt worden door de klant zelf, niet door de cloudaanbieder. Organisaties die Azure gebruiken, hebben gemiddeld 43 misconfiguratites per account.",
+      "bewezen": "Misconfiguratie is aantoonbaar de derde meest voorkomende initiële aanvalsvector bij security breaches (15% van alle breaches begint ermee) en was betrokken bij ~23-25% van alle cloudbeveiligingsincidenten in 2024, bevestigd door IBM X-Force, CSA en SentinelOne.",
+      "afgeleide_conclusie": "Studenten die zelfstandig Azure-resources aanmaken zonder kennis van beveiligingsprincipes (least privilege, netwerkisolatie, encryptie) introduceren met hoge waarschijnlijkheid misconfiguraties die pas na een incident worden ontdekt.",
+      "bronnen": [
+        "IBM X-Force Threat Intelligence Index 2024",
+        "Cloud Security Alliance (CSA) Top Threats to Cloud Computing 2024",
+        "SentinelOne Cloud Security Statistics 2025/2026 (sentinelone.com)",
+        "Verizon DBIR 2024 (misconfigurations verantwoordelijk voor ~30% van breaches)"
+      ]
+    },
+    {
+      "titel": "Identiteits- en toegangsbeheer als grootste risicobron in Azure",
+      "bevindingen": "Identiteitsgerelateerde zwakheden vormen de grootste risicocategorie in cloudomgevingen. ReliaQuest analyseerde Q3 2025 cloudincidenten en concludeerde dat 44% van alle true-positive alerts hun oorsprong vond in identiteitsweaknesses zoals overmatige rechten, verkeerd geconfigureerde rollen en misbruik van credentials. Microsoft rapporteerde in zijn Digital Defense Report 2024/2025 meer dan 600 miljoen identiteitsaanvallen per dag, met een stijging van 32% in de eerste helft van 2025. Uit onderzoek van ReliaQuest en Infosecurity Magazine blijkt dat 99% van alle cloudidentiteiten overprivileged zijn, waardoor aanvallers na toegang eenvoudig lateraal kunnen bewegen.",
+      "bewezen": "44% van alle geverifieerde cloudincidenten in Q3 2025 was terug te voeren op identiteitszwakheden (ReliaQuest); compromised identities zijn verantwoordelijk voor meer dan 70% van cloudbreaches (SentinelOne 2025).",
+      "afgeleide_conclusie": "Wanneer studenten deployment-serviceaccounts of CI/CD service principals aanmaken met te brede rechten (bijv. Contributor op subscriptieniveau), creëren zij een aanzienlijk lateraal bewegingsrisico indien die credentials lekken.",
+      "bronnen": [
+        "ReliaQuest Q3 2025 Cloud Threat Analysis (reliaquest.com)",
+        "Infosecurity Magazine: Identity Is Now the Top Source of Cloud Risk (november 2025)",
+        "Microsoft Digital Defense Report 2024/2025",
+        "Microsoft Learn: Azure Identity Best Practices (learn.microsoft.com, februari 2026)"
+      ]
+    },
+    {
+      "titel": "Onveilige CI/CD-pipelines en blootgestelde secrets",
+      "bevindingen": "CI/CD-pipelines die worden gebruikt voor Azure-deployment hebben per definitie toegang tot gevoelige informatie zoals API-sleutels, service principals en verbindingsstrings. Forrester onderzoek toont aan dat 57% van de organisaties in de afgelopen twee jaar een beveiligingsincident heeft gehad door blootgestelde secrets uit onveilige DevOps-processen. Verizon DBIR 2025 stelt dat 43% van alle cloudinfrastructuur-secrets die in publieke repositories werden gevonden, Google Cloud API keys waren, maar ook Azure-credentials worden frequent gevonden. De mediantijd om gelekte secrets te herstellen is 94 dagen. Een zero-click kwetsbaarheid in Azure Pipelines (CVE-2023-36561) liet aanvallers pipeline-secrets stelen zonder tussenkomst van de eigenaar.",
+      "bewezen": "57% van de organisaties bevestigt beveiligingsincidenten door blootgestelde secrets in DevOps-processen (Forrester via StepSecurity); CVE-2023-36561 in Azure Pipelines is gedocumenteerd als een bewezen kwetsbaarheid met high-severity impact.",
+      "afgeleide_conclusie": "Studenten die hardcoded credentials in pipeline-configuraties of IaC-bestanden plaatsen en deze committen naar versiebeheersystemen creëren een risico waarbij aanvallers langdurig onopgemerkt toegang kunnen hebben tot Azure-omgevingen.",
+      "bronnen": [
+        "Forrester-studie geciteerd via StepSecurity (stepsecurity.io)",
+        "Verizon DBIR 2025",
+        "Legit Security: Azure DevOps Zero-Click CI/CD Vulnerability CVE-2023-36561",
+        "Microsoft Learn: Best Practices for Protecting Secrets (learn.microsoft.com, februari 2026)"
+      ]
+    },
+    {
+      "titel": "Gedeeld verantwoordelijkheidsmodel: verkeerd begrip leidt tot blinde vlekken",
+      "bevindingen": "Het gedeelde verantwoordelijkheidsmodel (Shared Responsibility Model) van Azure bepaalt dat Microsoft de onderliggende infrastructuur beveiligt, maar dat de klant verantwoordelijk is voor dataconfiguratie, identiteitsbeheer, applicatiebeveiliging en complianceinstellingen. In de praktijk nemen klanten ten onrechte aan dat Microsoft ook de applicatielaag beveiligt. Dit leidt ertoe dat overly permissive IAM-rollen, publiek toegankelijke opslag en ongepatchte VMs ongecorrigeerd blijven. Gartner stelde dat 70% van CIO's ervaren dat cloudtechnologieën hun controle verminderen. De CISA heeft in december 2024 Binding Operational Directive 25-01 uitgevaardigd die federale ovheden opdraagt cloudomgevingen te beveiligen specifiek vanwege wijdverspreide misconfiguratites door onduidelijkheid over verantwoordelijkheden.",
+      "bewezen": "CISA BOD 25-01 (december 2024) is een bewezen beleidsrespons op de bewezen omvang van cloud misconfiguratites bij overheidsorganisaties; het shared responsibility model is gedocumenteerd door Microsoft zelf als primaire securiteitsfundering.",
+      "afgeleide_conclusie": "Studenten die uitsluitend leren deployen zonder kennis van het shared responsibility model zullen structureel verantwoordelijkheden missen die door Azure niet automatisch worden ingevuld.",
+      "bronnen": [
+        "CISA Binding Operational Directive 25-01, december 2024 (cisa.gov)",
+        "Microsoft Azure Shared Responsibility Documentation (learn.microsoft.com)",
+        "Davenport Group: Understanding the Cloud Shared Responsibility Model (2025)",
+        "Fidelis Security: Cloud Misconfiguration – The #1 Cause of Data Breaches (november 2025)"
+      ]
+    },
+    {
+      "titel": "Compliancerisico's bij dataresidensy en AVG/GDPR",
+      "bevindingen": "Clouddeployment roept compliancevragen op rondom de locatie waar data wordt opgeslagen en verwerkt. De AVG (GDPR) verplicht EU-organisaties persoonsgegevens binnen de EER te houden of adequate waarborgen te treffen bij doorgifte buiten de EER. Azure biedt regio-instellingen en Data Processing Addenda (DPA), maar de klant is zelf verantwoordelijk voor het correct configureren van data residency, retentiebeleid en versleuteling. ISACA (2024) stelt dat breaches in multi-countrycloud-omgevingen overlappende notificatieplichten triggeren onder GDPR, HIPAA en lokale wetgeving tegelijkertijd. Azure compliance tools (Azure Policy, Compliance Manager) zijn beschikbaar maar vereisen actieve configuratie.",
+      "bewezen": "GDPR verplicht organisaties aantoonbaar tot technische én organisatorische maatregelen; Azure biedt tools maar draagt contractueel niet de volledige compliance-verantwoordelijkheid – dit is vastgelegd in het Azure DPA en bevestigd door zowel ISACA als Microsoft.",
+      "afgeleide_conclusie": "Studenten die applicaties deployen zonder bewust regio's te kiezen of encryptie-instellingen te configureren, kunnen onbedoeld in strijd handelen met AVG-vereisten, wat boetes en reputatieschade kan opleveren voor hun werkgever.",
+      "bronnen": [
+        "ISACA: Cloud Data Sovereignty – Governance and Risk Implications (2024)",
+        "Microsoft Azure: Data Residency and GDPR compliance documentation (azure.microsoft.com)",
+        "SimpleAnalytics: Is Azure GDPR Compliant? (2025)",
+        "Varonis: The Complete Azure Compliance Guide (2023)"
+      ]
+    },
+    {
+      "titel": "Ongepatchte virtuele machines en containerkwetsbaarheden",
+      "bevindingen": "Bij IaaS-gebruik (Azure Virtual Machines) is de klant zelf verantwoordelijk voor het patchen van het besturingssysteem en alle geïnstalleerde software. Intruder.io documenteert dat onvoldoende patchbeheer leidt tot remote code execution risico's. ReliaQuest Q3 2025 analyse toont dat meer dan 71% van alle kritieke cloudkwetsbaarheidsalerts voortkwam uit slechts vier CVEs, waaronder Log4Shell (CVE-2021-44228) en OpenSSH (CVE-2024-6387), die al jaren bekend zijn maar nog actief worden geëxploiteerd. Containerbeveiliging vormt een aanvullend risico: kwetsbare images, verkeerd geconfigureerde AKS RBAC en onveilige build-pipelines kunnen kwetsbaarheden propageren naar alle deployments die gebruik maken van die images.",
+      "bewezen": "Over 14.700 Jenkins-servers waren in oktober 2025 nog kwetsbaar voor CVE-2024-23897 (ReliaQuest); Log4Shell blijft actief geëxploiteerd in cloudomgevingen, bevestigd door meerdere beveiligingsorganisaties.",
+      "afgeleide_conclusie": "Studenten die VM-images of containerimages niet actief bijhouden of scannen op bekende kwetsbaarheden brengen productiemomgevingen in gevaar door exploits die al lang zijn gedocumenteerd en waarvoor patches beschikbaar zijn.",
+      "bronnen": [
+        "ReliaQuest: Too Much Trust – The Danger of Over-Privileged Cloud Identities (Q3 2025)",
+        "Intruder.io: Azure Cloud Security – The Critical Vulnerabilities You're Responsible For",
+        "Wiz Academy: Azure Security Risks (december 2025)",
+        "SentinelOne: Azure Vulnerability Management Guide (januari 2026)"
+      ]
+    }
+  ],
+  "consequenties_en_voorbeelden": [
+    {
+      "titel": "Microsoft Azure Entra ID Cross-Tenant Breach (CVE-2025-55241, 2025)",
+      "onderzoek": "Begin 2025 ontdekte beveiligingsonderzoeker Dirk-jan Mollema een kritieke kwetsbaarheid (CVE-2025-55241, CVSS 10.0) in de Azure AD Graph API die aanvallers in staat stelde om via ongetekende Actor tokens toegang te krijgen tot andere tenants en als global administrator te opereren. Microsoft patchte de kwetsbaarheid na verantwoorde openbaarmaking; er zijn geen bewezen exploits in het wild bekend.",
+      "wat_ging_mis": [
+        "Ongetekende Actor tokens konden niet worden ingetrokken en omzeilden conditional access policies",
+        "Tenant-identifiers zijn publiek, waardoor brute-force van netIDs mogelijk was",
+        "Het legacy Azure AD Graph API-systeem miste essentiële validatiecontroles",
+        "Tokens genereerden geen logs, waardoor detectie nagenoeg onmogelijk was"
+      ],
+      "impact": [
+        "Theoretisch ongefilterde toegang als global administrator tot duizenden organisaties",
+        "Volledige omzeiling van multi-tenancy isolatiegaranties",
+        "Aanleiding voor verscherpte beveiligingseisen vanuit Microsofts Secure Future Initiative"
+      ],
+      "bronnen": [
+        "Dark Reading: Critical Azure Entra ID Flaw Highlights Microsoft IAM Issues (september 2025)",
+        "ITAdOn: Microsoft Azure Tenant Breach 2025 (januari 2026)"
+      ]
+    },
+    {
+      "titel": "Snowflake-breach via ontbrekende MFA op cloudaccounts (2024)",
+      "onderzoek": "In 2024 werden honderden Snowflake-klantaccounts gecompromitteerd doordat aanvallers gebruik maakten van gestolen credentials bij accounts zonder multi-factor authenticatie. De aanval was niet gericht op kwetsbaarheden in Snowflake zelf, maar op de configuratiekeuze van klanten om MFA niet te verplichten.",
+      "wat_ging_mis": [
+        "Klantaccounts waren niet beveiligd met MFA, in strijd met best practices",
+        "Gestolen credentials werden verkregen via infostealer malware en phishing",
+        "Geen detectie van ongewone inlogpogingen vanuit onbekende locaties"
+      ],
+      "impact": [
+        "Datadiefstal bij meerdere grote klanten van Snowflake",
+        "Blootstelling van gevoelige klant- en bedrijfsdata",
+        "Bredere aandacht voor het gevaar van overprivileged accounts zonder sterke authenticatie"
+      ],
+      "bronnen": [
+        "IBM X-Force Threat Intelligence Index 2024",
+        "SecPod: Top 10 Cloud Misconfigurations to Avoid (juli 2025)"
+      ]
+    },
+    {
+      "titel": "Azure CLI-bug lekte secrets in CI/CD-buildlogs (2023)",
+      "onderzoek": "Microsoft ontdekte in november 2023 een bug in de Azure CLI waarbij gevoelige omgevingsvariabelen, waaronder secrets en verbindingsstrings, onbedoeld werden weggeschreven naar CI/CD buildlogs. Deze logs zijn in veel omgevingen toegankelijk voor alle teamleden of zelfs publiekelijk raadpleegbaar.",
+      "wat_ging_mis": [
+        "Azure CLI schreef secrets naar standaard outputlogs",
+        "Pipelines maskeerden secrets niet proactief genoeg",
+        "Geen automatische detectie van accidentele secretsblootstelling in logs"
+      ],
+      "impact": [
+        "Mogelijke blootstelling van Azure-credentials aan ongeautoriseerde partijen",
+        "Risico op ongeautoriseerde toegang tot Azure-omgevingen via gelekte service principals",
+        "Aanzet tot richtlijnen voor verplichte secret masking in pipelines"
+      ],
+      "bronnen": [
+        "StepSecurity: Top 2024 Predictions for CI/CD Security (stepsecurity.io)",
+        "Microsoft Learn: Best Practices for Protecting Secrets (learn.microsoft.com)"
+      ]
+    },
+    {
+      "titel": "Capital One-datalek via misconfigureerde WAF op AWS/cloud (2019, referentiegeval)",
+      "onderzoek": "De Capital One-breach is een veelgeciteerd referentiegeval waarbij een onjuist geconfigureerde Web Application Firewall door een insider-aanvaller werd misbruikt om SSRF-aanvallen uit te voeren en meer dan 100 miljoen klantrecords te stelen uit cloudopslag. Azure en andere cloudaanbieders verwijzen naar dit incident als bewijs dat misconfiguraties even gevaarlijk zijn als zero-days.",
+      "wat_ging_mis": [
+        "Web Application Firewall stond SSRF-verzoeken toe die niet geblokkeerd hadden mogen worden",
+        "Instance Metadata Service was te ruim toegankelijk vanuit de applicatie",
+        "Geen afdoende monitoring van ongewone data-exfiltratie patronen"
+      ],
+      "impact": [
+        "Meer dan 100 miljoen klantrecords blootgesteld",
+        "Boete van 80 miljoen dollar van de OCC",
+        "Breed erkend als bewijs dat klantconfiguratie de zwakste schakel is in cloud security"
+      ],
+      "bronnen": [
+        "SentinelOne: Azure Security Checklist (januari 2026) – verwijst naar Capital One als audit-referentie",
+        "SecPod: Top 10 Cloud Misconfigurations to Avoid (juli 2025)"
+      ]
+    }
+  ],
+  "consequenties_conclusie": "De genoemde incidenten tonen aan dat de zwakste schakel bij Azure-deployment vrijwel altijd aan de klantzijde ligt: verkeerde configuraties, ontbrekende MFA, onbeveiligde pipelines en gebrek aan monitoring. Aanvallers hoeven zelden gebruik te maken van geavanceerde zero-day exploits; het is voldoende om misbruik te maken van fouten die het gevolg zijn van onvoldoende kennis of haast in het deployment-proces.",
+  "risicos": {
+    "risico_matrix": {
+      "kans_schaal": {
+        "1": "Laag – Komt zelden voor",
+        "2": "Middel – Komt regelmatig voor",
+        "3": "Hoog – Komt vaak voor"
+      },
+      "impact_schaal": {
+        "1": "Laag – Beperkte gevolgen",
+        "2": "Middel – Merkbare schade",
+        "3": "Hoog – Ernstige schade (organisatie, mens, maatschappij)"
+      }
+    },
+    "lijst": [
+      {
+        "nr": 1,
+        "titel": "Misconfiguratie van Azure-resources bij deployment",
+        "kans": "3",
+        "impact": "3",
+        "score": "9",
+        "ranking": "1",
+        "oorzaak": [
+          "Gebrek aan kennis van Azure-beveiligingsstandaarden bij studenten en junior developers",
+          "Overmatig ruime netwerkinstellingen (open poorten, 0.0.0.0/0 ingress regels)",
+          "Publiek toegankelijke storage accounts zonder authenticatievereiste",
+          "Infrastructure as Code zonder beveiligingsvalidatie vóór deployment",
+          "Ontbreken van Azure Policy om misconfiguraties automatisch te blokkeren"
+        ],
+        "gevolg": [
+          "Ongeautoriseerde toegang tot cloudresources via internet",
+          "Diefstal of blootstelling van gevoelige bedrijfs- of persoonsgegevens",
+          "Aanvallers kunnen langdurig onopgemerkt in de omgeving opereren"
+        ],
+        "impact_detail": [
+          "Gemiddelde kosten van een clouddata-breach bedragen 4,44 miljoen dollar (IBM 2025)",
+          "Misconfiguraties waren betrokken bij ~23-25% van alle cloudbeveiligingsincidenten in 2024",
+          "Herstel duurt gemiddeld 186 dagen na identificatie van een misconfiguratiebreach",
+          "AVG-boetes tot 4% van de wereldwijde jaaromzet bij datalekken van persoonsgegevens"
+        ]
+      },
+      {
+        "nr": 2,
+        "titel": "Identiteitsmisbruik en zwak toegangsbeheer (IAM/Entra ID)",
+        "kans": "3",
+        "impact": "3",
+        "score": "9",
+        "ranking": "1",
+        "oorzaak": [
+          "Overprivileged service accounts en gebruikers (Owner/Contributor op subscriptieniveau)",
+          "Ontbreken van multi-factor authenticatie op Azure-accounts en service principals",
+          "Gebruik van statische credentials in plaats van Managed Identities",
+          "Niet deactiveren van accounts na einde project of stage",
+          "Geen Privileged Identity Management (PIM) voor tijdelijke verhoogde rechten"
+        ],
+        "gevolg": [
+          "Aanvallers kunnen na credential-diefstal onbeperkt Azure-resources benaderen",
+          "Laterale beweging naar andere services en tenants",
+          "Gegevensexfiltratie, sabotage of ransomware-deployment"
+        ],
+        "impact_detail": [
+          "44% van alle true-positive cloudincidenten in Q3 2025 had een identiteitsgerelateerde oorzaak (ReliaQuest)",
+          "99% van cloudidentiteiten is overprivileged (ReliaQuest 2025)",
+          "Microsoft registreerde meer dan 600 miljoen identiteitsaanvallen per dag in 2024",
+          "Credential-diefstal is initieel toegangspunt in 65% van geanalyseerde cloudbreaches (ReliaQuest)"
+        ]
+      },
+      {
+        "nr": 3,
+        "titel": "Blootstelling van secrets en credentials in CI/CD-pipelines",
+        "kans": "3",
+        "impact": "2",
+        "score": "6",
+        "ranking": "3",
+        "oorzaak": [
+          "Hardcoded API-sleutels, wachtwoorden of verbindingsstrings in broncode of pipeline-scripts",
+          "Niet gebruik maken van Azure Key Vault voor opslag van secrets",
+          "Secrets die onbedoeld worden weggeschreven naar build-logs",
+          "Pipeline-triggers die externe pull requests toegang geven tot interne secrets",
+          "Geen secret scanning geïntegreerd in versiebeheersysteem of pipeline"
+        ],
+        "gevolg": [
+          "Aanvallers verkrijgen toegang tot Azure-subscriptions via gelekte service principal credentials",
+          "Geheimen blijven gemiddeld 94 dagen onopgemerkt gelekt voordat ze worden hersteld",
+          "Supply-chain aanvallen via gecompromitteerde build-agents"
+        ],
+        "impact_detail": [
+          "57% van organisaties ervoer een beveiligingsincident door blootgestelde secrets in DevOps (Forrester via StepSecurity)",
+          "CVE-2023-36561 in Azure Pipelines demonstreerde zero-click secrets-diefstal voor meer dan 70.000 open-source projecten",
+          "43% van cloudinfrastructuur-secrets in publieke repos betreft actieve API-sleutels (Verizon DBIR 2025)"
+        ]
+      },
+      {
+        "nr": 4,
+        "titel": "Misverstand over gedeeld verantwoordelijkheidsmodel (Shared Responsibility)",
+        "kans": "3",
+        "impact": "2",
+        "score": "6",
+        "ranking": "3",
+        "oorzaak": [
+          "Studenten en junior developers gaan ervan uit dat Azure automatisch de beveiliging regelt",
+          "Onvoldoende onderscheid tussen IaaS-, PaaS- en SaaS-verantwoordelijkheden",
+          "Geen formele introductie tot het Shared Responsibility Model in opleiding of onboarding",
+          "Azure-defaults zijn niet altijd de meest veilige instelling"
+        ],
+        "gevolg": [
+          "Beveiligingsverantwoordelijkheden worden structureel niet ingevuld aan klantzijde",
+          "VM's worden niet gepatcht omdat men verwacht dat Azure dit doet",
+          "Compliancevereisten zoals AVG worden niet geborgd in deployment-configuraties"
+        ],
+        "impact_detail": [
+          "Gartner voorspelde dat 99% van alle cloudfouten veroorzaakt worden door de klant (bevestigd door marktstatistieken)",
+          "CISA vaardigde BOD 25-01 uit (december 2024) vanwege wijdverspreide misconfiguraties bij overheden door onduidelijkheid over verantwoordelijkheden",
+          "95% van cloudfouten is terug te voeren op menselijke configuratiefouten, niet op inherente platformkwetsbaarheden (SentinelOne 2026)"
+        ]
+      },
+      {
+        "nr": 5,
+        "titel": "Ongepatchte VM's en kwetsbare containerimages",
+        "kans": "2",
+        "impact": "2",
+        "score": "4",
+        "ranking": "5",
+        "oorzaak": [
+          "Klant verantwoordelijk voor patchen van OS en software op IaaS VMs, maar doet dit onvoldoende",
+          "Containerimages worden gebouwd op verouderde basisimages met bekende CVEs",
+          "Geen geautomatiseerd scannen van images vóór deployment",
+          "Ephemerische testomgevingen worden niet opgeruimd en raken verouderd"
+        ],
+        "gevolg": [
+          "Remote code execution via bekende kwetsbaarheden zoals Log4Shell of OpenSSH CVE-2024-6387",
+          "Gecompromitteerde container-workloads door besmette base images",
+          "Aanvallers exploiteren kwetsbaarheden in productieomgevingen maanden na beschikbaarheid van patches"
+        ],
+        "impact_detail": [
+          "71% van alle kritieke cloudkwetsbaarheidsalerts in Q3 2025 vloeit voort uit slechts vier bekende CVEs (ReliaQuest)",
+          "Meer dan 14.700 Jenkins-servers waren in oktober 2025 nog kwetsbaar voor CVE-2024-23897",
+          "32% van cloudresources wordt onbewaakt gelaten, elk met gemiddeld 115 kwetsbaarheden (Orca Security)"
+        ]
+      },
+      {
+        "nr": 6,
+        "titel": "Compliancerisico's bij dataopslag en AVG/GDPR in cloudomgevingen",
+        "kans": "2",
+        "impact": "2",
+        "score": "4",
+        "ranking": "5",
+        "oorzaak": [
+          "Onbewust opslaan van persoonsgegevens in Azure-regio's buiten de EER",
+          "Ontbreken van versleuteling van persoonsgegevens in Azure Blob Storage of databases",
+          "Geen retentiebeleid voor gevoelige data in cloudopslag",
+          "Onvoldoende kennis van AVG-vereisten bij technische deploymentbeslissingen"
+        ],
+        "gevolg": [
+          "Onrechtmatige verwerking van persoonsgegevens buiten de EER in strijd met AVG",
+          "AVG-boetes tot 20 miljoen euro of 4% van de wereldwijde jaaromzet",
+          "Reputatieschade en verlies van klantvertrouwen bij een datalek"
+        ],
+        "impact_detail": [
+          "Breaches in multi-cloud omgevingen triggeren overlappende notificatieplichten onder GDPR, HIPAA en lokale wetgeving (ISACA 2024)",
+          "Slechts 11% van organisaties versleutelt vrijwel al hun clouddata (Cloudwards 2024)",
+          "AVG melding van datalek is vereist binnen 72 uur aan de Autoriteit Persoonsgegevens"
+        ]
+      }
+    ]
+  },
+  "maatregelen": {
+    "technisch": {
+      "items": [
+        "Gebruik Infrastructure as Code (Bicep, Terraform) met geïntegreerde IaC-beveiligingsscanning (bijv. Checkov, tfsec) vóór elke deployment",
+        "Schakel Azure Policy in om misconfiguraties automatisch te blokkeren (bijv. verplichte encryptie, beperking tot EU-regio's)",
+        "Verplicht multi-factor authenticatie (MFA) voor alle Azure-accounts; gebruik Managed Identities in plaats van statische service principal credentials",
+        "Sla alle secrets op in Azure Key Vault en verbied hardcoded credentials in broncode en pipeline-definities",
+        "Activeer secret scanning in Azure DevOps of GitHub Advanced Security als onderdeel van elke CI/CD-pipeline",
+        "Configureer Azure Defender for Cloud (CSPM) voor continue bewaking van de security posture en automatische detectie van misconfiguraties",
+        "Scan containerimages op bekende CVEs vóór deployment via Azure Container Registry vulnerability scanning of Trivy",
+        "Implementeer Role-Based Access Control (RBAC) met least privilege principe; gebruik Privileged Identity Management (PIM) voor tijdelijke verhoogde rechten",
+        "Stel Azure Monitor en Diagnostic Settings in voor logging van alle kritieke activiteiten (sign-ins, resource-wijzigingen, API-calls)",
+        "Voer netwerksegmentatie in met Azure Virtual Networks, Network Security Groups en Azure Private Link om services van het publieke internet te isoleren"
+      ],
+      "onderbouwing": "Microsoft Learn Azure Security Best Practices (2026); Wiz Academy Azure Security Risks (2025); CIS Azure Foundations Benchmark; OWASP Cloud Security Guidance"
+    },
+    "proces": {
+      "items": [
+        "Adopteer een DevSecOps-werkwijze waarbij security checks (SAST, IaC-scan, dependency-scan) geïntegreerd zijn in elke CI/CD-pipeline run",
+        "Voer peer reviews uit op Infrastructure as Code vóór merge naar main branch, met expliciete aandacht voor beveiligingsinstellingen",
+        "Documenteer en volg het gedeelde verantwoordelijkheidsmodel: leg per service (IaaS/PaaS/SaaS) vast welke beveiligingstaken bij de organisatie liggen",
+        "Voer periodieke Azure-beveiligingsaudits uit via Microsoft Defender for Cloud secure score en Compliance Manager",
+        "Stel een secrets-rotatieschema in: verplicht verversen van credentials op vaste intervallen of direct na een vermoeden van blootstelling",
+        "Implementeer een formeel offboarding-proces voor verwijdering van Azure-toegang van ex-medewerkers en ex-stages",
+        "Gebruik een DTAP-strategie (Development, Test, Acceptatie, Productie) met strikte toegangsscheiding tussen omgevingen"
+      ],
+      "onderbouwing": "CISA/NSA Joint Guidance on Defending CI/CD Pipelines; NIST SP 800-204D DevSecOps Practices; Verizon DBIR 2024/2025 aanbevelingen"
+    },
+    "organisatorisch": {
+      "items": [
+        "Train alle ontwikkelaars in het Azure Shared Responsibility Model als verplicht onderdeel van onboarding en cloudonderwijs",
+        "Stel een cloudbeveiliging-policy op die minimale beveiligingseisen beschrijft voor elke Azure-deployment (encryptie, MFA, logging, regiokeuze)",
+        "Wijs een duidelijke eigenaar aan voor de cloudbeveiliging per project; definieer wie verantwoordelijk is voor welke beveiligingslagen",
+        "Zorg dat studenten en developers kennis hebben van AVG-vereisten die van toepassing zijn op data in clouddeployments",
+        "Voer een risicogebaseerde aanpak in waarbij nieuwe cloudservices een security review ondergaan vóór productie-deployment",
+        "Zorg voor bewustzijnsvorming over social engineering en phishing als initiële aanvalsvector voor credential-diefstal"
+      ],
+      "onderbouwing": "ENISA Threat Landscape 2024; Microsoft Digital Defense Report 2024/2025; Cloud Security Alliance Top Threats 2024"
+    }
+  },
+  "basisvaardigheden": {
+    "inleiding": "Studenten softwareontwikkeling die leren deployen naar Azure (en aanverwante cloudplatformen) moeten niet alleen technisch kunnen deployen, maar ook begrijpen welke beveiligingsrisico's zij daarmee introduceren en hoe zij die kunnen beperken. Onderstaande basisvaardigheden zijn opgesplitst in bewustzijn, technische vaardigheden en gedrag, en zijn geformuleerd als toetsbare en observeerbare leeruitkomsten.",
+    "bewustzijn": {
+      "doel": "De student begrijpt de aard van cloudbeveiligingsrisico's bij deployment op Azure en vergelijkbare platforms, en herkent veelvoorkomende risicosituaties in de eigen werkpraktijk.",
+      "minimale_kennis": [
+        "De student kan het Azure Shared Responsibility Model uitleggen en per servicemodel (IaaS, PaaS, SaaS) benoemen welke beveiligingstaken bij de klant liggen",
+        "De student kent de top-3 oorzaken van cloudbeveiliginsgincidenten: misconfiguratie, zwak identiteitsbeheer en blootgestelde secrets",
+        "De student begrijpt wat een CI/CD-pipeline is en welke beveiligingsrisico's gepaard gaan met automatische deployments",
+        "De student weet wat de AVG/GDPR betekent voor de keuze van Azure-regio's en dataopslag",
+        "De student kent het concept van least privilege en kan uitleggen waarom overprivileged accounts een risico vormen"
+      ],
+      "herkenningsvaardigheid": [
+        "De student herkent een misconfiguratie zoals een publiek toegankelijke Azure Blob Storage of een open netwerkpoort in een ARM/Bicep-template",
+        "De student herkent hardcoded credentials (wachtwoorden, API-keys) in broncode, pipeline-scripts of configuratiebestanden",
+        "De student herkent wanneer een service account meer rechten heeft dan nodig voor de uitvoering van zijn taak",
+        "De student herkent wanneer logging en monitoring ontbreekt in een deploymentomgeving",
+        "De student herkent wanneer een deploymentconfiguratite persoonsgegevens opslaat buiten de EER zonder adequate waarborgen"
+      ],
+      "toetsbare_leeruitkomsten": [
+        "De student kan aan de hand van een gegeven Azure-architectuurdiagram minimaal drie beveiligingsrisico's benoemen en koppelen aan het juiste risicotype",
+        "De student kan in een casebeschrijving het shared responsibility model correct toepassen en aangeven welke partij verantwoordelijk is voor welke beveiligingslaag",
+        "De student scoort minimaal 70% op een schriftelijke toets over Azure-beveiligingsbegrippen (misconfiguratie, IAM, CI/CD-risico's, AVG)"
+      ]
+    },
+    "vaardigheden": {
+      "doel": "De student kan zelfstandig een veilige Azure-deployment opzetten die voldoet aan minimale beveiligingseisen voor identiteitsbeheer, netwerkconfiguratie, secret management en monitoring.",
+      "categorieen": [
+        {
+          "titel": "Veilige identiteits- en toegangsconfiguratie",
+          "student_kan": [
+            "Een Azure-resource aanmaken met RBAC-rechten conform het least privilege principe",
+            "Een Managed Identity instellen voor een Azure-applicatie als vervanging van statische credentials",
+            "Een Conditional Access Policy configureren die MFA verplicht voor Azure-portaltoegang",
+            "Overbodige of verlopen accounts en service principals identificeren en deactiveren via Entra ID"
+          ],
+          "toetsbaar": [
+            "In een praktijkopdracht heeft de student geen service principal met Owner-rechten op subscriptieniveau aangemaakt zonder aantoonbare noodzaak",
+            "De student demonstreert dat de deployed applicatie gebruik maakt van een Managed Identity in plaats van een hardcoded credential"
+          ]
+        },
+        {
+          "titel": "Veilig gebruik van CI/CD-pipelines voor Azure-deployment",
+          "student_kan": [
+            "Secrets opslaan en ophalen via Azure Key Vault in een Azure DevOps Pipeline of GitHub Actions workflow",
+            "Secret scanning activeren in de versiebeheerpipeline en een gevonden secret als gecompromitteerd behandelen",
+            "Een IaC-template (Bicep of Terraform) laten valideren op beveiligingsmisconfiguraties vóór deployment",
+            "Pipeline-triggers beperken zodat externe pull requests geen toegang hebben tot interne secrets"
+          ],
+          "toetsbaar": [
+            "De ingeleverde pipeline-configuratie bevat geen hardcoded credentials; secrets worden aantoonbaar opgehaald uit Azure Key Vault",
+            "De student kan demonstreren hoe een secret scanning tool een gelekte credential in een commit detecteert"
+          ]
+        },
+        {
+          "titel": "Basisconfiguratie van veilige Azure-resources",
+          "student_kan": [
+            "Een Azure Storage Account configureren met private access (geen publieke anonieme toegang)",
+            "Een Network Security Group configureren die inkomend verkeer beperkt tot noodzakelijke poorten en IP-ranges",
+            "Azure Policy inschakelen om verplichte encryptie of regiobeperkingen af te dwingen",
+            "Azure Monitor of Diagnostic Settings inschakelen voor relevante resources",
+            "Containerimages scannen op bekende CVEs vóór deployment naar Azure Container Registry"
+          ],
+          "toetsbaar": [
+            "In een deploymentopdracht bevat de geleverde IaC-configuratie aantoonbaar: encryptie ingeschakeld, geen publieke toegang tot storage, NSG met beperkte ingress-regels",
+            "De student kan via het Azure-portal de secure score en minimaal twee aanbevelingen van Defender for Cloud benoemen en verklaren"
+          ]
+        }
+      ]
+    },
+    "gedrag": {
+      "doel": "De student vertoont structureel veilig gedrag rondom Azure-deployment, behandelt beveiliging als integraal onderdeel van het ontwikkelproces en handelt proactief bij beveiligingsproblemen.",
+      "gewenst_gedrag": [
+        "De student controleert vóór elke commit of er geen secrets, wachtwoorden of verbindingsstrings in de code staan",
+        "De student gebruikt Azure Key Vault standaard voor alle gevoelige configuratiedata, zonder te zoeken naar 'snellere' alternatieven",
+        "De student stelt na het aanmaken van een Azure-resource eerst de beveiligingsinstellingen in vóór de resource productief wordt",
+        "De student raadpleegt de Defender for Cloud-aanbevelingen als standaard onderdeel van een deployment review",
+        "De student meldt een gevonden beveiligingsprobleem (geconfigureerde secrets in code, open storage) direct aan de verantwoordelijke, ook als het een fout van een teamlid is",
+        "De student kiest bij dataopslag bewust voor een Azure EER-regio wanneer persoonsgegevens worden verwerkt"
+      ],
+      "observeerbaar_gedrag": [
+        "In code reviews benoemt de student proactief beveiligingsproblemen zoals hardcoded credentials of open networkregels",
+        "In sprint-planningen vraagt de student om expliciete aandacht voor beveiligingstaken bij deployment-stories",
+        "De student past zijn deployment-configuratie aan na feedback over beveiligingsrisico's, zonder dit als optioneel te beschouwen",
+        "Bij een bewust aangemaakt beveiligingslek in een practicumopdracht detecteert de student het probleem en lost het op binnen de gestelde tijd"
+      ],
+      "toetsbare_leeruitkomsten": [
+        "In een gesimuleerde deployment-opdracht vertoont de student geen van de volgende risicogedragingen: hardcoded secrets, publieke storage, ontbrekende MFA, geen logging",
+        "In een peer review-sessie geeft de student minimaal één correcte beveiligingsgerelateerde opmerking op de deploymentconfiguratie van een medestudent",
+        "De student kan na afronding van een project aantonen welke bewuste beveiligingskeuzes zijn gemaakt in de deploymentconfiguratie"
+      ]
+    },
+    "minimale_competentie_eisen": [
+      "De student kan het shared responsibility model correct uitleggen en toepassen op een Azure IaaS-casus",
+      "De student maakt bij een deployment-opdracht geen gebruik van hardcoded credentials; secrets worden aantoonbaar opgeslagen in Azure Key Vault of equivalente oplossing",
+      "De student configureert RBAC-rechten conform het least privilege principe: geen overbodige Owner- of Contributor-rechten op subscriptieniveau",
+      "De student schakelt bij elke deployment-opdracht minimaal één monitoringmechanisme in (Azure Monitor, Diagnostic Settings, Defender for Cloud)",
+      "De student kan bij een gegeven ARM/Bicep-template minimaal twee beveiligingsmisconfiguraties identificeren en corrigeren",
+      "De student kan het AVG-argument uitleggen waarom EER-regio's de voorkeur genieten voor opslag van persoonsgegevens in Azure"
+    ]
+  },
+  "samenvatting": {
+    "belangrijkste_risicos": [
+      "Misconfiguratie van Azure-resources (score 9): de meest voorkomende oorzaak van cloudbeveiligingsincidenten, veroorzaakt door gebrek aan kennis en ontbrekende automatische controles",
+      "Zwak identiteits- en toegangsbeheer (score 9): 44% van alle cloudincidenten is identiteitsgerelateerd; overprivileged accounts en ontbrekende MFA zijn de voornaamste oorzaken",
+      "Blootgestelde secrets in CI/CD-pipelines (score 6): 57% van organisaties ervoer een incident door secrets in DevOps-processen; herstel duurt gemiddeld 94 dagen",
+      "Misverstand over shared responsibility (score 6): klanten vullen structureel beveiligingsverantwoordelijkheden niet in omdat ze denken dat Azure dit automatisch doet"
+    ],
+    "belangrijkste_maatregelen": [
+      "Verplicht MFA voor alle Azure-accounts en gebruik Managed Identities in plaats van statische credentials in pipelines",
+      "Integreer IaC-beveiligingsscanning (Checkov, tfsec) en secret scanning in elke CI/CD-pipeline als verplichte gate",
+      "Configureer Azure Policy en Defender for Cloud voor continue bewaking en automatische blokkering van misconfiguraties",
+      "Onderwijs het shared responsibility model als verplicht onderdeel van elke cloudopleiding, met nadruk op de klantzijde-verantwoordelijkheden"
+    ],
+    "kerninzicht": "De grootste beveiligingsrisico's bij Azure-deployment komen niet van technische zwakheden in het platform zelf, maar van configuratiefouten en kennisgaten aan de klantzijde – juist het domein waarvoor studenten en junior developers verantwoordelijk zijn. Het vroegtijdig aanleren van veilig deploymentgedrag als kerncompetentie is daarmee de meest effectieve preventieve maatregel."
+  },
+  "bronnen": [
+    {
+      "referentie": "IBM Security. (2025). IBM X-Force Threat Intelligence Index 2025. IBM Corporation.",
+      "url": "https://www.ibm.com/reports/threat-intelligence"
+    },
+    {
+      "referentie": "Cloud Security Alliance (CSA). (2024). Top Threats to Cloud Computing 2024. Cloud Security Alliance.",
+      "url": "https://cloudsecurityalliance.org/research/topics/top-threats"
+    },
+    {
+      "referentie": "SentinelOne. (2026). Cloud Security Statistics 2025/2026. SentinelOne Cybersecurity 101.",
+      "url": "https://www.sentinelone.com/cybersecurity-101/cloud-security/cloud-security-statistics/"
+    },
+    {
+      "referentie": "SentinelOne. (2026). Azure Vulnerability Management Guide 2026. SentinelOne.",
+      "url": "https://www.sentinelone.com/cybersecurity-101/cybersecurity/azure-vulnerability-management/"
+    },
+    {
+      "referentie": "Verizon. (2024). 2024 Data Breach Investigations Report (DBIR). Verizon Communications.",
+      "url": "https://www.verizon.com/business/resources/reports/dbir/"
+    },
+    {
+      "referentie": "Verizon. (2025). 2025 Data Breach Investigations Report (DBIR). Verizon Communications.",
+      "url": "https://www.verizon.com/business/resources/reports/dbir/"
+    },
+    {
+      "referentie": "ReliaQuest. (2025, november). Too Much Trust: The Danger of Over-Privileged Cloud Identities (Q3 2025 Threat Spotlight). ReliaQuest.",
+      "url": "https://reliaquest.com/blog/threat-spotlight-danger-of-over-privileged-cloud-identities/"
+    },
+    {
+      "referentie": "Infosecurity Magazine. (2025, november). Identity Is Now the Top Source of Cloud Risk. Infosecurity Magazine.",
+      "url": "https://www.infosecurity-magazine.com/news/identity-is-now-the-top-cloud-risk/"
+    },
+    {
+      "referentie": "Microsoft. (2024/2025). Microsoft Digital Defense Report 2024/2025. Microsoft Corporation.",
+      "url": "https://www.microsoft.com/en-us/security/security-insider/microsoft-digital-defense-report-2024"
+    },
+    {
+      "referentie": "Microsoft Learn. (2026, februari). Azure identity & access security best practices. Microsoft Corporation.",
+      "url": "https://learn.microsoft.com/en-us/azure/security/fundamentals/identity-management-best-practices"
+    },
+    {
+      "referentie": "Microsoft Learn. (2026, februari). Best practices for protecting secrets in Azure. Microsoft Corporation.",
+      "url": "https://learn.microsoft.com/en-us/azure/security/fundamentals/secrets-best-practices"
+    },
+    {
+      "referentie": "Dark Reading. (2025, september). Critical Azure Entra ID Flaw Highlights Microsoft IAM Issues. Dark Reading.",
+      "url": "https://www.darkreading.com/cloud-security/critical-azure-entra-id-flaw-microsoft-iam-issues"
+    },
+    {
+      "referentie": "ITAdOn. (2026, januari). Microsoft Azure Tenant Breach 2025. ITAdOn IT Solutions.",
+      "url": "https://itadon.com/blog/microsoft-azure-tenant-breach/"
+    },
+    {
+      "referentie": "ENISA. (2024). ENISA Threat Landscape 2024. European Union Agency for Cybersecurity.",
+      "url": "https://www.enisa.europa.eu/publications/enisa-threat-landscape-2024"
+    },
+    {
+      "referentie": "CISA. (2024, december). Binding Operational Directive 25-01: Implementing Secure Practices for Cloud Services. Cybersecurity and Infrastructure Security Agency.",
+      "url": "https://www.cisa.gov/binding-operational-directive-25-01"
+    },
+    {
+      "referentie": "Fidelis Security. (2025, november). Cloud Misconfiguration: The #1 Cause of Data Breaches 2025. Fidelis Security.",
+      "url": "https://fidelissecurity.com/threatgeek/threat-detection-response/cloud-misconfigurations-causing-data-breaches/"
+    },
+    {
+      "referentie": "RSA Conference. (2025, oktober). Cloud Misconfigurations: Still the Biggest Threat in 2025? RSA Conference Blog.",
+      "url": "https://www.rsaconference.com/library/blog/cloud-misconfigurations-still-the-biggest-threat-in-2025"
+    },
+    {
+      "referentie": "ISACA. (2024). Cloud Data Sovereignty: Governance and Risk Implications of Cross-Border Cloud Storage. ISACA Industry News.",
+      "url": "https://www.isaca.org/resources/news-and-trends/industry-news/2024/cloud-data-sovereignty-governance-and-risk-implications-of-cross-border-cloud-storage"
+    },
+    {
+      "referentie": "Wiz. (2025, december). Azure Security Risks. Wiz Academy.",
+      "url": "https://www.wiz.io/academy/cloud-security/azure-security-risks"
+    },
+    {
+      "referentie": "Intruder.io. (2025). Azure Cloud Security: The Critical Vulnerabilities You're Responsible For. Intruder.io Blog.",
+      "url": "https://www.intruder.io/blog/azure-cloud-security"
+    },
+    {
+      "referentie": "Legit Security. (2023). Azure DevOps Zero-Click CI/CD Vulnerability (CVE-2023-36561). Legit Security Blog.",
+      "url": "https://www.legitsecurity.com/blog/azure-devops-zero-click-ci/cd-vulnerability"
+    },
+    {
+      "referentie": "StepSecurity. (2024). Top 2024 Predictions for CI/CD Security. StepSecurity Blog.",
+      "url": "https://www.stepsecurity.io/blog/top-2024-predictions-for-ci-cd-security"
+    },
+    {
+      "referentie": "Compass Security. (2025, juni). The Dark Side of Azure Identity & Access Management – 5 IAM & Entra ID Security Risks You Can't Ignore. Compass Security Blog.",
+      "url": "https://blog.compass-security.com/2025/06/the-dark-side-of-azure-identity-access-management-5-iam-entra-id-security-risks-you-cant-ignore/"
+    },
+    {
+      "referentie": "SecPod. (2025, juli). Top 10 Cloud Misconfigurations to Avoid and How to Fix Them. SecPod Blog.",
+      "url": "https://www.secpod.com/blog/top-cloud-misconfigurations-to-avoid/"
+    },
+    {
+      "referentie": "Microsoft Azure. (2024). Data Residency, Data Sovereignty, and Compliance in the Microsoft Cloud. Microsoft Corporation.",
+      "url": "https://azure.microsoft.com/mediahandler/files/resourcefiles/data-residency-data-sovereignty-and-compliance-in-the-microsoft-cloud/Data_Residency_Data_Sovereignty_Compliance_Microsoft_Cloud.pdf"
+    },
+    {
+      "referentie": "Exabeam. (2025). 61 Cloud Security Statistics You Must Know in 2025. Exabeam.",
+      "url": "https://www.exabeam.com/explainers/cloud-security/61-cloud-security-statistics-you-must-know-in-2025/"
+    },
+    {
+      "referentie": "Microsoft Azure Blog. (2022). Microsoft Azure's defense in depth approach to cloud vulnerabilities. Microsoft Corporation.",
+      "url": "https://azure.microsoft.com/en-us/blog/microsoft-azures-defense-in-depth-approach-to-cloud-vulnerabilities/"
+    }
+  ]
+}

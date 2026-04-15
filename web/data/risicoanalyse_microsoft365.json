@@ -1,0 +1,670 @@
+{
+  "metadata": {
+    "titel": "Risicoanalyse",
+    "project": "CYBERWIJZER",
+    "thema": "Microsoft 365",
+    "auteur": "AI-agent (Cyberwijzer)",
+    "datum": "15-04-2026",
+    "template_versie": "0.1",
+    "versie": "0.1"
+  },
+  "versiebeheer": [
+    {
+      "versie": "0.1",
+      "datum": "15-04-2026",
+      "wijzigingen": "Initiële versie (AI-gegenereerd)",
+      "auteur": "AI-agent"
+    }
+  ],
+  "beschrijving_thema": {
+    "inleiding": "Microsoft 365 is een cloudgebaseerd productiviteitsplatform dat wereldwijd door miljoenen organisaties wordt gebruikt voor communicatie, samenwerking en documentbeheer. Het omvat toepassingen als Outlook (e-mail), Teams (chat en videovergaderen), OneDrive en SharePoint (bestandsopslag en -deling), Word, Excel, PowerPoint (documentcreatie), OneNote (notities) en To Do (taakbeheer). Als centraal platform voor bedrijfsinformatie vormt Microsoft 365 een aantrekkelijk doelwit voor cyberaanvallen, aangezien compromittering van één identiteit toegang kan geven tot e-mail, interne communicatie, gedeelde bestanden en gevoelige klantgegevens. Het platform opereert onder een gedeeld verantwoordelijkheidsmodel waarbij Microsoft de cloudinfrastructuur beveiligt, maar organisaties zelf verantwoordelijk zijn voor hun data, identiteiten en configuraties.",
+    "gebruik": {
+      "toepassingen": [
+        "E-mailcommunicatie via Outlook en Exchange Online",
+        "Realtime samenwerking en videovergaderen via Microsoft Teams",
+        "Cloudopslag en bestandsdeling via OneDrive en SharePoint Online",
+        "Documentcreatie en -bewerking via Word, Excel en PowerPoint Online",
+        "Notities en kennisbeheer via OneNote",
+        "Taakbeheer en planning via Microsoft To Do en Planner",
+        "Identiteits- en toegangsbeheer via Microsoft Entra ID (voorheen Azure AD)",
+        "AI-gestuurde productiviteit via Microsoft 365 Copilot"
+      ],
+      "rol_in_processen": [
+        "Centraal communicatieplatform voor interne en externe zakelijke correspondentie",
+        "Samenwerkingsomgeving voor projectteams met gedeelde documenten en kanalen",
+        "Opslagplaats voor bedrijfskritische en gevoelige informatie",
+        "Identiteitsinfrastructuur voor authenticatie en autorisatie van gebruikers",
+        "Platform voor integratie met derden via OAuth-apps en API's",
+        "Basis voor hybride werkomgevingen met toegang vanaf meerdere apparaten en locaties"
+      ]
+    },
+    "conclusie": "Microsoft 365 is door zijn centrale rol in bedrijfscommunicatie en dataopslag een primair aanvalsoppervlak voor cybercriminelen; misconfiguratie, zwakke identiteitsbeveiliging en onzorgvuldig deelgedrag kunnen leiden tot grootschalige datalekken en bedrijfsonderbrekingen."
+  },
+  "onderzoek": [
+    {
+      "titel": "Phishing en credential theft gericht op Microsoft 365",
+      "bevindingen": "E-mail blijft het dominante aanvalsvector: 91% van alle cyberaanvallen begint via e-mail en 28% van alle door Microsoft Incident Response onderzochte inbreuken werd geïnitieerd via phishing of social engineering. In 2025 blokkeerde Microsoft in één maand meer dan 13 miljoen phishingmails van één enkel platform. Device code phishing, waarbij aanvallers de legitieme OAuth device authorization flow van Microsoft misbruiken, is sinds september 2025 sterk toegenomen en treft zowel financieel gemotiveerde als staatsgelieerde dreigingsactoren.",
+      "bewezen": "Volgens het 2025 Microsoft Digital Defense Report begon 28% van alle onderzochte inbreuken met phishing of social engineering, en het Verizon DBIR 2025 bevestigt dat 22% van inbreuken begint met credential abuse en 16% met phishing.",
+      "afgeleide_conclusie": "Organisaties die Microsoft 365 gebruiken lopen een verhoogd risico op accountovername via geavanceerde phishingtechnieken die zelfs MFA kunnen omzeilen, vooral wanneer OAuth-flows niet worden beperkt via Conditional Access-beleid.",
+      "bronnen": [
+        "Microsoft Digital Defense Report 2025 (via o365cloudexperts.com)",
+        "Verizon Data Breach Investigations Report 2025",
+        "Proofpoint Advisory – OAuth Device Code Phishing (december 2025)",
+        "KnowBe4 Threat Labs – M365 OAuth Token Theft Campaign (februari 2026)",
+        "The Hacker News – Device Code Phishing Hits 340+ Microsoft 365 Orgs (maart 2026)"
+      ]
+    },
+    {
+      "titel": "MFA-bypass en OAuth-tokendiefstal",
+      "bevindingen": "Aanvallers omzeilen steeds vaker multi-factor authenticatie via technieken als token theft, adversary-in-the-middle (AiTM) aanvallen en OAuth device code phishing. Het Verizon DBIR 2025 rapporteert een duidelijke toename van MFA-bypass-aanvallen. Bij device code phishing worden geldige OAuth-tokens verkregen nadat het slachtoffer zich legitiem heeft geauthenticeerd, waardoor de aanvaller persistente toegang krijgt die zelfs na wachtwoordwijziging behouden blijft.",
+      "bewezen": "Het Verizon DBIR 2025 documenteert specifieke MFA-bypass-methoden (token theft, prompt bombing, AiTM) als groeiende aanvalsvectoren; Proofpoint en Huntress bevestigen dat meerdere dreigingsactoren (Storm-2372, APT29, TA2723) deze technieken actief inzetten tegen Microsoft 365.",
+      "afgeleide_conclusie": "Traditionele MFA (SMS, push-notificaties) biedt onvoldoende bescherming tegen geavanceerde phishing; phishing-resistente authenticatie zoals FIDO2-passkeys en strikte Conditional Access-policies zijn noodzakelijk.",
+      "bronnen": [
+        "Verizon DBIR 2025 (via descope.com en beyondidentity.com)",
+        "Proofpoint – OAuth Device Code Phishing Campaigns (december 2025)",
+        "Huntress – EvilTokens PhaaS Platform (maart 2026)",
+        "Help Net Security – Microsoft 365 Device Code Phishing (december 2025)"
+      ]
+    },
+    {
+      "titel": "Misconfiguratie en oversharing in SharePoint en OneDrive",
+      "bevindingen": "Misconfiguratie is een persistente bron van beveiligingsrisico's in Microsoft 365. Het CoreView 2025 M365 Security Report rapporteert een toename van bijna 80% in configuratiemanipulatie sinds 2023. CISA heeft specifieke beveiligingsbaselines gepubliceerd voor SharePoint en OneDrive, gebaseerd op NIST SP 800-53. Oversharing is wijdverbreid: 51% van organisaties heeft meer dan 250 Entra-apps met lees-/schrijfrechten, en standaardinstellingen voor bestandsdeling zijn vaak te permissief.",
+      "bewezen": "CoreView rapporteert een toename van bijna 80% in configuratiemanipulatie; CISA's M365 Secure Configuration Baselines specificeren verplichte deelbeperkingen voor SharePoint en OneDrive op basis van NIST SP 800-53; 49% van IT-leiders denkt onterecht dat Microsoft automatisch configuraties back-upt.",
+      "afgeleide_conclusie": "Zonder actief configuratiebeheer en periodieke audits zullen organisaties kwetsbaar blijven voor datalekken door te brede deelrechten, vooral nu AI-tools als Copilot bestaande oversharing-problemen versterken.",
+      "bronnen": [
+        "CoreView – Four Key Takeaways from Microsoft 365 in 2025",
+        "CISA – Microsoft SharePoint & OneDrive Secure Configuration Baselines",
+        "Help Net Security – Microsoft 365 Attack Surface (juli 2025)",
+        "CoreView – 2025 State of Microsoft 365 Security Report"
+      ]
+    },
+    {
+      "titel": "Kwetsbaarheden in Microsoft Teams",
+      "bevindingen": "Microsoft Teams is een groeiend aanvalsdoelwit. In augustus 2025 werd CVE-2025-53783 gepubliceerd, een heap-based buffer overflow waarmee aanvallers op afstand code konden uitvoeren en berichten konden lezen, wijzigen en verwijderen. Check Point Research onthulde vier kwetsbaarheden waarmee aanvallers executives konden nabootsen, berichten konden manipuleren en identiteiten konden vervalsen in video- en audiogesprekken. Microsoft zelf documenteert hoe dreigingsactoren Teams gebruiken voor phishing, malware-aflevering en social engineering.",
+      "bewezen": "CVE-2025-53783 (CVSS 7.5) is gedocumenteerd en gepatcht door Microsoft als onderdeel van de August 2025 Patch Tuesday; Check Point Research publiceerde vier Teams-kwetsbaarheden die in oktober 2025 allemaal waren opgelost, waarvan één als CVE-2024-38197 werd geregistreerd.",
+      "afgeleide_conclusie": "Samenwerkingsplatformen als Teams worden steeds vaker aangevallen omdat ze breed vertrouwd worden binnen organisaties; het vertrouwensmodel van Teams maakt social engineering bijzonder effectief.",
+      "bronnen": [
+        "Microsoft Security Blog – Disrupting Threats Targeting Microsoft Teams (oktober 2025)",
+        "Check Point Research – Microsoft Teams Impersonation and Spoofing Vulnerabilities (november 2025)",
+        "Multiple security outlets (GBHackers, Cyber Security News, The Cyber Express) – CVE-2025-53783 (augustus 2025)"
+      ]
+    },
+    {
+      "titel": "Zero-day exploits en ransomware gericht op Microsoft Office/365",
+      "bevindingen": "In januari 2026 bracht Microsoft een noodpatch uit voor CVE-2026-21509, een zero-day in Microsoft Office en Microsoft 365 waarmee aanvallers beveiligingscontroles konden omzeilen en willekeurige code konden uitvoeren. De Russische dreigingsgroep APT28 begon deze kwetsbaarheid drie dagen na de patch te misbruiken. Het Microsoft Digital Defense Report 2025 rapporteert dat 40% van ransomware-aanvallen nu hybride componenten treft en dat destructieve cloudaanvallen met 87% zijn gestegen.",
+      "bewezen": "CVE-2026-21509 werd door Microsoft bevestigd als actief misbruikte zero-day en door CISA toegevoegd aan de KEV-catalogus; Zscaler documenteerde het misbruik door APT28 als 'Operation Neusploit' drie dagen na de patch.",
+      "afgeleide_conclusie": "De snelheid waarmee staatsactoren zero-days in Office-producten exploiteren benadrukt dat patchbeheer een kritiek tijdsgevoelig proces is; organisaties die niet binnen dagen patchen lopen direct risico.",
+      "bronnen": [
+        "Dark Reading – Microsoft Rushes Emergency Patch for Office Zero-Day (januari 2026)",
+        "Dark Reading – Russian Hackers Weaponize Office Bug in Just 3 Days (februari 2026)",
+        "Microsoft Digital Defense Report 2025 (via Practical365.com)",
+        "CISA KEV Catalog"
+      ]
+    },
+    {
+      "titel": "Risico's door AI-integratie (Microsoft 365 Copilot)",
+      "bevindingen": "Gartner identificeerde vijf primaire beveiligingsrisico's van Microsoft 365 Copilot: SharePoint-oversharing versterkt door AI, prompt injection, remote code execution, gevoelige data-exposure via derde-partij-apps en toxic output. Meerdere kwetsbaarheden zijn gedocumenteerd, waaronder CVE-2026-26133 (cross-prompt injection in e-mailsamenvatting) en een bug in februari 2026 waarmee Copilot DLP-controles omzeilde. Copilot is nu gelicentieerd door meer dan 2 miljoen organisaties.",
+      "bewezen": "Gartner presenteerde de vijf risico's op hun Security & Risk Management Summit in maart 2026; CVE-2026-26133 werd door Microsoft bevestigd en gepatcht op 11 maart 2026; onderzoekers van Aim Security demonstreerden in juni 2025 hoe Copilot kon worden gebruikt voor data-exfiltratie.",
+      "afgeleide_conclusie": "AI-integratie versterkt bestaande beveiligingsproblemen exponentieel: misconfiguraties die voorheen beperkt risico vormden worden door AI-assistenten op superhoge snelheid geëxploiteerd.",
+      "bronnen": [
+        "WinBuzzer – Gartner Flags Five Microsoft 365 Copilot Security Risks (maart 2026)",
+        "SecureWorld – Making the Latest Microsoft 365 Security Updates Work (februari 2026)",
+        "Aim Security – EchoLeak M365 Research (juni 2025)",
+        "The Hacker News – AI Won't Break Microsoft 365. Your Security Backlog Will (februari 2026)"
+      ]
+    },
+    {
+      "titel": "Incidenten bij Microsoft zelf en nation-state aanvallen",
+      "bevindingen": "In januari 2024 compromitteerde de Russische groep Midnight Blizzard Microsoft's eigen bedrijfsnetwerk via password spraying op een legacy testaccount, waardoor e-mails van senior executives werden gestolen. Chinese hackers stalen circa 60.000 e-mails van het Amerikaanse State Department via Microsoft's e-mailplatform. In april 2026 documenteerde Microsoft dat de Russische groep Forest Blizzard meer dan 200 organisaties trof via DNS-hijacking en AiTM-aanvallen op Microsoft 365-domeinen.",
+      "bewezen": "Microsoft bevestigde zelf de Midnight Blizzard-inbraak in januari 2024; het State Department-lek is bevestigd door meerdere overheidsbronnen; Forest Blizzard's campagne is gedocumenteerd door Microsoft Threat Intelligence in april 2026.",
+      "afgeleide_conclusie": "Als zelfs Microsoft's eigen omgeving kwetsbaar is voor nation-state aanvallen, onderstreept dit dat geen enkele organisatie immuun is en dat continue monitoring en zero-trust-principes essentieel zijn.",
+      "bronnen": [
+        "Virtru – A Timeline of Microsoft Data Breaches and Vulnerabilities (2025 Update)",
+        "Cloud Security Alliance – Reflecting on the 2024 Microsoft Breach (september 2025)",
+        "Microsoft Security Blog – Forest Blizzard DNS Hijacking (april 2026)"
+      ]
+    }
+  ],
+  "consequenties_en_voorbeelden": [
+    {
+      "titel": "Midnight Blizzard-aanval op Microsoft (2024)",
+      "onderzoek": "De Russische staatsgroep Midnight Blizzard gebruikte password spraying op een legacy testaccount zonder MFA om toegang te krijgen tot het Microsoft-bedrijfsnetwerk, waarna e-mails van senior executives en beveiligingsmedewerkers werden gestolen gedurende minimaal twee maanden.",
+      "wat_ging_mis": [
+        "Legacy testaccount zonder MFA met verhoogde rechten",
+        "Gebrek aan proactieve monitoring op anomaal inloggedrag",
+        "Onvoldoende toepassing van least-privilege voor testaccounts"
+      ],
+      "impact": [
+        "E-mails van senior executives en beveiligingsteams gecompromitteerd",
+        "Gevoelige correspondentie met overheidsinstanties gelekt",
+        "Ernstige reputatieschade voor Microsoft",
+        "Vertraging in detectie van minimaal twee maanden"
+      ],
+      "bronnen": [
+        "Cloud Security Alliance – Top Threats to Cloud Computing Deep Dive 2025",
+        "Virtru – A Timeline of Microsoft Data Breaches and Vulnerabilities (2025)"
+      ]
+    },
+    {
+      "titel": "OAuth Device Code Phishing-campagne tegen 340+ organisaties (2025-2026)",
+      "onderzoek": "Meerdere dreigingsactoren, waaronder het Russische UNK_AcademicFlare en de financieel gemotiveerde TA2723, voerden grootschalige device code phishing-campagnes uit die in totaal meer dan 340 Microsoft 365-organisaties troffen en MFA volledig omzeilden via OAuth-tokendiefstal.",
+      "wat_ging_mis": [
+        "Device code authentication flow was niet beperkt via Conditional Access",
+        "Gebruikers herkenden de phishing-lure niet als frauduleus",
+        "Gestolen OAuth-tokens bleven geldig zelfs na wachtwoordwijziging"
+      ],
+      "impact": [
+        "Volledige lees/schrijf-toegang tot e-mail, agenda, bestanden en beheerfuncties",
+        "Persistente toegang zonder dat MFA opnieuw hoefde te worden omzeild",
+        "Meer dan 340 organisaties in vijf landen getroffen",
+        "Gerichte aanvallen op overheids-, academische en technologiesectoren"
+      ],
+      "bronnen": [
+        "The Hacker News – Device Code Phishing Hits 340+ Microsoft 365 Orgs (maart 2026)",
+        "Proofpoint – OAuth Device Code Phishing Advisory (december 2025)",
+        "KnowBe4 Threat Labs – M365 OAuth Token Theft (februari 2026)"
+      ]
+    },
+    {
+      "titel": "CVE-2026-21509: Office Zero-Day misbruikt door APT28",
+      "onderzoek": "Een zero-day kwetsbaarheid in Microsoft Office en 365 werd actief geëxploiteerd en vervolgens drie dagen na de noodpatch door de Russische groep APT28 ingezet in een campagne met speciaal gecrafkte RTF-documenten die een multi-stage infectieketen activeerden.",
+      "wat_ging_mis": [
+        "Kwetsbaarheid bestond in COM/OLE-beveiligingscontroles van Office",
+        "Drie dagen tussen patch en actief misbruik door APT28",
+        "Organisaties die niet onmiddellijk patchten waren kwetsbaar"
+      ],
+      "impact": [
+        "Remote code execution op getroffen systemen",
+        "Installatie van backdoors (MiniDoor) en payload-loaders (PixyNetLoader)",
+        "CISA voegde de kwetsbaarheid toe aan de KEV-catalogus met urgente patchdeadline",
+        "Gerichte aanvallen op organisaties in meerdere Europese landen"
+      ],
+      "bronnen": [
+        "Dark Reading – Microsoft Rushes Emergency Patch for Office Zero-Day (januari 2026)",
+        "Dark Reading – Russian Hackers Weaponize Office Bug in Just 3 Days (februari 2026)"
+      ]
+    },
+    {
+      "titel": "Microsoft Teams impersonatie-kwetsbaarheden (2025)",
+      "onderzoek": "Check Point Research ontdekte vier kwetsbaarheden in Microsoft Teams waarmee aanvallers executives konden nabootsen, berichten konden manipuleren, notificaties konden vervalsen en identiteiten konden spoofen in video- en audiogesprekken, wat het vertrouwen in het platform fundamenteel ondermijnde.",
+      "wat_ging_mis": [
+        "Onvoldoende validatie van gebruikersidentiteit in Teams-communicatie",
+        "Zowel externe gastgebruikers als interne kwaadwillenden konden de fouten misbruiken",
+        "Vertrouwensmodel van Teams was niet bestand tegen impersonatieaanvallen"
+      ],
+      "impact": [
+        "Risico op financiële fraude door CEO-impersonatie",
+        "Mogelijkheid tot malware-verspreiding via vertrouwde communicatiekanalen",
+        "Desinformatiecampagnes binnen organisaties mogelijk",
+        "320+ miljoen Teams-gebruikers wereldwijd potentieel blootgesteld"
+      ],
+      "bronnen": [
+        "Check Point Research – Microsoft Teams Impersonation and Spoofing Vulnerabilities (november 2025)",
+        "Microsoft Security Blog – Disrupting Threats Targeting Microsoft Teams (oktober 2025)"
+      ]
+    }
+  ],
+  "consequenties_conclusie": "De incidenten tonen aan dat Microsoft 365 een primair doelwit is voor zowel financieel gemotiveerde cybercriminelen als staatsactoren; de combinatie van geavanceerde phishing, MFA-bypass, zero-day-exploits en misconfiguratie leidt tot grootschalige compromittering van bedrijfsgegevens, financiële schade en reputatieverlies.",
+  "risicos": {
+    "risico_matrix": {
+      "kans_schaal": {
+        "1": "Laag – Komt zelden voor",
+        "2": "Middel – Komt regelmatig voor",
+        "3": "Hoog – Komt vaak voor"
+      },
+      "impact_schaal": {
+        "1": "Laag – Beperkte gevolgen",
+        "2": "Middel – Merkbare schade",
+        "3": "Hoog – Ernstige schade (organisatie, mens, maatschappij)"
+      }
+    },
+    "lijst": [
+      {
+        "nr": 1,
+        "titel": "Accountovername via phishing en credential theft",
+        "kans": "3",
+        "impact": "3",
+        "score": "9",
+        "ranking": "1",
+        "oorzaak": [
+          "Phishing-e-mails die Microsoft 365-loginpagina's nabootsen",
+          "OAuth device code phishing dat MFA omzeilt",
+          "Adversary-in-the-middle (AiTM) aanvallen die sessietokens stelen",
+          "Social engineering via Teams, Outlook en OneDrive-lookalikes",
+          "Breed beschikbare phishing-kits (SquarePhish, Graphish, EvilTokens)"
+        ],
+        "gevolg": [
+          "Volledige toegang tot e-mail, bestanden, Teams-chats en agenda",
+          "Diefstal van bedrijfsgeheimen en persoonsgegevens",
+          "Mogelijkheid tot laterale beweging binnen de organisatie",
+          "Business Email Compromise en financiële fraude"
+        ],
+        "impact_detail": [
+          "91% van cyberaanvallen begint via e-mail (Hornetsecurity/Microsoft)",
+          "28% van inbreuken begint met phishing (Microsoft Digital Defense Report 2025)",
+          "340+ organisaties getroffen door één device code phishing-campagne (Huntress 2026)",
+          "OAuth-tokens geven persistente toegang zelfs na wachtwoordwijziging"
+        ]
+      },
+      {
+        "nr": 2,
+        "titel": "Datalekken door misconfiguratie en oversharing",
+        "kans": "3",
+        "impact": "3",
+        "score": "9",
+        "ranking": "2",
+        "oorzaak": [
+          "Te permissieve standaard deelinstellingen in SharePoint en OneDrive",
+          "Anonieme of organisatiebrede deellinks zonder vervaldatum",
+          "Onvoldoende review van gastrechten en externe toegang",
+          "Gebrek aan Data Loss Prevention (DLP) policies",
+          "Bijna 80% toename in configuratiemanipulatie sinds 2023"
+        ],
+        "gevolg": [
+          "Onbedoelde blootstelling van gevoelige documenten aan onbevoegden",
+          "Compliance-schendingen (AVG/GDPR, branche-regelgeving)",
+          "Reputatieschade door datalekken",
+          "Boetes van toezichthouders"
+        ],
+        "impact_detail": [
+          "51% van organisaties heeft 250+ Entra-apps met lees-/schrijfrechten (CoreView 2025)",
+          "49% van IT-leiders denkt onterecht dat Microsoft configuraties automatisch back-upt",
+          "Gemiddelde kosten van een datalek bedragen USD 4,88 miljoen (IBM 2024)",
+          "CISA heeft specifieke baselines gepubliceerd om oversharing in SharePoint/OneDrive te beperken"
+        ]
+      },
+      {
+        "nr": 3,
+        "titel": "MFA-bypass via geavanceerde aanvalstechnieken",
+        "kans": "2",
+        "impact": "3",
+        "score": "6",
+        "ranking": "3",
+        "oorzaak": [
+          "Gebruik van zwakke MFA-methoden (SMS, push-notificaties)",
+          "Token theft en session hijacking na succesvolle authenticatie",
+          "Prompt bombing (MFA fatigue-aanvallen)",
+          "Device code authentication flow niet beperkt via Conditional Access",
+          "Legacy authenticatieprotocollen nog actief"
+        ],
+        "gevolg": [
+          "Persistente ongeautoriseerde toegang ondanks MFA-implementatie",
+          "Vals gevoel van veiligheid bij organisaties die MFA hebben ingeschakeld",
+          "Toegang tot volledige Microsoft 365-omgeving inclusief e-mail en bestanden"
+        ],
+        "impact_detail": [
+          "Verizon DBIR 2025 rapporteert specifieke groei in MFA-bypass-aanvallen",
+          "82% van inbreuken betreft identiteit (Verizon DBIR 2025)",
+          "Proofpoint waarschuwt dat misbruik van OAuth-flows zal toenemen met FIDO-adoptie",
+          "Gestolen refresh tokens blijven geldig totdat ze expliciet worden ingetrokken"
+        ]
+      },
+      {
+        "nr": 4,
+        "titel": "Exploitatie van kwetsbaarheden in Office-applicaties en Teams",
+        "kans": "2",
+        "impact": "3",
+        "score": "6",
+        "ranking": "4",
+        "oorzaak": [
+          "Zero-day kwetsbaarheden in Microsoft Office en 365 (zoals CVE-2026-21509)",
+          "Heap-based buffer overflows in Teams (CVE-2025-53783)",
+          "Impersonatie- en spoofing-kwetsbaarheden in Teams",
+          "Trage patchcycli bij organisaties",
+          "Social engineering via kwaadaardige Office-documenten"
+        ],
+        "gevolg": [
+          "Remote code execution op gebruikerssystemen",
+          "Installatie van malware, backdoors en ransomware",
+          "Manipulatie van Teams-berichten en identiteitsfraude",
+          "Gebruik als springplank voor verdere netwerkinfiltratie"
+        ],
+        "impact_detail": [
+          "Microsoft registreerde 1.360 kwetsbaarheden in 2024, een record (BeyondTrust)",
+          "APT28 exploiteerde CVE-2026-21509 slechts drie dagen na de patch",
+          "CVE-2025-53783 in Teams trof alle ongepatcht clients (desktop, web, mobiel)",
+          "107 kwetsbaarheden gepatcht in August 2025 Patch Tuesday alleen"
+        ]
+      },
+      {
+        "nr": 5,
+        "titel": "Datarisico's door AI-integratie (Microsoft Copilot)",
+        "kans": "2",
+        "impact": "2",
+        "score": "4",
+        "ranking": "5",
+        "oorzaak": [
+          "Copilot doorzoekt en combineert data uit SharePoint, OneDrive en Outlook",
+          "Bestaande oversharing wordt versterkt door AI-gestuurde zoekfunctionaliteit",
+          "Prompt injection-kwetsbaarheden in Copilot",
+          "AI-output draagt geen sensitivity labels van de oorspronkelijke bron",
+          "Onvoldoende governance voor AI-agenten en plugins"
+        ],
+        "gevolg": [
+          "Onbedoelde ontsluiting van gevoelige informatie via AI-samenvattingen",
+          "Data-exfiltratie via kwaadaardige prompt injection in e-mails",
+          "Omzeiling van DLP-controles door Copilot",
+          "Compliance-risico's door niet-gelabelde AI-output"
+        ],
+        "impact_detail": [
+          "Gartner identificeert vijf primaire Copilot-risico's (maart 2026)",
+          "CVE-2026-26133: cross-prompt injection in Copilot e-mailsamenvatting",
+          "8,5% van enterprise prompts riskeert gevoelige data-blootstelling (Knostic)",
+          "Copilot gelicentieerd door 2+ miljoen organisaties (Q1 2026)"
+        ]
+      },
+      {
+        "nr": 6,
+        "titel": "Aanvallen via Microsoft Teams als social engineering-kanaal",
+        "kans": "2",
+        "impact": "2",
+        "score": "4",
+        "ranking": "6",
+        "oorzaak": [
+          "Teams wordt vertrouwd als intern communicatiekanaal",
+          "Externe gastgebruikers kunnen berichten sturen",
+          "Phishing via Teams-berichten en nep-vergaderverzoeken",
+          "Malvertising via nep-Teams-installers",
+          "Third-party bots en connectors met brede machtigingen"
+        ],
+        "gevolg": [
+          "Malware-aflevering via vertrouwd samenwerkingsplatform",
+          "Credential harvesting buiten het e-mailkanaal om",
+          "Ransomware-installatie via Teams-phishing-lures",
+          "Salarisfraudie via accountcompromittering (Storm-2755)"
+        ],
+        "impact_detail": [
+          "Storm-0324 gebruikte Teams-phishing voor ransomware-toegang (Microsoft 2025)",
+          "Malwarebytes rapporteerde nep-Teams-installer malvertising (juli 2025)",
+          "Storm-2755 compromitteerde werknemersaccounts voor salarisomleiding",
+          "320+ miljoen Teams-gebruikers wereldwijd vormen een groot aanvalsoppervlak"
+        ]
+      },
+      {
+        "nr": 7,
+        "titel": "Onvoldoende privilegebeheer en te veel beheerdersrechten",
+        "kans": "2",
+        "impact": "2",
+        "score": "4",
+        "ranking": "7",
+        "oorzaak": [
+          "Te veel global administrator accounts",
+          "Langdurige geprivilegieerde toegang zonder tijdsbeperking",
+          "Onvoldoende gebruik van Privileged Identity Management (PIM)",
+          "OAuth-apps met overmatige machtigingen die niet worden gereviewd"
+        ],
+        "gevolg": [
+          "Grotere blast radius bij compromittering van één account",
+          "Ongeautoriseerde wijzigingen in tenant-configuratie",
+          "Moeilijkere detectie van insider threats",
+          "Verhoogd risico op volledige tenant-overname"
+        ],
+        "impact_detail": [
+          "Organisaties met PIM ervaren 64% minder beveiligingsincidenten (CoreView 2025)",
+          "Organisaties zonder privilegebeheer zijn 3,8x meer kwetsbaar voor accountcompromittering",
+          "51% van organisaties heeft 250+ Entra-apps met gevaarlijke lees-/schrijfmachtigingen",
+          "Gartner adviseert dat 99% van inbreuken terug te voeren is op configuratiefouten"
+        ]
+      }
+    ]
+  },
+  "maatregelen": {
+    "technisch": {
+      "items": [
+        "Implementeer phishing-resistente MFA (FIDO2-passkeys, Windows Hello for Business) voor alle gebruikers, niet alleen beheerders",
+        "Blokkeer device code authentication flow via Conditional Access-beleid tenzij expliciet nodig",
+        "Blokkeer legacy authenticatieprotocollen volledig",
+        "Configureer Data Loss Prevention (DLP) policies in Microsoft Purview voor SharePoint, OneDrive, Teams en Exchange",
+        "Beperk externe deling in SharePoint en OneDrive tot bestaande gasten of alleen interne gebruikers conform CISA-baselines",
+        "Stel standaard deellinks in op 'Specifieke personen' met alleen-lezen-rechten en vervaldatum",
+        "Activeer Microsoft Defender for Office 365 met Safe Links en Safe Attachments",
+        "Implementeer Conditional Access-beleid gebaseerd op apparaatstatus, locatie en risicosignalen",
+        "Beperk OAuth app-registratie en consent tot beheerders; review regelmatig bestaande app-machtigingen",
+        "Schakel auditlogging in en monitor Sign-in Logs in Entra ID op verdachte authenticatie-events"
+      ],
+      "onderbouwing": "CISA M365 Secure Configuration Baselines (NIST SP 800-53); Microsoft Digital Defense Report 2025; Verizon DBIR 2025; CoreView 2025 Security Report; Proofpoint Advisory december 2025"
+    },
+    "proces": {
+      "items": [
+        "Voer maandelijks patchbeheer uit met prioriteit voor zero-day en actief misbruikte kwetsbaarheden",
+        "Review elk kwartaal Entra ID-rollen, gastaccounts en OAuth-appmachtigingen",
+        "Voer periodieke data-risicobeoordelingen uit via Microsoft Purview Data Security Posture Management",
+        "Implementeer een incident response plan specifiek voor Microsoft 365-compromittering",
+        "Gebruik Privileged Identity Management (PIM) met just-in-time en tijdgebonden elevated access",
+        "Beperk het aantal Global Administrators tot minder dan vijf conform Microsoft best practices",
+        "Monitor Dark Web en dreigingsintelligentie voor gelekte bedrijfscredentials"
+      ],
+      "onderbouwing": "Microsoft best practices voor privilegebeheer; CoreView rapport dat PIM 64% minder incidenten oplevert; CISA baselines; IBM Cost of a Data Breach Report 2024"
+    },
+    "organisatorisch": {
+      "items": [
+        "Train alle medewerkers minimaal elk kwartaal op het herkennen van phishing, inclusief Teams-phishing en OAuth-aanvallen",
+        "Stel een duidelijk beleid op voor bestandsdeling en externe samenwerking",
+        "Wijs security champions aan per afdeling die configuratienaleving monitoren",
+        "Definieer en communiceer het gedeelde verantwoordelijkheidsmodel van Microsoft 365",
+        "Voer tabletop-oefeningen uit voor scenario's als accountovername en ransomware",
+        "Stel classificatiebeleid op voor gevoelige informatie en implementeer sensitivity labels"
+      ],
+      "onderbouwing": "Microsoft Shared Responsibility Model; Gartner Security & Risk Management Summit 2026; LMG Security – tabletop exercises voor M365; CoreView en CISA aanbevelingen"
+    }
+  },
+  "basisvaardigheden": {
+    "inleiding": "Studenten in softwareontwikkeling moeten de beveiligingsrisico's van Microsoft 365 begrijpen en in staat zijn om veilige configuraties toe te passen, phishing te herkennen en verantwoordelijk om te gaan met samenwerking en bestandsdeling in cloudomgevingen.",
+    "bewustzijn": {
+      "doel": "Studenten begrijpen de belangrijkste aanvalsvectoren, het gedeelde verantwoordelijkheidsmodel en de gevolgen van misconfiguratie in Microsoft 365-omgevingen.",
+      "minimale_kennis": [
+        "Weten dat 91% van cyberaanvallen via e-mail begint en hoe phishing-aanvallen op Microsoft 365 werken",
+        "Het gedeelde verantwoordelijkheidsmodel van Microsoft 365 kunnen uitleggen (wat Microsoft beveiligt vs. wat de organisatie zelf moet doen)",
+        "Begrijpen wat OAuth, device code authentication en tokendiefstal inhouden",
+        "Weten dat MFA niet onfeilbaar is en welke bypass-methoden bestaan (token theft, AiTM, prompt bombing)",
+        "Kennis van de risico's van oversharing via SharePoint, OneDrive en Teams",
+        "Begrijpen hoe AI-tools als Copilot bestaande beveiligingsproblemen kunnen versterken"
+      ],
+      "herkenningsvaardigheid": [
+        "Een phishing-e-mail of Teams-bericht herkennen dat een nep-Microsoft-loginpagina nabootst",
+        "Verdachte OAuth-consent-verzoeken en device code-prompts identificeren",
+        "Onjuiste of te brede deelinstellingen in SharePoint/OneDrive herkennen",
+        "Signalen van accountcompromittering herkennen (onverwachte loginmeldingen, doorgestuurd e-mail)",
+        "Herkennen wanneer een Teams-bericht van een onbekende externe bron een social engineering-poging kan zijn"
+      ],
+      "toetsbare_leeruitkomsten": [
+        "De student kan minimaal drie phishing-aanvalstechnieken gericht op Microsoft 365 benoemen en uitleggen",
+        "De student kan het shared responsibility model van Microsoft 365 correct toepassen op een casus",
+        "De student kan uitleggen waarom traditionele MFA kwetsbaar is voor token theft en AiTM-aanvallen",
+        "De student kan minimaal drie risico's van oversharing in SharePoint/OneDrive beschrijven met voorbeelden"
+      ]
+    },
+    "vaardigheden": {
+      "doel": "Studenten kunnen veilige configuraties toepassen in Microsoft 365 en beveiligingsmaatregelen implementeren in een ontwikkel- of beheeromgeving.",
+      "categorieen": [
+        {
+          "titel": "Identiteits- en toegangsbeheer",
+          "student_kan": [
+            "MFA configureren voor gebruikersaccounts in Microsoft 365",
+            "Conditional Access-beleid opzetten op basis van locatie, apparaat en risico",
+            "Het principe van least privilege toepassen bij het toewijzen van rollen in Entra ID",
+            "OAuth-appmachtigingen reviewen en onnodig brede consent intrekken"
+          ],
+          "toetsbaar": [
+            "De student configureert een werkende MFA-instelling in een testomgeving",
+            "De student stelt een Conditional Access-beleid op dat device code flow blokkeert",
+            "De student identificeert en corrigeert overmatige rechten in een gegeven Entra ID-configuratie"
+          ]
+        },
+        {
+          "titel": "Bestandsdeling en DLP-configuratie",
+          "student_kan": [
+            "Externe deelinstellingen configureren in SharePoint en OneDrive conform CISA-baselines",
+            "Standaard linktypen en machtigingen instellen op 'Specifieke personen' en 'Alleen weergeven'",
+            "Een basis DLP-beleid configureren in Microsoft Purview dat gevoelige data detecteert",
+            "Sensitivity labels toepassen op documenten en sites"
+          ],
+          "toetsbaar": [
+            "De student configureert SharePoint-deelinstellingen die voldoen aan de CISA-baselines in een testomgeving",
+            "De student creëert een werkend DLP-beleid dat het delen van documenten met persoonsgegevens buiten de organisatie blokkeert"
+          ]
+        },
+        {
+          "titel": "Monitoring en incident response",
+          "student_kan": [
+            "Sign-in logs in Entra ID interpreteren en verdachte authenticatie-events identificeren",
+            "Auditlogs in Microsoft 365 raadplegen om deelactiviteiten te monitoren",
+            "Een basisincident response-procedure uitvoeren bij een vermoedelijke accountcompromittering (sessies intrekken, wachtwoord resetten, tokens revoken)"
+          ],
+          "toetsbaar": [
+            "De student analyseert een set sign-in logs en identificeert correct verdachte loginpogingen",
+            "De student voert de juiste stappen uit bij een gesimuleerde accountcompromittering"
+          ]
+        }
+      ]
+    },
+    "gedrag": {
+      "doel": "Studenten vertonen veiligheidsbewust gedrag bij het dagelijks gebruik van Microsoft 365 en nemen verantwoordelijkheid voor de beveiliging van gedeelde gegevens.",
+      "gewenst_gedrag": [
+        "Altijd de URL en afzender verifiëren voordat inloggegevens worden ingevoerd",
+        "Nooit een device code invoeren op verzoek van een e-mail of chatbericht zonder verificatie",
+        "Bestanden delen met zo min mogelijk rechten en alleen met beoogde ontvangers",
+        "Verdachte e-mails, Teams-berichten en OAuth-verzoeken melden bij IT/security",
+        "Regelmatig controleren welke apps toegang hebben tot het eigen Microsoft 365-account",
+        "Geen bedrijfsdocumenten opslaan op of doorsturen naar persoonlijke accounts"
+      ],
+      "observeerbaar_gedrag": [
+        "De student deelt bestanden standaard via 'Specifieke personen'-links in plaats van 'Iedereen'-links",
+        "De student meldt proactief een verdacht bericht via het juiste rapportagekanaal",
+        "De student weigert OAuth-consent voor onbekende of onnodig brede app-verzoeken",
+        "De student controleert app-machtigingen op het eigen account en trekt onnodige machtigingen in"
+      ],
+      "toetsbare_leeruitkomsten": [
+        "De student demonstreert correct gedrag bij het ontvangen van een gesimuleerde phishing-aanval",
+        "De student past het least-privilege-principe correct toe bij het delen van documenten in een samenwerkingsscenario",
+        "De student voert een audit uit op eigen app-machtigingen en beargumenteert welke machtigingen ingetrokken moeten worden"
+      ]
+    },
+    "minimale_competentie_eisen": [
+      "De student kan minimaal drie aanvalsvectoren op Microsoft 365 benoemen, uitleggen en de bijbehorende tegenmaatregelen beschrijven",
+      "De student kan een veilige basisconfiguratie voor bestandsdeling in SharePoint/OneDrive opzetten conform standaarden",
+      "De student kan MFA en Conditional Access configureren in een Microsoft 365-testomgeving",
+      "De student kan een phishing-aanval op Microsoft 365 herkennen en de correcte meldingsprocedure volgen",
+      "De student kan auditlogs interpreteren om verdachte activiteiten in een Microsoft 365-omgeving te identificeren",
+      "De student past bij alle samenwerkingsactiviteiten het principe van least privilege toe"
+    ]
+  },
+  "samenvatting": {
+    "belangrijkste_risicos": [
+      "Accountovername via phishing en OAuth-tokendiefstal (score 9)",
+      "Datalekken door misconfiguratie en oversharing in SharePoint/OneDrive (score 9)",
+      "MFA-bypass via geavanceerde aanvalstechnieken als token theft en AiTM (score 6)",
+      "Exploitatie van zero-day kwetsbaarheden in Office-applicaties en Teams (score 6)"
+    ],
+    "belangrijkste_maatregelen": [
+      "Implementeer phishing-resistente MFA (FIDO2-passkeys) en blokkeer device code flow via Conditional Access",
+      "Beperk externe deling en pas DLP-policies toe conform CISA/NIST-baselines",
+      "Voer tijdig patchbeheer uit met prioriteit voor actief misbruikte kwetsbaarheden",
+      "Review regelmatig Entra ID-rollen, gastaccounts en OAuth-appmachtigingen",
+      "Train medewerkers en studenten structureel op het herkennen van M365-gerichte phishing"
+    ],
+    "kerninzicht": "Microsoft 365 is door zijn centrale rol in bedrijfsprocessen het primaire aanvalsdoelwit geworden; de combinatie van geavanceerde phishing die MFA omzeilt, wijdverbreide misconfiguratie en de opkomst van AI-versterkte risico's vereist een gelaagde verdediging waarin identiteitsbeveiliging, configuratiebeheer en gebruikersbewustzijn gelijkwaardig worden geadresseerd."
+  },
+  "bronnen": [
+    {
+      "referentie": "Microsoft. (2025). Microsoft Digital Defense Report 2025.",
+      "url": "https://www.microsoft.com/en-us/security/security-insider/intelligence-reports/microsoft-digital-defense-report-2025"
+    },
+    {
+      "referentie": "Verizon. (2025). 2025 Data Breach Investigations Report (DBIR).",
+      "url": "https://www.verizon.com/business/resources/reports/dbir/"
+    },
+    {
+      "referentie": "CoreView. (2025). Four Key Takeaways from Microsoft 365 in 2025.",
+      "url": "https://www.coreview.com/blog/four-key-takeaways-from-microsoft-365-in-2025"
+    },
+    {
+      "referentie": "CoreView. (2025). 2025 State of Microsoft 365 Security Report.",
+      "url": "https://www.coreview.com/blog/microsoft-365-security-best-practices-and-how-to-implement-them"
+    },
+    {
+      "referentie": "CISA. (z.d.). Microsoft SharePoint & OneDrive Secure Configuration Baselines.",
+      "url": "https://www.cisa.gov/resources-tools/services/m365-sharepoint-onedrive"
+    },
+    {
+      "referentie": "Proofpoint. (2025, december). OAuth Device Code Phishing Campaigns Advisory.",
+      "url": "https://www.infosecurity-magazine.com/news/oauth-phishing-campaigns/"
+    },
+    {
+      "referentie": "Huntress. (2026, maart). Device Code Phishing Hits 340+ Microsoft 365 Orgs via OAuth Abuse. The Hacker News.",
+      "url": "https://thehackernews.com/2026/03/device-code-phishing-hits-340-microsoft.html"
+    },
+    {
+      "referentie": "KnowBe4 Threat Labs. (2026, februari). Uncovering the Sophisticated Phishing Campaign Bypassing M365 MFA.",
+      "url": "https://blog.knowbe4.com/uncovering-the-sophisticated-phishing-campaign-bypassing-m365-mfa"
+    },
+    {
+      "referentie": "Dark Reading. (2026, januari). Microsoft Rushes Emergency Patch for Office Zero-Day.",
+      "url": "https://www.darkreading.com/vulnerabilities-threats/microsoft-rushes-emergency-patch-office-zero-day"
+    },
+    {
+      "referentie": "Dark Reading. (2026, februari). Russian Hackers Weaponize Microsoft Office Bug in Just 3 Days.",
+      "url": "https://www.darkreading.com/cyberattacks-data-breaches/russian-hackers-weaponize-office-bug-within-days"
+    },
+    {
+      "referentie": "Check Point Research. (2025, november). Microsoft Teams Impersonation and Spoofing Vulnerabilities Exposed.",
+      "url": "https://research.checkpoint.com/2025/microsoft-teams-impersonation-and-spoofing-vulnerabilities-exposed/"
+    },
+    {
+      "referentie": "Microsoft Security Blog. (2025, oktober). Disrupting Threats Targeting Microsoft Teams.",
+      "url": "https://www.microsoft.com/en-us/security/blog/2025/10/07/disrupting-threats-targeting-microsoft-teams/"
+    },
+    {
+      "referentie": "Microsoft Security Blog. (2026, april). SOHO Router Compromise Leads to DNS Hijacking and AiTM Attacks.",
+      "url": "https://www.microsoft.com/en-us/security/blog/2026/04/07/soho-router-compromise-leads-to-dns-hijacking-and-adversary-in-the-middle-attacks/"
+    },
+    {
+      "referentie": "WinBuzzer. (2026, maart). Gartner Flags Five Microsoft 365 Copilot Security Risks.",
+      "url": "https://winbuzzer.com/2026/03/17/gartner-five-microsoft-365-copilot-security-risks-xcxwbn/"
+    },
+    {
+      "referentie": "Hornetsecurity. (2026, januari). Monthly Threat Report December 2025 / Cybersecurity Report 2026.",
+      "url": "https://www.hornetsecurity.com/en/blog/monthly-threat-report-december-2025/"
+    },
+    {
+      "referentie": "Cloud Security Alliance. (2025, september). Top Threats to Cloud Computing Deep Dive 2025 – Reflecting on the 2024 Microsoft Breach.",
+      "url": "https://cloudsecurityalliance.org/blog/2025/09/15/reflecting-on-the-2024-microsoft-breach"
+    },
+    {
+      "referentie": "Virtru. (2025, juli). A Timeline of Microsoft Data Breaches and Vulnerabilities: 2025 Update.",
+      "url": "https://www.virtru.com/blog/industry-updates/microsoft-data-breaches-2025"
+    },
+    {
+      "referentie": "Help Net Security. (2025, juli). Why Your Microsoft 365 Setup Might Be More Vulnerable Than You Think.",
+      "url": "https://www.helpnetsecurity.com/2025/07/14/microsoft-365-attack-surface/"
+    },
+    {
+      "referentie": "BeyondTrust. (2025). 12th Annual Microsoft Vulnerabilities Report.",
+      "url": null
+    },
+    {
+      "referentie": "IBM. (2024). Cost of a Data Breach Report 2024.",
+      "url": null
+    },
+    {
+      "referentie": "Apps4Rent / O365CloudExperts. (2026, april). Microsoft 365 Security Statistics: 50+ Stats Every IT Manager Should Know in 2026.",
+      "url": "https://www.o365cloudexperts.com/blog/microsoft-365-security-statistics/"
+    },
+    {
+      "referentie": "SecureWorld. (2026, februari). Making the Latest Microsoft 365 Security Updates Work for Your Org.",
+      "url": "https://www.secureworld.io/industry-news/making-latest-microsoft-365-security-updates-work"
+    },
+    {
+      "referentie": "LMG Security. (2025, december). 5 New-ish Microsoft Security Features & What They Reveal About Today's Threats.",
+      "url": "https://www.lmgsecurity.com/5-new-ish-microsoft-security-features-what-they-reveal-about-todays-threats/"
+    },
+    {
+      "referentie": "BleepingComputer. (2025, december). Microsoft 365 Accounts Targeted in Wave of OAuth Phishing Attacks.",
+      "url": "https://www.bleepingcomputer.com/news/security/microsoft-365-accounts-targeted-in-wave-of-oauth-phishing-attacks/"
+    },
+    {
+      "referentie": "The Hacker News. (2026, februari). AI Won't Break Microsoft 365. Your Security Backlog Will.",
+      "url": "https://thehackernews.com/expert-insights/2026/02/ai-wont-break-microsoft-365-your.html"
+    }
+  ]
+}

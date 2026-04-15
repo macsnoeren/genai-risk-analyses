@@ -1,0 +1,343 @@
+{
+"metadata": {
+"titel": "Risicoanalyse",
+"project": "CYBERWIJZER",
+"thema": "dotNet",
+"auteur": "AI-agent (Cyberwijzer)",
+"datum": "15-04-2026",
+"template_versie": "0.1",
+"versie": "0.1"
+},
+"versiebeheer": [
+{
+"versie": "0.1",
+"datum": "15-04-2026",
+"wijzigingen": "Initiële versie (AI-gegenereerd)",
+"auteur": "AI-agent"
+}
+],
+"beschrijving_thema": {
+"inleiding": ".NET is een softwareontwikkelplatform van Microsoft dat wordt gebruikt voor het bouwen van webapplicaties, desktopsoftware, cloudservices en API’s. Het platform ondersteunt meerdere programmeertalen zoals C# en F#, en wordt veel toegepast in enterprise-omgevingen. .NET-applicaties draaien vaak in complexe ecosystemen met databases, externe libraries en cloudintegraties. Hierdoor ontstaan diverse beveiligingsrisico’s die zowel technisch als organisatorisch van aard zijn.",
+"gebruik": {
+"toepassingen": [
+"Webapplicaties (ASP.NET Core)",
+"Enterprise back-end systemen",
+"Cloud-native applicaties",
+"API-ontwikkeling"
+],
+"rol_in_processen": [
+"Verwerken van gebruikersdata en transacties",
+"Authenticatie en autorisatie van gebruikers",
+"Integratie met externe systemen en services",
+"Beheer van bedrijfslogica en dataopslag"
+]
+},
+"conclusie": ".NET is breed inzetbaar en daardoor een belangrijk doelwit voor aanvallen; inzicht in generieke softwarekwetsbaarheden is cruciaal voor veilige ontwikkeling."
+},
+"onderzoek": [
+{
+"titel": "OWASP Top 10 kwetsbaarheden in .NET",
+"bevindingen": "De OWASP Top 10 beschrijft de meest kritieke kwetsbaarheden in webapplicaties, waaronder injection, broken authentication en XSS. Deze kwetsbaarheden komen ook veel voor in .NET-applicaties doordat deze afhankelijk zijn van invoer van gebruikers en complexe frameworks. Onderzoek toont dat injection-aanvallen en credential misuse verantwoordelijk zijn voor een groot deel van de datalekken.",
+"bewezen": "Injection, broken authentication en XSS behoren tot de meest voorkomende en kritieke kwetsbaarheden in webapplicaties.",
+"afgeleide_conclusie": ".NET-applicaties zijn kwetsbaar voor dezelfde fundamentele websecurityproblemen als andere platforms.",
+"bronnen": [
+"OWASP Top 10 (2021/2025)",
+"MoldStud OWASP Top Ten for .NET developers"
+]
+},
+{
+"titel": "Kwetsbare en verouderde componenten",
+"bevindingen": "Een groot deel van moderne software bestaat uit open-source componenten en dependencies. Onderzoek toont aan dat 89% van de codebases verouderde componenten bevat en dat 95% van de kwetsbaarheden zich in afhankelijkheden bevindt. Onvoldoende onderhoud verhoogt het risico op exploits aanzienlijk.",
+"bewezen": "Het merendeel van kwetsbaarheden bevindt zich in afhankelijkheden en verouderde componenten.",
+"afgeleide_conclusie": ".NET-projecten met veel NuGet-packages hebben een verhoogd supply chain risico.",
+"bronnen": [
+"OWASP OSS Risk Top 10",
+"Endor Labs dependency research (zoals geciteerd door OWASP)"
+]
+},
+{
+"titel": "Client-side en data exposure risico’s",
+"bevindingen": "Client-side applicaties kunnen gevoelige data lekken via opslag in browser storage of door onvoldoende beveiligingsmaatregelen. OWASP benadrukt dat gevoelige data zoals tokens en persoonsgegevens vaak onveilig worden opgeslagen of verzonden.",
+"bewezen": "Gevoelige data wordt regelmatig onveilig opgeslagen of verwerkt in webapplicaties.",
+"afgeleide_conclusie": ".NET webapplicaties met front-end componenten lopen risico op datalekken via client-side opslag.",
+"bronnen": [
+"OWASP Client-Side Top 10",
+"OWASP Top 10 (Sensitive Data Exposure)"
+]
+},
+{
+"titel": "Security misconfiguration en insecure design",
+"bevindingen": "Veel beveiligingsproblemen ontstaan door verkeerde configuraties, zoals standaardinstellingen of ontbrekende beveiligingsheaders. Ook ontwerpkeuzes zonder security-by-design leiden tot structurele kwetsbaarheden.",
+"bewezen": "Security misconfiguration en insecure design behoren tot de belangrijkste oorzaken van kwetsbaarheden.",
+"afgeleide_conclusie": "Onjuiste configuratie in .NET (bijv. middleware, headers) kan directe toegang tot systemen mogelijk maken.",
+"bronnen": [
+"OWASP Top 10",
+"Aspose OWASP security assessment (.NET)"
+]
+}
+],
+"consequenties_en_voorbeelden": [
+{
+"titel": "SQL Injection datalek",
+"onderzoek": "Aanvallers injecteren kwaadaardige SQL-code in invoervelden om databases te manipuleren en data te exfiltreren.",
+"wat_ging_mis": [
+"Onvoldoende inputvalidatie",
+"Geen gebruik van parameterized queries"
+],
+"impact": [
+"Datalekken",
+"Ongeautoriseerde toegang tot systemen"
+],
+"bronnen": [
+"OWASP Top 10",
+"MoldStud OWASP .NET guide"
+]
+},
+{
+"titel": "Supply chain aanval via dependency",
+"onderzoek": "Kwaadaardige code wordt geïntroduceerd via externe libraries of packages.",
+"wat_ging_mis": [
+"Gebruik van onbetrouwbare packages",
+"Geen controle op afhankelijkheden"
+],
+"impact": [
+"Malware in applicaties",
+"Compromittering van systemen"
+],
+"bronnen": [
+"OWASP OSS Risks",
+"Endor Labs dependency research"
+]
+}
+],
+"consequenties_conclusie": ".NET-applicaties zijn gevoelig voor zowel klassieke webkwetsbaarheden als moderne supply chain-aanvallen, wat kan leiden tot ernstige datalekken en systeemcompromittering.",
+"risicos": {
+"risico_matrix": {
+"kans_schaal": {
+"1": "Laag – Komt zelden voor",
+"2": "Middel – Komt regelmatig voor",
+"3": "Hoog – Komt vaak voor"
+},
+"impact_schaal": {
+"1": "Laag – Beperkte gevolgen",
+"2": "Middel – Merkbare schade",
+"3": "Hoog – Ernstige schade (organisatie, mens, maatschappij)"
+}
+},
+"lijst": [
+{
+"nr": 1,
+"titel": "Injection-aanvallen (SQL/command)",
+"kans": "3",
+"impact": "3",
+"score": "9",
+"ranking": "1",
+"oorzaak": [
+"Onvoldoende inputvalidatie",
+"Gebruik van dynamische queries"
+],
+"gevolg": [
+"Databasediefstal",
+"Systeemcompromittering"
+],
+"impact_detail": [
+"Verlies van vertrouwelijke data",
+"Volledige controle over database"
+]
+},
+{
+"nr": 2,
+"titel": "Kwetsbare afhankelijkheden (supply chain)",
+"kans": "3",
+"impact": "3",
+"score": "9",
+"ranking": "2",
+"oorzaak": [
+"Gebruik van verouderde libraries",
+"Geen dependency scanning"
+],
+"gevolg": [
+"Malware-injectie",
+"Onbekende kwetsbaarheden"
+],
+"impact_detail": [
+"Onzichtbare aanvallen via packages",
+"Grootschalige impact op systemen"
+]
+},
+{
+"nr": 3,
+"titel": "Broken authentication",
+"kans": "3",
+"impact": "3",
+"score": "9",
+"ranking": "3",
+"oorzaak": [
+"Zwakke wachtwoorden",
+"Geen MFA"
+],
+"gevolg": [
+"Account takeover",
+"Privilege escalation"
+],
+"impact_detail": [
+"Toegang tot gevoelige data",
+"Misbruik van accounts"
+]
+},
+{
+"nr": 4,
+"titel": "Sensitive data exposure",
+"kans": "2",
+"impact": "3",
+"score": "6",
+"ranking": "4",
+"oorzaak": [
+"Onversleutelde opslag",
+"Onveilige client-side opslag"
+],
+"gevolg": [
+"Datalekken",
+"Privacy schending"
+],
+"impact_detail": [
+"Boetes (AVG)",
+"Reputatieschade"
+]
+},
+{
+"nr": 5,
+"titel": "Security misconfiguration",
+"kans": "2",
+"impact": "2",
+"score": "4",
+"ranking": "5",
+"oorzaak": [
+"Standaardconfiguraties",
+"Ontbrekende security headers"
+],
+"gevolg": [
+"Ongeautoriseerde toegang",
+"Aanvalsvectoren open"
+],
+"impact_detail": [
+"Verhoogde aanvalskans",
+"Systemen makkelijker te compromitteren"
+]
+}
+]
+},
+"maatregelen": {
+"technisch": {
+"items": [
+"Gebruik parameterized queries en ORM’s",
+"Implementeer inputvalidatie en output encoding",
+"Voer dependency scanning uit (bijv. SCA-tools)",
+"Gebruik encryptie voor data in rust en transport",
+"Implementeer MFA en veilige authenticatie"
+],
+"onderbouwing": "OWASP Top 10 en OSS risk richtlijnen adviseren deze maatregelen voor mitigatie van bekende kwetsbaarheden."
+},
+"proces": {
+"items": [
+"Voer regelmatige security audits en pentests uit",
+"Integreer security in CI/CD (DevSecOps)",
+"Patch en update dependencies regelmatig"
+],
+"onderbouwing": "OWASP en industriepraktijken tonen aan dat continue monitoring en updates essentieel zijn."
+},
+"organisatorisch": {
+"items": [
+"Train ontwikkelaars in secure coding",
+"Implementeer security policies",
+"Voer code reviews met security focus uit"
+],
+"onderbouwing": "Menselijke fouten zijn een belangrijke oorzaak van kwetsbaarheden volgens OWASP."
+}
+},
+"basisvaardigheden": {
+"inleiding": "Studenten moeten basiskennis hebben van veilige softwareontwikkeling binnen .NET en algemene programmeertalen.",
+"bewustzijn": {
+"doel": "Begrijpen van veelvoorkomende kwetsbaarheden en hun impact",
+"minimale_kennis": [
+"OWASP Top 10",
+"Basisprincipes van encryptie",
+"Authenticatie en autorisatie concepten"
+],
+"herkenningsvaardigheid": [
+"Herkennen van onveilige inputverwerking",
+"Herkennen van hardcoded secrets"
+],
+"toetsbare_leeruitkomsten": [
+"Student kan minimaal 5 OWASP-risico’s uitleggen",
+"Student kan een kwetsbaarheid identificeren in code"
+]
+},
+"vaardigheden": {
+"doel": "Veilige applicaties kunnen ontwikkelen in .NET",
+"categorieen": [
+{
+"titel": "Secure coding",
+"student_kan": [
+"Input valideren en sanitizen",
+"Veilige authenticatie implementeren"
+],
+"toetsbaar": [
+"Code bevat geen injection kwetsbaarheden",
+"Authenticatie werkt volgens best practices"
+]
+}
+]
+},
+"gedrag": {
+"doel": "Veilig ontwikkelgedrag toepassen",
+"gewenst_gedrag": [
+"Regelmatig dependencies updaten",
+"Security testen uitvoeren"
+],
+"observeerbaar_gedrag": [
+"Gebruik van security tools",
+"Documentatie van security keuzes"
+],
+"toetsbare_leeruitkomsten": [
+"Student voert security scan uit",
+"Student documenteert beveiligingsmaatregelen"
+]
+},
+"minimale_competentie_eisen": [
+"Kan veilige code schrijven zonder OWASP Top 10 kwetsbaarheden",
+"Kan basis securitymaatregelen implementeren in .NET"
+]
+},
+"samenvatting": {
+"belangrijkste_risicos": [
+"Injection-aanvallen",
+"Kwetsbare afhankelijkheden",
+"Broken authentication"
+],
+"belangrijkste_maatregelen": [
+"Inputvalidatie",
+"Dependency management",
+"Sterke authenticatie"
+],
+"kerninzicht": ".NET is niet inherent onveilig, maar kwetsbaarheden ontstaan door ontwikkelkeuzes en afhankelijkheden; secure coding is essentieel."
+},
+"bronnen": [
+{
+"referentie": "OWASP Foundation. (2021-2025). OWASP Top 10.",
+"url": "[https://owasp.org/www-project-top-ten/](https://owasp.org/www-project-top-ten/)"
+},
+{
+"referentie": "OWASP Foundation. OSS Risks Top 10.",
+"url": "[https://owasp.org/www-project-open-source-software-top-10/](https://owasp.org/www-project-open-source-software-top-10/)"
+},
+{
+"referentie": "MoldStud. OWASP Top Ten for .NET developers.",
+"url": "[https://moldstud.com/articles/p-the-complete-guide-to-owasp-top-ten-for-net-developers-enhance-your-application-security](https://moldstud.com/articles/p-the-complete-guide-to-owasp-top-ten-for-net-developers-enhance-your-application-security)"
+},
+{
+"referentie": "OWASP Client-Side Top 10.",
+"url": "[https://owasp.org/www-project-top-10-client-side-security-risks/](https://owasp.org/www-project-top-10-client-side-security-risks/)"
+}
+]
+}

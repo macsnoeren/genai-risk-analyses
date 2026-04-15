@@ -1,0 +1,569 @@
+{
+  "metadata": {
+    "titel": "Risicoanalyse",
+    "project": "CYBERWIJZER",
+    "thema": ".NET en programmeertalen (algemeen)",
+    "auteur": "AI-agent (Cyberwijzer)",
+    "datum": "15-04-2026",
+    "template_versie": "0.1",
+    "versie": "0.1"
+  },
+  "versiebeheer": [
+    {
+      "versie": "0.1",
+      "datum": "15-04-2026",
+      "wijzigingen": "Initiële versie (AI-gegenereerd)",
+      "auteur": "AI-agent"
+    }
+  ],
+  "beschrijving_thema": {
+    "inleiding": ".NET is een door Microsoft ontwikkeld open-source framework dat breed wordt ingezet voor de ontwikkeling van webapplicaties (ASP.NET Core), desktop-software, cloud-diensten en API's. Het ecosysteem omvat meerdere programmeertalen, waaronder C#, F# en VB.NET, en maakt intensief gebruik van de NuGet-packagemanager voor externe afhankelijkheden. Het thema strekt zich ook uit naar algemene programmeertaalrisico's zoals onveilige deserialisatie, injectiekwetsbaarheden en supply chain-aanvallen via packagemanagers, die taaloverkoepelend van toepassing zijn.",
+    "gebruik": {
+      "toepassingen": [
+        "Webapplicaties en REST API's met ASP.NET Core en Kestrel",
+        "Enterprise-applicaties en microservices-architecturen",
+        "Desktop-applicaties (WPF, WinForms, .NET MAUI)",
+        "Cloud-native applicaties op Azure en andere platforms",
+        "Geautomatiseerde CI/CD-pipelines met NuGet-dependencybeheer"
+      ],
+      "rol_in_processen": [
+        "Backend-ontwikkeling en dataverwerking in bedrijfskritische systemen",
+        "Authenticatie en autorisatie via Identity-frameworks",
+        "Integratie met externe diensten via NuGet-packages en API-koppelingen",
+        "Studentenprojecten en leertoepassingen binnen HBO/MBO-opleidingen"
+      ]
+    },
+    "conclusie": ".NET is een van de meest gebruikte frameworks ter wereld met meer dan 7 miljoen maandelijks actieve ontwikkelaars. De brede inzet in bedrijfskritische systemen, gecombineerd met een omvangrijk dependency-ecosysteem en veelvoorkomende programmeertaalrisico's, maakt security-awareness essentieel voor elke (aankomende) softwareontwikkelaar."
+  },
+  "onderzoek": [
+    {
+      "titel": "Kritieke kwetsbaarheden in ASP.NET Core (Kestrel HTTP Request Smuggling)",
+      "bevindingen": "In oktober 2025 publiceerde Microsoft CVE-2025-55315, een HTTP request smuggling-kwetsbaarheid in de Kestrel-webserver van ASP.NET Core met een CVSS-score van 9.9, de hoogste ooit voor ASP.NET Core. De kwetsbaarheid treft alle ondersteunde versies (8.0, 9.0, 10.0) en stelt aanvallers in staat verborgen HTTP-verzoeken te injecteren, wat kan leiden tot privilege escalation, SSRF en CSRF-bypass. Microsoft adviseert onmiddellijk patchen en biedt geen bekende mitigerende factoren buiten de update.",
+      "bewezen": "CVE-2025-55315 is officieel gedocumenteerd door Microsoft met CVSS 9.9 en bevestigd door meerdere security-onderzoekers als de ernstigste ASP.NET Core-kwetsbaarheid ooit.",
+      "afgeleide_conclusie": "Organisaties die niet tijdig patchen, lopen een hoog risico op exploitatie via HTTP request smuggling, vooral wanneer reverse proxies worden ingezet.",
+      "bronnen": [
+        "Microsoft Security Advisory CVE-2025-55315 (GitHub dotnet/aspnetcore, oktober 2025)",
+        "BleepingComputer – Microsoft fixes highest-severity ASP.NET Core flaw ever (oktober 2025)",
+        "InfoQ – Microsoft Patches Critical ASP.NET Core Vulnerability with 9.9 Severity Score (november 2025)",
+        "Microsoft MSRC Blog – Understanding CVE-2025-55315 (oktober 2025)"
+      ]
+    },
+    {
+      "titel": "Supply chain-aanvallen via NuGet-packages",
+      "bevindingen": "In 2025 zijn meerdere grootschalige supply chain-campagnes ontdekt op NuGet. Socket identificeerde 9 malafide NuGet-packages met logic bombs die geprogrammeerd zijn om te activeren in 2027-2028, gericht op databases en industriële PLC-systemen. ReversingLabs ontdekte 14 crypto-gerelateerde malafide packages die OAuth-tokens en wallet-informatie stelen. Daarnaast werd een typosquatting-aanval op het Nethereum-project geïdentificeerd met kunstmatig opgeblazen downloadaantallen (11,6 miljoen). In februari 2026 werd een malafide Stripe-imitatie ontdekt die API-tokens exfiltreerde.",
+      "bewezen": "Meerdere onafhankelijke security-bedrijven (Socket, ReversingLabs) hebben de malafide packages geïdentificeerd, geanalyseerd en gerapporteerd, met in totaal meer dan 23 malafide NuGet-packages in 2025.",
+      "afgeleide_conclusie": "Het NuGet-ecosysteem is een actief doelwit voor supply chain-aanvallen; ontwikkelaars die packages niet verifiëren lopen risico op compromittering van hun ontwikkelomgeving en productiesystemen.",
+      "bronnen": [
+        "The Hacker News – Hidden Logic Bombs in Malware-Laced NuGet Packages (november 2025)",
+        "ReversingLabs – NuGet malware targets crypto wallets, OAuth tokens (januari 2026)",
+        "ReversingLabs – Malicious NuGet package targets Stripe (februari 2026)",
+        "Socket / Industrial Cyber – Socket researchers uncover NuGet packages that silently sabotage industrial PLCs (november 2025)"
+      ]
+    },
+    {
+      "titel": "Onveilige deserialisatie in .NET-applicaties",
+      "bevindingen": "Onveilige deserialisatie is een structureel risico in .NET, met name bij gebruik van BinaryFormatter, NetDataContractSerializer en JSON.NET met TypeNameHandling. Microsoft waarschuwt expliciet dat BinaryFormatter gevaarlijk is en niet veilig kan worden gemaakt. Het ysoserial.net-project documenteert tientallen gadget chains in veelgebruikte .NET-bibliotheken die exploiteerbaar zijn. De OWASP Top 10 2025 classificeert deserialisatierisico's onder meerdere categorieën, waaronder Software and Data Integrity Failures.",
+      "bewezen": "Microsoft's officiële documentatie bestempelt BinaryFormatter als onveilig; ysoserial.net bevat gedocumenteerde exploit-chains voor meerdere .NET-serializers.",
+      "afgeleide_conclusie": "Veel legacy .NET-applicaties gebruiken nog onveilige serializers; migratie naar veilige alternatieven zoals System.Text.Json is noodzakelijk maar verloopt traag.",
+      "bronnen": [
+        "Microsoft Learn – Deserialization risks in use of BinaryFormatter and related types",
+        "OWASP – Deserialization Cheat Sheet en OWASP Top 10:2025 (A08)",
+        "Invicti – .NET JSON.NET Deserialization RCE",
+        "SecureFlag – Unsafe Deserialization in .NET"
+      ]
+    },
+    {
+      "titel": "Hardcoded secrets en credential-lekkage in code",
+      "bevindingen": "GitGuardian rapporteert 28,65 miljoen nieuwe hardcoded secrets in publieke GitHub-repositories in 2025, een stijging van 34% ten opzichte van het voorgaande jaar. AI-geassisteerde commits (zoals met Claude Code) lekken secrets met een gemiddeld percentage van 3,2%, ongeveer twee keer de baseline. Specifiek voor AI-service-credentials is er een stijging van 81% jaar-op-jaar. Daarnaast zijn 24.008 unieke secrets gevonden in MCP-configuratiebestanden. 70% van de in 2022 gelekte secrets waren in 2024 nog steeds actief.",
+      "bewezen": "GitGuardian's State of Secrets Sprawl 2025 en 2026 rapporten documenteren de stijging in gelekte credentials op basis van scanning van alle publieke GitHub-commits.",
+      "afgeleide_conclusie": "De combinatie van AI-geassisteerd coderen en gebrekkig secrets management versnelt het risico van credential-lekkage, met directe impact op .NET-projecten die API-keys en connection strings in code opslaan.",
+      "bronnen": [
+        "GitGuardian – State of Secrets Sprawl 2026 (maart 2026)",
+        "Help Net Security – 29 million leaked secrets in 2025 (april 2026)",
+        "Snyk – Why 28 million credentials leaked on GitHub in 2025 (april 2026)",
+        "GitGuardian – State of Secrets Sprawl 2025 (maart 2025)"
+      ]
+    },
+    {
+      "titel": "OWASP Top 10:2025 en webapplicatierisico's",
+      "bevindingen": "De OWASP Top 10:2025 introduceert twee nieuwe categorieën: Software Supply Chain Failures (A03) en Mishandling of Exceptional Conditions (A10). Broken Access Control (A01) en Security Misconfiguration (A02) behouden hun toppositie. De nadruk verschuift van geïsoleerde code-fouten naar systemische zwakheden in de gehele ontwikkelketen. Specifiek voor .NET worden ASP.NET-misconfiguraties (CWE-11, CWE-13) expliciet genoemd als voorbeelden van Security Misconfiguration.",
+      "bewezen": "OWASP Top 10:2025 is officieel gepubliceerd op basis van data van security-organisaties en industriebijdragen over de periode 2021-2024.",
+      "afgeleide_conclusie": "De toevoeging van supply chain failures en exception handling als aparte categorieën bevestigt dat deze risico's inmiddels wijdverbreid genoeg zijn om structurele aandacht te vereisen in het onderwijs.",
+      "bronnen": [
+        "OWASP – Top 10:2025 Introduction (owasp.org)",
+        "PVS-Studio – OWASP Top 10 2025: from code to supply chain (februari 2026)",
+        "Aikido – OWASP Top 10 2025: Key Changes and What Developers Should Know (januari 2026)"
+      ]
+    },
+    {
+      "titel": "Credential-gebaseerde aanvallen op webapplicaties",
+      "bevindingen": "Het Verizon DBIR 2025 rapporteert dat gestolen credentials de belangrijkste initiële toegangsvector blijven, betrokken bij 22% van alle datalekken. Bij basale webapplicatie-aanvallen zijn gestolen credentials zelfs betrokken bij 88% van de gevallen. Brute force-aanvallen op webapplicaties zijn bijna verdrievoudigd ten opzichte van het voorgaande jaar. Derde-partij-betrokkenheid bij datalekken is verdubbeld naar 30%.",
+      "bewezen": "Het Verizon DBIR 2025 is gebaseerd op analyse van meer dan 22.000 incidenten en 12.195 bevestigde datalekken over 139 landen.",
+      "afgeleide_conclusie": "Webapplicaties gebouwd met .NET zijn net zo kwetsbaar voor credential-gebaseerde aanvallen als applicaties in andere talen; sterke authenticatie en input-validatie zijn essentieel.",
+      "bronnen": [
+        "Verizon – 2025 Data Breach Investigations Report",
+        "Beyond Identity – Verizon DBIR 2025: Access is Still the Point of Failure",
+        "Keepnet Labs – 2025 Verizon DBIR: Key Facts, Trends & Statistics (maart 2026)"
+      ]
+    }
+  ],
+  "consequenties_en_voorbeelden": [
+    {
+      "titel": "CVE-2025-55315: Kestrel HTTP Request Smuggling (oktober 2025)",
+      "onderzoek": "Een HTTP request smuggling-kwetsbaarheid in de Kestrel-webserver van ASP.NET Core maakte het mogelijk voor geauthenticeerde aanvallers om verborgen HTTP-verzoeken in te sluizen. Dit kon leiden tot het inloggen als andere gebruikers, SSRF-aanvallen en het omzeilen van CSRF-bescherming.",
+      "wat_ging_mis": [
+        "Inconsistente parsing van HTTP chunk extensions met ongeldige line-endings (\\r vs \\n)",
+        "Discrepantie tussen proxy- en server-interpretatie van HTTP-verzoeken",
+        "Geen bekende mitigerende factoren buiten patching"
+      ],
+      "impact": [
+        "Hoogste CVSS-score ooit voor ASP.NET Core (9.9)",
+        "Alle ondersteunde versies van ASP.NET Core getroffen",
+        "Mogelijke privilege escalation, credential theft en data-integriteitscompromittering"
+      ],
+      "bronnen": [
+        "Microsoft MSRC Blog – Understanding CVE-2025-55315 (oktober 2025)",
+        "BleepingComputer – Microsoft fixes highest-severity ASP.NET Core flaw ever (oktober 2025)"
+      ]
+    },
+    {
+      "titel": "NuGet Supply Chain-aanvallen: Logic Bombs en Crypto-malware (2025)",
+      "onderzoek": "Negen malafide NuGet-packages met logic bombs werden ontdekt die geprogrammeerd waren om in 2027-2028 te activeren, gericht op het saboteren van databases en industriële PLC-systemen. Daarnaast werden 14 crypto-gerelateerde malafide packages ontdekt die walletgegevens en OAuth-tokens stalen.",
+      "wat_ging_mis": [
+        "Ontwikkelaars installeerden packages zonder verificatie van de uitgever",
+        "99% van de code in malafide packages functioneerde correct, waardoor detectie werd bemoeilijkt",
+        "NuGet's naamgevingsregels boden onvoldoende bescherming tegen typosquatting en homoglief-aanvallen",
+        "Kunstmatig opgeblazen downloadaantallen gaven een vals gevoel van betrouwbaarheid"
+      ],
+      "impact": [
+        "Circa 9.500 downloads van de logic bomb-packages",
+        "Potentiële sabotage van safety-critical industriële systemen",
+        "Diefstal van cryptocurrency-walletgegevens en OAuth-tokens",
+        "Ondermijning van vertrouwen in het open-source NuGet-ecosysteem"
+      ],
+      "bronnen": [
+        "The Hacker News – Hidden Logic Bombs in Malware-Laced NuGet Packages (november 2025)",
+        "ReversingLabs – NuGet malware targets crypto wallets, OAuth tokens (januari 2026)"
+      ]
+    },
+    {
+      "titel": "Massale credential-lekkage via GitHub (2024-2025)",
+      "onderzoek": "In 2025 werden 28,65 miljoen nieuwe hardcoded secrets gedetecteerd in publieke GitHub-repositories. AI-geassisteerde code-commits vertoonden een leakrate van circa 3,2%, het dubbele van de baseline. 70% van de in 2022 gelekte secrets was in 2024 nog steeds actief en niet ingetrokken.",
+      "wat_ging_mis": [
+        "Ontwikkelaars plaatsten API-keys, database-connectionstrings en tokens direct in broncode",
+        "AI-codeerassistenten genereerden werkende code met hardcoded credentials",
+        "Onvoldoende gebruik van secrets managers en environment-variabelen",
+        "Gebrekkige rotatie- en revocatieprocedures voor gelekte credentials"
+      ],
+      "impact": [
+        "Directe toegang tot productiesystemen voor kwaadwillenden",
+        "34% stijging ten opzichte van het voorgaande jaar in gelekte secrets",
+        "64% van geldige secrets uit 2022 was begin 2026 nog niet ingetrokken"
+      ],
+      "bronnen": [
+        "GitGuardian – State of Secrets Sprawl 2026 (maart 2026)",
+        "Help Net Security – AI frenzy feeds credential chaos (maart 2026)"
+      ]
+    }
+  ],
+  "consequenties_conclusie": "De combinatie van frameworkkwetsbaarheden, supply chain-aanvallen via packagemanagers en grootschalige credential-lekkage vormt een directe bedreiging voor .NET-applicaties en softwareontwikkeling in het algemeen. De incidenten tonen aan dat zowel het framework, het ecosysteem als het gedrag van ontwikkelaars kwetsbaar zijn.",
+  "risicos": {
+    "risico_matrix": {
+      "kans_schaal": {
+        "1": "Laag – Komt zelden voor",
+        "2": "Middel – Komt regelmatig voor",
+        "3": "Hoog – Komt vaak voor"
+      },
+      "impact_schaal": {
+        "1": "Laag – Beperkte gevolgen",
+        "2": "Middel – Merkbare schade",
+        "3": "Hoog – Ernstige schade (organisatie, mens, maatschappij)"
+      }
+    },
+    "lijst": [
+      {
+        "nr": 1,
+        "titel": "Supply chain-compromittering via malafide NuGet-packages",
+        "kans": "3",
+        "impact": "3",
+        "score": "9",
+        "ranking": "1",
+        "oorzaak": [
+          "Onvoldoende verificatie van package-uitgevers en integriteit",
+          "Typosquatting en homoglief-aanvallen op packagenamen",
+          "Ontbreken van SBOM-monitoring en dependency-auditing",
+          "Kunstmatig opgeblazen downloadaantallen misleiden ontwikkelaars"
+        ],
+        "gevolg": [
+          "Injectie van malware, backdoors of logic bombs in applicaties",
+          "Diefstal van credentials, API-tokens en cryptovaluta",
+          "Sabotage van productiesystemen en industriële besturingssystemen"
+        ],
+        "impact_detail": [
+          "Directe compromittering van de gehele build- en deploymentpipeline",
+          "Langdurige onopgemerkte aanwezigheid van malware (logic bombs met jaren vertraging)",
+          "Reputatieschade en verlies van klantenvertrouwen"
+        ]
+      },
+      {
+        "nr": 2,
+        "titel": "Hardcoded secrets en credential-lekkage in broncode",
+        "kans": "3",
+        "impact": "3",
+        "score": "9",
+        "ranking": "2",
+        "oorzaak": [
+          "Ontwikkelaars plaatsen API-keys en connectionstrings direct in code",
+          "AI-codeerassistenten genereren code met ingebedde credentials",
+          "Onvoldoende gebruik van secrets managers en vaultoplossingen",
+          "Gebrekkige .gitignore-configuratie laat gevoelige bestanden door"
+        ],
+        "gevolg": [
+          "Ongeautoriseerde toegang tot databases, API's en cloudservices",
+          "Datalekken en financiële schade",
+          "Laterale beweging binnen netwerken via gelekte serviceaccounts"
+        ],
+        "impact_detail": [
+          "28,65 miljoen gelekte secrets op GitHub in 2025 toont de schaal",
+          "70% van gelekte secrets blijft jarenlang actief zonder revocatie",
+          "Eén gelekte key kan de volledige cloudinfrastructuur compromitteren"
+        ]
+      },
+      {
+        "nr": 3,
+        "titel": "Onveilige deserialisatie in .NET-applicaties",
+        "kans": "2",
+        "impact": "3",
+        "score": "6",
+        "ranking": "3",
+        "oorzaak": [
+          "Gebruik van BinaryFormatter, NetDataContractSerializer of JSON.NET met onveilige TypeNameHandling",
+          "Onvoldoende kennis bij ontwikkelaars over deserialisatierisico's",
+          "Legacy-code die nog niet is gemigreerd naar veilige serializers",
+          "Ontbreken van input-validatie op gedeserialiseerde objecten"
+        ],
+        "gevolg": [
+          "Remote Code Execution (RCE) via gadget chains",
+          "Denial of Service (DoS) door gemanipuleerde payloads",
+          "Privilege escalation en omzeilen van authenticatie"
+        ],
+        "impact_detail": [
+          "RCE geeft aanvallers volledige controle over het doelsysteem",
+          "Exploits zijn goed gedocumenteerd (ysoserial.net) en relatief eenvoudig inzetbaar",
+          "Microsoft waarschuwt expliciet dat BinaryFormatter niet veilig kan worden gemaakt"
+        ]
+      },
+      {
+        "nr": 4,
+        "titel": "Kwetsbaarheden in het .NET-framework en runtime (ongepatcht)",
+        "kans": "2",
+        "impact": "3",
+        "score": "6",
+        "ranking": "4",
+        "oorzaak": [
+          "Vertraging in het toepassen van security-updates en patches",
+          "Gebruik van end-of-life .NET-versies (bijv. .NET 6, .NET 7) zonder uitgebreide support",
+          "Complexiteit van updateprocessen in productieomgevingen",
+          "Onvoldoende monitoring van CVE-meldingen voor gebruikte frameworks"
+        ],
+        "gevolg": [
+          "Exploitatie van bekende kwetsbaarheden zoals CVE-2025-55315 (CVSS 9.9)",
+          "HTTP request smuggling, RCE en information disclosure",
+          "Ongeautoriseerde toegang tot applicatiegegevens"
+        ],
+        "impact_detail": [
+          "CVE-2025-55315 liet zien dat zelfs de kerninfrastructuur van .NET kwetsbaar kan zijn",
+          "EOL-software ontvangt geen CVE-meldingen, waardoor kwetsbaarheden onzichtbaar blijven",
+          "Mediaan hersteltijd voor webapplicatiekwetsbaarheden is 74,3 dagen"
+        ]
+      },
+      {
+        "nr": 5,
+        "titel": "Broken Access Control en injectiekwetsbaarheden in webapplicaties",
+        "kans": "3",
+        "impact": "2",
+        "score": "6",
+        "ranking": "5",
+        "oorzaak": [
+          "Ontbrekende of onjuiste autorisatiecontroles in API-endpoints",
+          "SQL-injectie door onvoldoende parameterisatie van queries",
+          "Cross-Site Scripting (XSS) door onvoldoende output-encoding",
+          "Onvoldoende toepassing van het principle of least privilege"
+        ],
+        "gevolg": [
+          "Ongeautoriseerde toegang tot gevoelige gegevens en functies",
+          "Manipulatie of verwijdering van data",
+          "Account-overname en sessie-hijacking"
+        ],
+        "impact_detail": [
+          "Broken Access Control is #1 in OWASP Top 10:2025 met 3,73% van geteste applicaties",
+          "SQL-injectie is volgens Edgescan nog steeds de meest gevonden webkwetsbaarheid sinds 2022",
+          "88% van basale webapplicatie-aanvallen betreft gestolen credentials (Verizon DBIR 2025)"
+        ]
+      },
+      {
+        "nr": 6,
+        "titel": "Security misconfiguratie van .NET-applicaties en -omgevingen",
+        "kans": "2",
+        "impact": "2",
+        "score": "4",
+        "ranking": "6",
+        "oorzaak": [
+          "Debug-modus actief in productieomgevingen (CWE-11)",
+          "Wachtwoorden in configuratiebestanden (CWE-13)",
+          "Standaard- of onveilige CORS-, header- en TLS-instellingen",
+          "Onvoldoende hardening van Kestrel en IIS-configuraties"
+        ],
+        "gevolg": [
+          "Blootstelling van gevoelige foutmeldingen en stack traces",
+          "Ongeautoriseerde toegang via zwakke standaardinstellingen",
+          "Informatielekken die vervolgaanvallen mogelijk maken"
+        ],
+        "impact_detail": [
+          "Security Misconfiguration steeg naar #2 in OWASP Top 10:2025",
+          "ASP.NET-specifieke CWE's (CWE-11, CWE-13) zijn expliciet opgenomen",
+          "Configuratiefouten vormen vaak het startpunt van een aanvalsketen"
+        ]
+      }
+    ]
+  },
+  "maatregelen": {
+    "technisch": {
+      "items": [
+        "Implementeer geautomatiseerde dependency-scanning met tools als Snyk, Dependabot of dotnet list package --vulnerable in CI/CD-pipelines",
+        "Gebruik uitsluitend veilige serializers (System.Text.Json) en migreer weg van BinaryFormatter en onveilige JSON.NET-configuraties",
+        "Sla secrets op in dedicated vaults (Azure Key Vault, HashiCorp Vault) en gebruik nooit hardcoded credentials in broncode",
+        "Implementeer pre-commit hooks met tools als GitGuardian ggshield voor detectie van secrets vóór commit",
+        "Pas parameterized queries toe (Entity Framework, Dapper met parameters) om SQL-injectie te voorkomen",
+        "Configureer Content Security Policy, HSTS, anti-forgery tokens en output-encoding standaard in alle ASP.NET Core-applicaties",
+        "Automatiseer .NET runtime- en SDK-updates in deployment-pipelines en monitor actief op nieuwe CVE's"
+      ],
+      "onderbouwing": "Gebaseerd op OWASP Top 10:2025 aanbevelingen, Microsoft security advisories, GitGuardian State of Secrets Sprawl 2026, en Snyk .NET security insights."
+    },
+    "proces": {
+      "items": [
+        "Voer verplichte code reviews uit met specifieke aandacht voor security (secrets, deserialisatie, input-validatie)",
+        "Integreer SAST- en SCA-tools in de CI/CD-pipeline als quality gate",
+        "Genereer en onderhoud een Software Bill of Materials (SBOM) voor alle projecten",
+        "Stel een patchbeleid op met maximaal 72 uur voor kritieke kwetsbaarheden",
+        "Voer periodieke dependency-audits uit en verwijder ongebruikte of onbetrouwbare packages"
+      ],
+      "onderbouwing": "Gebaseerd op OWASP Top 10:2025 A03 (Software Supply Chain Failures), Verizon DBIR 2025 aanbevelingen, en NuGet-incident-analyses van Socket en ReversingLabs."
+    },
+    "organisatorisch": {
+      "items": [
+        "Bied structurele security-trainingen aan voor ontwikkelaars, specifiek gericht op OWASP Top 10 en taalspecifieke risico's",
+        "Stel duidelijke richtlijnen op voor het gebruik van open-source packages en AI-codeerassistenten",
+        "Implementeer een responsible disclosure-proces en incidentresponseplan",
+        "Draag security-champions aan binnen ontwikkelteams",
+        "Evalueer en beperk het gebruik van end-of-life .NET-versies met een migratieplan"
+      ],
+      "onderbouwing": "Gebaseerd op OWASP DevSecOps-guidance, Verizon DBIR 2025 bevinding dat 60% van datalekken een menselijk element bevat, en GitGuardian-aanbevelingen voor organisatorische secretsbeheer."
+    }
+  },
+  "basisvaardigheden": {
+    "inleiding": "Studenten software-ontwikkeling moeten fundamentele security-vaardigheden bezitten om veilige .NET-applicaties te bouwen en veelvoorkomende kwetsbaarheden te herkennen, voorkomen en verhelpen.",
+    "bewustzijn": {
+      "doel": "Studenten begrijpen de belangrijkste security-risico's bij .NET-ontwikkeling en softwareontwikkeling in het algemeen, en herkennen onveilige patronen in code en configuratie.",
+      "minimale_kennis": [
+        "De OWASP Top 10:2025 categorieën kennen en kunnen uitleggen hoe deze van toepassing zijn op .NET-applicaties",
+        "Begrijpen wat supply chain-aanvallen zijn en hoe malafide packages in NuGet-ecosystemen terechtkomen",
+        "Weten waarom hardcoded secrets gevaarlijk zijn en hoe credentials kunnen lekken via versiebeheer",
+        "Begrijpen wat onveilige deserialisatie is en waarom BinaryFormatter in .NET onveilig is",
+        "Kennis hebben van het belang van tijdig patchen en de risico's van end-of-life software"
+      ],
+      "herkenningsvaardigheid": [
+        "Herkennen van hardcoded API-keys, connectionstrings en wachtwoorden in broncode",
+        "Herkennen van onveilige deserialisatiepatronen (BinaryFormatter, TypeNameHandling.All)",
+        "Signaleren van ontbrekende input-validatie en parameterisatie in database-queries",
+        "Herkennen van verdachte of onbekende NuGet-packages op basis van naam, uitgever en downloadaantallen",
+        "Identificeren van debug-configuraties en informatielekken in foutmeldingen"
+      ],
+      "toetsbare_leeruitkomsten": [
+        "De student kan minimaal vijf OWASP Top 10:2025 categorieën benoemen en per categorie een .NET-specifiek voorbeeld geven",
+        "De student kan in een codefragment minimaal drie security-risico's identificeren en benoemen",
+        "De student kan uitleggen waarom een supply chain-aanval via packagemanagers effectief is en welke kenmerken verdacht zijn"
+      ]
+    },
+    "vaardigheden": {
+      "doel": "Studenten kunnen veilige .NET-applicaties ontwerpen en bouwen, en beschikken over de technische vaardigheden om veelvoorkomende kwetsbaarheden te voorkomen.",
+      "categorieen": [
+        {
+          "titel": "Veilig omgaan met dependencies en packages",
+          "student_kan": [
+            "NuGet-packages verifiëren op uitgever, licentie en bekende kwetsbaarheden",
+            "dotnet list package --vulnerable en --outdated uitvoeren en interpreteren",
+            "Een SBOM genereren voor een .NET-project",
+            "Dependency-scanning integreren in een CI/CD-pipeline"
+          ],
+          "toetsbaar": [
+            "Student demonstreert het uitvoeren van een dependency-audit op een bestaand project en rapporteert gevonden kwetsbaarheden",
+            "Student configureert een geautomatiseerde dependency-check in een CI/CD-pipeline"
+          ]
+        },
+        {
+          "titel": "Veilig programmeren en input-validatie",
+          "student_kan": [
+            "Parameterized queries schrijven met Entity Framework of Dapper",
+            "Output-encoding toepassen ter voorkoming van XSS",
+            "Veilige serialisatie implementeren met System.Text.Json",
+            "Autorisatiecontroles implementeren op API-endpoints met ASP.NET Core Authorization"
+          ],
+          "toetsbaar": [
+            "Student schrijft een API-endpoint dat beveiligd is tegen SQL-injectie, XSS en broken access control",
+            "Student refactort een codefragment met BinaryFormatter naar een veilig alternatief"
+          ]
+        },
+        {
+          "titel": "Secrets management",
+          "student_kan": [
+            "Environment-variabelen en user-secrets gebruiken in plaats van hardcoded credentials",
+            "Een .gitignore correct configureren voor gevoelige bestanden",
+            "Een basis secrets-scanning tool (bijv. ggshield) installeren en als pre-commit hook gebruiken",
+            "Het verschil uitleggen en toepassen tussen development- en productieconfiguraties"
+          ],
+          "toetsbaar": [
+            "Student demonstreert een project waarin geen secrets in de repository staan en credentials via environment-variabelen worden geladen",
+            "Student installeert en demonstreert een pre-commit hook die hardcoded secrets detecteert"
+          ]
+        }
+      ]
+    },
+    "gedrag": {
+      "doel": "Studenten tonen structureel veilig gedrag bij het ontwikkelen van software en nemen security als integraal onderdeel mee in hun werkproces.",
+      "gewenst_gedrag": [
+        "Nooit credentials of secrets direct in broncode of configuratiebestanden plaatsen",
+        "Altijd NuGet-packages verifiëren voordat ze worden toegevoegd aan een project",
+        "Security-updates voor frameworks en dependencies structureel en tijdig toepassen",
+        "Code reviews uitvoeren met specifieke aandacht voor security-patronen",
+        "AI-gegenereerde code kritisch controleren op security-risico's voordat deze wordt gecommit"
+      ],
+      "observeerbaar_gedrag": [
+        "De student commit geen secrets naar versiebeheer (controleerbaar via git history en scanning)",
+        "De student gebruikt parameterized queries in alle database-interacties",
+        "De student controleert package-authenticiteit en versies bij elke nieuwe dependency",
+        "De student past HTTPS, anti-forgery tokens en secure headers toe in webapplicaties",
+        "De student reviewt AI-gegenereerde code op hardcoded credentials en onveilige patronen"
+      ],
+      "toetsbare_leeruitkomsten": [
+        "De student levert een project op waarin geen hardcoded secrets voorkomen, geverifieerd door een geautomatiseerde scan",
+        "De student kan een code review uitvoeren op een mede-student's werk en minimaal twee security-verbeterpunten identificeren",
+        "De student past bij een nieuw project standaard secure-by-default configuraties toe voor ASP.NET Core"
+      ]
+    },
+    "minimale_competentie_eisen": [
+      "De student kan de OWASP Top 10:2025 benoemen en voor elke categorie een .NET-relevant voorbeeld geven",
+      "De student kan een .NET-project opleveren zonder hardcoded secrets, met geparameteriseerde queries en veilige serialisatie",
+      "De student kan een dependency-audit uitvoeren en de resultaten interpreteren",
+      "De student kan een security code review uitvoeren en verbeterpunten documenteren",
+      "De student kan uitleggen hoe supply chain-aanvallen via NuGet werken en welke maatregelen effectief zijn"
+    ]
+  },
+  "samenvatting": {
+    "belangrijkste_risicos": [
+      "Supply chain-compromittering via malafide NuGet-packages (score 9)",
+      "Hardcoded secrets en credential-lekkage in broncode (score 9)",
+      "Onveilige deserialisatie in .NET-applicaties (score 6)",
+      "Ongepatche framework- en runtime-kwetsbaarheden (score 6)",
+      "Broken Access Control en injectiekwetsbaarheden (score 6)"
+    ],
+    "belangrijkste_maatregelen": [
+      "Geautomatiseerde dependency-scanning en SBOM-generatie in CI/CD-pipelines",
+      "Secrets management via vaults en pre-commit scanning; nooit hardcoded credentials",
+      "Migratie naar veilige serializers (System.Text.Json) en verwijdering van BinaryFormatter",
+      "Structureel patchbeleid met monitoring van CVE-meldingen voor .NET",
+      "Security-trainingen gericht op OWASP Top 10:2025 en secure coding practices"
+    ],
+    "kerninzicht": "De grootste security-risico's voor .NET-ontwikkelaars liggen niet alleen in het framework zelf, maar vooral in de software supply chain en het gedrag van ontwikkelaars: het ongecontroleerd toevoegen van dependencies, het hardcoden van credentials en het uitstellen van patches vormen samen de meest waarschijnlijke aanvalsvectoren."
+  },
+  "bronnen": [
+    {
+      "referentie": "Microsoft (2025). Microsoft Security Advisory CVE-2025-55315: .NET Security Feature Bypass Vulnerability.",
+      "url": "https://github.com/dotnet/aspnetcore/security/advisories/GHSA-5rrx-jjjq-q2r5"
+    },
+    {
+      "referentie": "Microsoft MSRC (2025). Understanding CVE-2025-55315: What CISOs, security engineers, and sysadmins should know.",
+      "url": "https://www.microsoft.com/en-us/msrc/blog/2025/10/understanding-cve-2025-55315"
+    },
+    {
+      "referentie": "BleepingComputer (2025). Microsoft fixes highest-severity ASP.NET Core flaw ever.",
+      "url": "https://www.bleepingcomputer.com/news/microsoft/microsoft-fixes-highest-severity-aspnet-core-flaw-ever/"
+    },
+    {
+      "referentie": "InfoQ (2025). Microsoft Patches Critical ASP.NET Core Vulnerability with 9.9 Severity Score.",
+      "url": "https://www.infoq.com/news/2025/11/dotnet-request-smuggling/"
+    },
+    {
+      "referentie": "Lakshmanan, R. (2025). Hidden Logic Bombs in Malware-Laced NuGet Packages Set to Detonate Years After Installation. The Hacker News.",
+      "url": "https://thehackernews.com/2025/11/hidden-logic-bombs-in-malware-laced.html"
+    },
+    {
+      "referentie": "ReversingLabs (2026). NuGet malware targets crypto wallets, OAuth tokens.",
+      "url": "https://www.reversinglabs.com/blog/nuget-malware-crypto-oauth-tokens"
+    },
+    {
+      "referentie": "ReversingLabs (2026). Malicious NuGet package targets Stripe.",
+      "url": "https://www.reversinglabs.com/blog/malicious-nuget-package-targets-stripe"
+    },
+    {
+      "referentie": "Socket / Industrial Cyber (2025). Socket researchers uncover NuGet packages that silently sabotage industrial PLCs, safety-critical systems.",
+      "url": "https://industrialcyber.co/control-device-security/socket-researchers-uncover-nuget-packages-that-silently-sabotage-industrial-plcs-safety-critical-systems/"
+    },
+    {
+      "referentie": "OWASP (2025). OWASP Top 10:2025 Introduction.",
+      "url": "https://owasp.org/Top10/2025/0x00_2025-Introduction/"
+    },
+    {
+      "referentie": "PVS-Studio (2026). OWASP Top 10 2025—from code to supply chain: Expanding boundaries of security.",
+      "url": "https://pvs-studio.com/en/blog/posts/csharp/1343/"
+    },
+    {
+      "referentie": "Microsoft Learn (2024). Deserialization risks in use of BinaryFormatter and related types.",
+      "url": "https://learn.microsoft.com/en-us/dotnet/standard/serialization/binaryformatter-security-guide"
+    },
+    {
+      "referentie": "Invicti (z.d.). .NET JSON.NET Deserialization RCE.",
+      "url": "https://www.invicti.com/web-application-vulnerabilities/net-json-net-deserialization-rce"
+    },
+    {
+      "referentie": "GitGuardian (2026). The State of Secrets Sprawl 2026.",
+      "url": "https://blog.gitguardian.com/the-state-of-secrets-sprawl-2026-pr/"
+    },
+    {
+      "referentie": "GitGuardian (2025). The State of Secrets Sprawl 2025.",
+      "url": "https://blog.gitguardian.com/the-state-of-secrets-sprawl-2025/"
+    },
+    {
+      "referentie": "Help Net Security (2026). 29 million leaked secrets in 2025: Why AI agents credentials are out of control.",
+      "url": "https://www.helpnetsecurity.com/2026/04/14/gitguardian-ai-agents-credentials-leak/"
+    },
+    {
+      "referentie": "Snyk (z.d.). Why 28 million credentials leaked on GitHub in 2025, and what to do about it.",
+      "url": "https://snyk.io/articles/state-of-secrets/"
+    },
+    {
+      "referentie": "Verizon (2025). 2025 Data Breach Investigations Report (DBIR).",
+      "url": "https://www.verizon.com/business/resources/reports/dbir/"
+    },
+    {
+      "referentie": "Keepnet Labs (2026). 2025 Verizon DBIR: Key Facts, Trends & Statistics.",
+      "url": "https://keepnetlabs.com/blog/2025-verizon-data-breach-investigations-report"
+    },
+    {
+      "referentie": "Edgescan (2025). Inside the 2025 Verizon DBIR: Edgescan's Critical Insights on Web Application Security.",
+      "url": "https://www.edgescan.com/inside-the-2025-verizon-dbir/"
+    },
+    {
+      "referentie": "Snyk (2019). .NET open source security insights.",
+      "url": "https://snyk.io/blog/net-open-source-security-insights/"
+    },
+    {
+      "referentie": "The Dev Newsletter (2026). State of .NET 2026.",
+      "url": "https://devnewsletter.com/p/state-of-dot-net-2026/"
+    },
+    {
+      "referentie": "Developer-Tech (2025). NuGet attack highlights open-source software supply chain risk.",
+      "url": "https://www.developer-tech.com/news/nuget-attack-open-source-software-supply-chain-risk/"
+    }
+  ]
+}

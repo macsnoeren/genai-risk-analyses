@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Risicoanalyse Rapport</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2, h3, h4 {
+            color: #2c3e50;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+        h1 {
+            font-size: 2.5em;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            text-align: center;
+        }
+        h2 {
+            font-size: 1.8em;
+            color: #3498db;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+        }
+        h3 {
+            font-size: 1.4em;
+            color: #2980b9;
+        }
+        h4 {
+            font-size: 1.2em;
+            color: #1abc9c;
+        }
+        p {
+            margin-bottom: 10px;
+        }
+        ul {
+            list-style-type: disc;
+            margin-left: 20px;
+            margin-bottom: 10px;
+        }
+        ol {
+            list-style-type: decimal;
+            margin-left: 20px;
+            margin-bottom: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        .metadata-table {
+            width: auto;
+            margin: 0 auto 20px auto;
+        }
+        .metadata-table td:first-child {
+            font-weight: bold;
+            padding-right: 15px;
+        }
+        .section {
+            margin-bottom: 30px;
+        }
+        .sub-section {
+            margin-left: 20px;
+            margin-bottom: 20px;
+            padding-left: 10px;
+            border-left: 3px solid #ecf0f1;
+        }
+        .source-list li {
+            font-size: 0.9em;
+            color: #555;
+        }
+        .source-list li a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        .source-list li a:hover {
+            text-decoration: underline;
+        }
+        .warning {
+            background-color: #fcf8e3;
+            border: 1px solid #faebcc;
+            color: #8a6d3b;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+        .file-controls {
+            background: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 5px rgba(0,0,0,0.1);
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+        @media print {
+            .file-controls { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="file-controls">
+            <p style="margin-top: 0; font-size: 0.9em; color: #666;">Selecteer een JSON analyse bestand om het rapport weer te geven:</p>
+            <input type="file" id="json-file-input" accept=".json">
+        </div>
+    </div>
+
+    <div class="container" id="report-container">
+        <h1>Laden van Risicoanalyse...</h1>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('../documentation/example.json') // Adjust path if necessary
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => renderReport(data))
+                .catch(error => {
+                    console.error('Fout bij het laden van de JSON:', error);
+                    document.getElementById('report-container').innerHTML = `
+                        <h1 style="color: #e74c3c;">Kon example.json niet automatisch laden.</h1>
+                        <p>Dit komt waarschijnlijk door de <strong>CORS-beveiliging</strong> omdat je het bestand direct vanaf je schijf opent.</p>
+                        <p>Gebruik de knop hierboven om een bestand handmatig te selecteren.</p>
+                    `;
+                });
+
+            // Luister naar handmatige bestandsuploads
+            document.getElementById('json-file-input').addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    try {
+                        const data = JSON.parse(event.target.result);
+                        renderReport(data);
+                    } catch (err) {
+                        alert('Fout bij het verwerken van JSON: ' + err.message);
+                    }
+                };
+                reader.readAsText(file);
+            });
+        });
+
+        function renderReport(data) {
+            const container = document.getElementById('report-container');
+            container.innerHTML = ''; // Clear loading message
+
+            // Helper function to create elements
+            const createElement = (tag, className = '', htmlContent = '') => {
+                const el = document.createElement(tag);
+                if (className) el.className = className;
+                if (htmlContent) el.innerHTML = htmlContent; // Changed to innerHTML to render HTML tags
+                return el;
+            };
+
+            // --- Metadata ---
+            const metadata = data.metadata;
+            container.appendChild(createElement('h1', '', metadata.titel));
+            const metaTable = createElement('table', 'metadata-table');
+            for (const key in metadata) {
+                const tr = createElement('tr');
+                tr.appendChild(createElement('td', '', key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())));
+                tr.appendChild(createElement('td', '', metadata[key]));
+                metaTable.appendChild(tr);
+            }
+            container.appendChild(metaTable);
+
+            // --- Versiebeheer ---
+            const versiebeheerSection = createElement('div', 'section');
+            versiebeheerSection.appendChild(createElement('h2', '', 'Versiebeheer'));
+            const versiebeheerTable = createElement('table');
+            const thead = createElement('thead');
+            const headerRow = createElement('tr');
+            ['Versie', 'Datum', 'Wijzigingen', 'Auteur'].forEach(text => headerRow.appendChild(createElement('th', '', text)));
+            thead.appendChild(headerRow);
+            versiebeheerTable.appendChild(thead);
+            const tbody = createElement('tbody');
+            data.versiebeheer.forEach(item => {
+                const tr = createElement('tr');
+                tr.appendChild(createElement('td', '', item.versie));
+                tr.appendChild(createElement('td', '', item.datum));
+                tr.appendChild(createElement('td', '', item.wijzigingen));
+                tr.appendChild(createElement('td', '', item.auteur));
+                tbody.appendChild(tr);
+            });
+            versiebeheerTable.appendChild(tbody);
+            versiebeheerSection.appendChild(versiebeheerTable);
+            container.appendChild(versiebeheerSection);
+
+            // --- Beschrijving Thema ---
+            const beschrijvingThemaSection = createElement('div', 'section');
+            beschrijvingThemaSection.appendChild(createElement('h2', '', 'Beschrijving Thema'));
+            beschrijvingThemaSection.appendChild(createElement('p', '', data.beschrijving_thema.inleiding));
+            
+            const gebruikSubSection = createElement('div', 'sub-section');
+            gebruikSubSection.appendChild(createElement('h3', '', 'Gebruik'));
+            gebruikSubSection.appendChild(createElement('h4', '', 'Toepassingen'));
+            const toepassingenList = createElement('ul');
+            data.beschrijving_thema.gebruik.toepassingen.forEach(item => toepassingenList.appendChild(createElement('li', '', item)));
+            gebruikSubSection.appendChild(toepassingenList);
+            
+            gebruikSubSection.appendChild(createElement('h4', '', 'Rol in processen'));
+            const rollenList = createElement('ul');
+            data.beschrijving_thema.gebruik.rol_in_processen.forEach(item => rollenList.appendChild(createElement('li', '', item)));
+            gebruikSubSection.appendChild(rollenList);
+            beschrijvingThemaSection.appendChild(gebruikSubSection);
+            
+            beschrijvingThemaSection.appendChild(createElement('p', '', `<strong>Conclusie:</strong> ${data.beschrijving_thema.conclusie}`));
+            container.appendChild(beschrijvingThemaSection);
+
+            // --- Onderzoek ---
+            const onderzoekSection = createElement('div', 'section');
+            onderzoekSection.appendChild(createElement('h2', '', 'Onderzoek'));
+            data.onderzoek.forEach(item => {
+                const subSection = createElement('div', 'sub-section');
+                subSection.appendChild(createElement('h3', '', item.titel));
+                subSection.appendChild(createElement('p', '', item.bevindingen));
+                subSection.appendChild(createElement('p', '', `<strong>Bewezen:</strong> ${item.bewezen}`));
+                subSection.appendChild(createElement('p', '', `<strong>Afgeleide conclusie:</strong> ${item.afgeleide_conclusie}`));
+                subSection.appendChild(createElement('p', '', `<em>Bronnen: ${item.bronnen.join(', ')}</em>`));
+                onderzoekSection.appendChild(subSection);
+            });
+            container.appendChild(onderzoekSection);
+
+            // --- Consequenties en Voorbeelden ---
+            const consequentiesSection = createElement('div', 'section');
+            consequentiesSection.appendChild(createElement('h2', '', 'Consequenties en Voorbeelden'));
+            data.consequenties_en_voorbeelden.forEach(item => {
+                const subSection = createElement('div', 'sub-section');
+                subSection.appendChild(createElement('h3', '', item.titel));
+                subSection.appendChild(createElement('p', '', `<strong>Onderzoek:</strong> ${item.onderzoek}`));
+                subSection.appendChild(createElement('h4', '', 'Wat ging mis'));
+                const watGingMisList = createElement('ul');
+                item.wat_ging_mis.forEach(mis => watGingMisList.appendChild(createElement('li', '', mis)));
+                subSection.appendChild(watGingMisList);
+                subSection.appendChild(createElement('h4', '', 'Impact'));
+                const impactList = createElement('ul');
+                item.impact.forEach(imp => impactList.appendChild(createElement('li', '', imp)));
+                subSection.appendChild(impactList);
+                subSection.appendChild(createElement('p', '', `<em>Bronnen: ${item.bronnen.join(', ')}</em>`));
+                consequentiesSection.appendChild(subSection);
+            });
+            consequentiesSection.appendChild(createElement('p', '', `<strong>Conclusie:</strong> ${data.consequenties_conclusie}`));
+            container.appendChild(consequentiesSection);
+
+            // --- Risico's ---
+            const risicosSection = createElement('div', 'section');
+            risicosSection.appendChild(createElement('h2', '', 'Risico\'s'));
+            
+            risicosSection.appendChild(createElement('h3', '', 'Risico Matrix Schaal'));
+            const kansSchaal = createElement('p', '', '<strong>Kans Schaal:</strong>');
+            const kansList = createElement('ul');
+            for (const key in data.risicos.risico_matrix.kans_schaal) {
+                kansList.appendChild(createElement('li', '', `${key}: ${data.risicos.risico_matrix.kans_schaal[key]}`));
+            }
+            risicosSection.appendChild(kansSchaal);
+            risicosSection.appendChild(kansList);
+
+            const impactSchaal = createElement('p', '', '<strong>Impact Schaal:</strong>');
+            const impactList = createElement('ul');
+            for (const key in data.risicos.risico_matrix.impact_schaal) {
+                impactList.appendChild(createElement('li', '', `${key}: ${data.risicos.risico_matrix.impact_schaal[key]}`));
+            }
+            risicosSection.appendChild(impactSchaal);
+            risicosSection.appendChild(impactList);
+
+            risicosSection.appendChild(createElement('h3', '', 'Risico\'s Lijst'));
+            const risicosTable = createElement('table');
+            const risicosThead = createElement('thead');
+            const risicosHeaderRow = createElement('tr');
+            ['Nr', 'Titel', 'Kans', 'Impact', 'Score', 'Ranking'].forEach(text => risicosHeaderRow.appendChild(createElement('th', '', text)));
+            risicosThead.appendChild(risicosHeaderRow);
+            risicosTable.appendChild(risicosThead);
+            const risicosTbody = createElement('tbody');
+            data.risicos.lijst.forEach(item => {
+                const tr = createElement('tr');
+                tr.appendChild(createElement('td', '', item.nr));
+                tr.appendChild(createElement('td', '', item.titel));
+                tr.appendChild(createElement('td', '', item.kans));
+                tr.appendChild(createElement('td', '', item.impact));
+                tr.appendChild(createElement('td', '', item.score));
+                tr.appendChild(createElement('td', '', item.ranking));
+                risicosTbody.appendChild(tr);
+            });
+            risicosTable.appendChild(risicosTbody);
+            risicosSection.appendChild(risicosTable);
+
+            data.risicos.lijst.forEach(item => {
+                const subSection = createElement('div', 'sub-section');
+                subSection.appendChild(createElement('h4', '', `Risico ${item.nr}: ${item.titel}`));
+                subSection.appendChild(createElement('p', '', '<strong>Oorzaak:</strong>'));
+                const oorzaakList = createElement('ul');
+                item.oorzaak.forEach(o => oorzaakList.appendChild(createElement('li', '', o)));
+                subSection.appendChild(oorzaakList);
+                subSection.appendChild(createElement('p', '', '<strong>Gevolg:</strong>'));
+                const gevolgList = createElement('ul');
+                item.gevolg.forEach(g => gevolgList.appendChild(createElement('li', '', g)));
+                subSection.appendChild(gevolgList);
+                subSection.appendChild(createElement('p', '', '<strong>Impact Detail:</strong>'));
+                const impactDetailList = createElement('ul');
+                item.impact_detail.forEach(id => impactDetailList.appendChild(createElement('li', '', id)));
+                subSection.appendChild(impactDetailList);
+                if (item.opmerking) {
+                    subSection.appendChild(createElement('p', '', `<em>Opmerking: ${item.opmerking}</em>`));
+                }
+                risicosSection.appendChild(subSection);
+            });
+            container.appendChild(risicosSection);
+
+            // --- Maatregelen ---
+            const maatregelenSection = createElement('div', 'section');
+            maatregelenSection.appendChild(createElement('h2', '', 'Maatregelen'));
+            for (const category in data.maatregelen) {
+                const subSection = createElement('div', 'sub-section');
+                subSection.appendChild(createElement('h3', '', category.charAt(0).toUpperCase() + category.slice(1)));
+                const itemsList = createElement('ul');
+                data.maatregelen[category].items.forEach(item => itemsList.appendChild(createElement('li', '', item)));
+                subSection.appendChild(itemsList);
+                subSection.appendChild(createElement('p', '', `<em>Onderbouwing: ${data.maatregelen[category].onderbouwing}</em>`));
+                maatregelenSection.appendChild(subSection);
+            }
+            container.appendChild(maatregelenSection);
+
+            // --- Basisvaardigheden ---
+            const basisvaardighedenSection = createElement('div', 'section');
+            basisvaardighedenSection.appendChild(createElement('h2', '', 'Basisvaardigheden'));
+            basisvaardighedenSection.appendChild(createElement('p', '', data.basisvaardigheden.inleiding));
+
+            const bewustzijnSubSection = createElement('div', 'sub-section');
+            bewustzijnSubSection.appendChild(createElement('h3', '', 'Bewustzijn'));
+            bewustzijnSubSection.appendChild(createElement('p', '', `<strong>Doel:</strong> ${data.basisvaardigheden.bewustzijn.doel}`));
+            bewustzijnSubSection.appendChild(createElement('h4', '', 'Minimale Kennis'));
+            const minimaleKennisList = createElement('ul');
+            data.basisvaardigheden.bewustzijn.minimale_kennis.forEach(item => minimaleKennisList.appendChild(createElement('li', '', item)));
+            bewustzijnSubSection.appendChild(minimaleKennisList);
+            bewustzijnSubSection.appendChild(createElement('h4', '', 'Herkenningsvaardigheid'));
+            const herkenningsvaardigheidList = createElement('ul');
+            data.basisvaardigheden.bewustzijn.herkenningsvaardigheid.forEach(item => herkenningsvaardigheidList.appendChild(createElement('li', '', item)));
+            bewustzijnSubSection.appendChild(herkenningsvaardigheidList);
+            bewustzijnSubSection.appendChild(createElement('h4', '', 'Toetsbare Leeruitkomsten'));
+            const toetsbareLeeruitkomstenBewustzijnList = createElement('ul');
+            data.basisvaardigheden.bewustzijn.toetsbare_leeruitkomsten.forEach(item => toetsbareLeeruitkomstenBewustzijnList.appendChild(createElement('li', '', item)));
+            bewustzijnSubSection.appendChild(toetsbareLeeruitkomstenBewustzijnList);
+            basisvaardighedenSection.appendChild(bewustzijnSubSection);
+
+            const vaardighedenSubSection = createElement('div', 'sub-section');
+            vaardighedenSubSection.appendChild(createElement('h3', '', 'Vaardigheden'));
+            vaardighedenSubSection.appendChild(createElement('p', '', `<strong>Doel:</strong> ${data.basisvaardigheden.vaardigheden.doel}`));
+            data.basisvaardigheden.vaardigheden.categorieen.forEach(category => {
+                vaardighedenSubSection.appendChild(createElement('h4', '', category.titel));
+                vaardighedenSubSection.appendChild(createElement('p', '', 'Student kan:'));
+                const studentKanList = createElement('ul');
+                category.student_kan.forEach(item => studentKanList.appendChild(createElement('li', '', item)));
+                vaardighedenSubSection.appendChild(studentKanList);
+                vaardighedenSubSection.appendChild(createElement('p', '', 'Toetsbaar:'));
+                const toetsbaarList = createElement('ul');
+                category.toetsbaar.forEach(item => toetsbaarList.appendChild(createElement('li', '', item)));
+                vaardighedenSubSection.appendChild(toetsbaarList);
+            });
+            basisvaardighedenSection.appendChild(vaardighedenSubSection);
+
+            const gedragSubSection = createElement('div', 'sub-section');
+            gedragSubSection.appendChild(createElement('h3', '', 'Gedrag'));
+            gedragSubSection.appendChild(createElement('p', '', `<strong>Doel:</strong> ${data.basisvaardigheden.gedrag.doel}`));
+            gedragSubSection.appendChild(createElement('h4', '', 'Gewenst Gedrag'));
+            const gewenstGedragList = createElement('ul');
+            data.basisvaardigheden.gedrag.gewenst_gedrag.forEach(item => gewenstGedragList.appendChild(createElement('li', '', item)));
+            gedragSubSection.appendChild(gewenstGedragList);
+            gedragSubSection.appendChild(createElement('h4', '', 'Observeerbaar Gedrag'));
+            const observeerbaarGedragList = createElement('ul');
+            data.basisvaardigheden.gedrag.observeerbaar_gedrag.forEach(item => observeerbaarGedragList.appendChild(createElement('li', '', item)));
+            gedragSubSection.appendChild(observeerbaarGedragList);
+            gedragSubSection.appendChild(createElement('h4', '', 'Toetsbare Leeruitkomsten'));
+            const toetsbareLeeruitkomstenGedragList = createElement('ul');
+            data.basisvaardigheden.gedrag.toetsbare_leeruitkomsten.forEach(item => toetsbareLeeruitkomstenGedragList.appendChild(createElement('li', '', item)));
+            gedragSubSection.appendChild(toetsbareLeeruitkomstenGedragList);
+            basisvaardighedenSection.appendChild(gedragSubSection);
+
+            basisvaardighedenSection.appendChild(createElement('h3', '', 'Minimale Competentie-eisen'));
+            const minimaleCompetentieEisenList = createElement('ol');
+            data.basisvaardigheden.minimale_competentie_eisen.forEach(item => minimaleCompetentieEisenList.appendChild(createElement('li', '', item)));
+            basisvaardighedenSection.appendChild(minimaleCompetentieEisenList);
+
+            container.appendChild(basisvaardighedenSection);
+
+            // --- Samenvatting ---
+            const samenvattingSection = createElement('div', 'section');
+            samenvattingSection.appendChild(createElement('h2', '', 'Samenvatting'));
+            samenvattingSection.appendChild(createElement('h3', '', 'Belangrijkste Risico\'s'));
+            const belangrijksteRisicosList = createElement('ul');
+            data.samenvatting.belangrijkste_risicos.forEach(item => belangrijksteRisicosList.appendChild(createElement('li', '', item)));
+            samenvattingSection.appendChild(belangrijksteRisicosList);
+            samenvattingSection.appendChild(createElement('h3', '', 'Belangrijkste Maatregelen'));
+            const belangrijksteMaatregelenList = createElement('ul');
+            data.samenvatting.belangrijkste_maatregelen.forEach(item => belangrijksteMaatregelenList.appendChild(createElement('li', '', item)));
+            samenvattingSection.appendChild(belangrijksteMaatregelenList);
+            samenvattingSection.appendChild(createElement('p', '', `<strong>Kerninzicht:</strong> ${data.samenvatting.kerninzicht}`));
+            container.appendChild(samenvattingSection);
+
+            // --- Bronnen ---
+            const bronnenSection = createElement('div', 'section');
+            bronnenSection.appendChild(createElement('h2', '', 'Bronnen'));
+            const bronnenList = createElement('ul', 'source-list');
+            data.bronnen.forEach(item => {
+                const li = createElement('li');
+                if (item.url) {
+                    const a = createElement('a', '', item.referentie);
+                    a.href = item.url;
+                    a.target = '_blank';
+                    li.appendChild(a);
+                } else {
+                    li.textContent = item.referentie;
+                }
+                bronnenList.appendChild(li);
+            });
+            bronnenSection.appendChild(bronnenList);
+            container.appendChild(bronnenSection);
+        }
+    </script>
+</body>
+</html>

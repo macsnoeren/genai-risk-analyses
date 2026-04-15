@@ -1,0 +1,3 @@
+Ik wil een AI-agent maken die automatisch voor mij een risico-analyse rapport kan maken op een specifiek thema. Het gaat hierover bronnen onderzoek om te kijken welke risico's er bekend zijn met een thema en welke basisvaardigheden studenten moeten verwerven om binnen dit thema veilig te blijven. Ik wil dat de agent goed onderzoek doet en uiteindelijk een JSON oplevert. De JSON wordt dan omgezet in een rapport via python. Ook de agent wordt uitgevoerd in python.
+
+Allereerst wil ik dat je de JSON formaat maakt op basis van een bestaand rapport. Dit rapport voeg ik toe aan de chat.

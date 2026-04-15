@@ -1,0 +1,636 @@
+{
+  "metadata": {
+    "titel": "Risicoanalyse",
+    "project": "CYBERWIJZER",
+    "thema": "Linux (basissecurity voor beginnende gebruikers)",
+    "auteur": "AI-agent (Cyberwijzer)",
+    "datum": "15-04-2026",
+    "template_versie": "0.1",
+    "versie": "0.1"
+  },
+  "versiebeheer": [
+    {
+      "versie": "0.1",
+      "datum": "15-04-2026",
+      "wijzigingen": "Initiële versie (AI-gegenereerd)",
+      "auteur": "AI-agent"
+    }
+  ],
+  "beschrijving_thema": {
+    "inleiding": "Linux is een open-source besturingssysteem dat de basis vormt van het merendeel van de wereldwijde server-, cloud- en IoT-infrastructuur. Voor beginnende gebruikers in het HBO/MBO-onderwijs is het essentieel om de basisprincipes van Linux-beveiliging te begrijpen, aangezien het OS standaard een krachtig maar complex rechten- en privilegemodel biedt. Misconfiguraties, zwakke wachtwoorden en het uitstellen van updates zijn de meest voorkomende oorzaken van beveiligingsincidenten op Linux-systemen. Linux wordt vaak als veiliger beschouwd dan andere besturingssystemen, maar dit geldt alleen wanneer het correct wordt geconfigureerd en onderhouden.",
+    "gebruik": {
+      "toepassingen": [
+        "Webservers (Apache, Nginx) en databaseservers",
+        "Cloud-infrastructuur (AWS, Azure, GCP draaien overwegend op Linux)",
+        "Containerplatforms (Docker, Kubernetes)",
+        "Ontwikkelomgevingen en CI/CD-pipelines",
+        "IoT-apparaten en embedded systemen",
+        "Desktop-besturingssysteem voor softwareontwikkeling",
+        "Supercomputers (100% van de top-500 draait op Linux)"
+      ],
+      "rol_in_processen": [
+        "Fundament voor softwareontwikkeling en deployment",
+        "Hosting van productie-applicaties en databases",
+        "Basis voor DevOps-workflows en automatisering",
+        "Platform voor leeromgevingen en laboratoriumomgevingen in het onderwijs",
+        "Beheer van gebruikersaccounts, bestandsrechten en netwerkservices"
+      ]
+    },
+    "conclusie": "Omdat Linux de ruggengraat vormt van vrijwel alle moderne IT-infrastructuur en tegelijkertijd een aanzienlijk aanvalsoppervlak biedt bij misconfiguratie, is het voor studenten cruciaal om de basisbeveiligingsprincipes te beheersen. Het mythos dat Linux inherent veilig is, leidt regelmatig tot nalatigheid die door aanvallers wordt uitgebuit."
+  },
+  "onderzoek": [
+    {
+      "titel": "SSH brute-force aanvallen op Linux-systemen",
+      "bevindingen": "SSH is de meest aangevallen service op Linux-systemen. Volgens het Elastic 2024 Global Threat Report vormen brute-force aanvallen 89% van alle endpoint-aanvalsgedragingen op Linux-systemen. AhnLab ASEC rapporteert doorlopend via honeypot-onderzoek dat geautomatiseerde aanvallen op slecht beveiligde SSH-servers continu plaatsvinden, met malware als P2PInfect en Tsunami als dominante dreigingen. Een nieuw geplaatste cloud-VPS ontvangt typisch binnen 90 seconden de eerste aanvalspoging.",
+      "bewezen": "89% van Linux endpoint-aanvallen betreft brute-force/credential stuffing tegen SSH, bevestigd door zowel Elastic Security Labs als meerdere onafhankelijke bronnen.",
+      "afgeleide_conclusie": "Beginnende Linux-gebruikers die SSH met standaard wachtwoordauthenticatie laten staan, lopen vrijwel gegarandeerd risico op compromittering.",
+      "bronnen": [
+        "Elastic Security Labs – 2024 Global Threat Report",
+        "AhnLab ASEC – Statistical Reports on Malware Targeting Linux SSH Servers Q1-Q4 2025",
+        "LinuxTeck – Linux Security Threats 2026 (maart 2026)",
+        "CommandLinux – Linux Malware And Vulnerability Statistics 2026"
+      ]
+    },
+    {
+      "titel": "Misconfiguratie van bestandsrechten en sudo",
+      "bevindingen": "Onjuiste bestandspermissies zijn een veelvoorkomende oorzaak van privilege-escalatie op Linux-systemen. Wereldleesbare /etc/shadow-bestanden komen voor in 12% van gecompromitteerde cloud-instances volgens het AWS Security Hub 2023 Threat Report. Overmatig gebruik van sudo en misconfiguratie van het sudoers-bestand (zoals NOPASSWD: ALL) biedt aanvallers een directe route naar root-toegang. OWASP en CIS Benchmarks benadrukken beiden het belang van het principle of least privilege.",
+      "bewezen": "Wereldleesbare /etc/shadow-bestanden worden gevonden in 12% van gecompromitteerde cloud-instances; sudo-misconfiguraties worden actief misbruikt voor privilege-escalatie.",
+      "afgeleide_conclusie": "Studenten die zonder kennis van het rechtenmodel werken, zullen waarschijnlijk te brede permissies instellen, wat het systeem kwetsbaar maakt.",
+      "bronnen": [
+        "AWS Security Hub 2023 Threat Report (geciteerd in Alibaba LifeTips analyse)",
+        "Security Compass – 5 Common Linux Misconfigurations",
+        "SecureFlag Security Knowledge Base – Privilege Escalation in Linux",
+        "LinuxTeck – Linux Security Threats 2026 (sudo misconfiguratie)"
+      ]
+    },
+    {
+      "titel": "Vertraagde of ontbrekende systeemupdates",
+      "bevindingen": "De Linux-kernel kende 5.530 CVE's in 2025, een stijging van 28% ten opzichte van het jaar ervoor, wat neerkomt op gemiddeld 8-9 nieuwe kwetsbaarheden per dag. Meer dan 52% van organisaties patcht kritieke kwetsbaarheden niet binnen 30 dagen. Ransomware-groepen zoals RansomHub en Akira hebben actief misbruik gemaakt van bekende kernel-kwetsbaarheden (zoals CVE-2024-1086) voor privilege-escalatie op ongepatchte systemen.",
+      "bewezen": "5.530 kernel-CVE's in 2025 is bevestigd door meerdere bronnen; CISA's KEV-catalogus documenteert actief misbruikte Linux-kwetsbaarheden.",
+      "afgeleide_conclusie": "Beginners die niet gewend zijn aan regelmatig updaten zullen hun systemen blootstellen aan bekende, actief uitgebuite kwetsbaarheden.",
+      "bronnen": [
+        "CommandLinux – Linux Malware And Vulnerability Statistics 2026",
+        "CIQ – Linux kernel CVEs 2025: what security leaders need to know",
+        "Verizon 2024 DBIR (ongepatchte kwetsbaarheden in 32% van ransomware-incidenten)",
+        "CISA Known Exploited Vulnerabilities (KEV) Catalog"
+      ]
+    },
+    {
+      "titel": "Supply chain-aanvallen op open-source software",
+      "bevindingen": "De XZ Utils-backdoor (CVE-2024-3094, CVSS 10.0) werd in maart 2024 ontdekt na een twee jaar durende infiltratiecampagne door een kwaadwillende maintainer. De backdoor trof de SSH-daemon van meerdere grote Linux-distributies en had remote code execution mogelijk kunnen maken. Daarnaast nemen typosquatting-aanvallen op package managers (PyPI, npm) toe, evenals gecompromitteerde container-images op Docker Hub.",
+      "bewezen": "CVE-2024-3094 is gedocumenteerd door NIST NVD, CrowdStrike, Datadog Security Labs, SentinelOne, Palo Alto Unit 42 en CISA.",
+      "afgeleide_conclusie": "Studenten die pakketten installeren zonder bronverificatie of hash-controle lopen risico op het binnenhalen van gecompromitteerde software.",
+      "bronnen": [
+        "Datadog Security Labs – The XZ Utils backdoor (CVE-2024-3094)",
+        "CrowdStrike – CVE-2024-3094 and XZ Upstream Supply Chain Attack",
+        "SentinelOne – XZ Utils Backdoor: Threat Actor Planned Further Vulnerabilities",
+        "NIST NVD – CVE-2024-3094"
+      ]
+    },
+    {
+      "titel": "Ontbrekende firewallconfiguratie en onnodige services",
+      "bevindingen": "Standaard Linux-installaties hebben vaak geen actieve firewall geconfigureerd en draaien services die niet nodig zijn. Het CrowdStrike 2025 Global Threat Report toont aan dat 79% van cyberaanvallen in 2024 malware-vrij was en vertrouwde op misconfiguraties en gestolen credentials. Het Mandiant M-Trends 2025 rapport geeft aan dat 33% van inbraken begint via een extern bereikbaar systeem. CIS Benchmarks en NIST-richtlijnen benadrukken het belang van het uitschakelen van onnodige services en het configureren van host-based firewalls.",
+      "bewezen": "79% van cyberaanvallen in 2024 was malware-vrij (CrowdStrike); 33% van inbraken begint via externe systemen (Mandiant).",
+      "afgeleide_conclusie": "Een Linux-systeem dat zonder firewall en met onnodige open poorten aan het netwerk hangt, biedt aanvallers eenvoudige toegangspunten.",
+      "bronnen": [
+        "CrowdStrike 2025 Global Threat Report",
+        "Mandiant M-Trends 2025 Report",
+        "HashiCorp – The 2026 Linux Security Threat Landscape",
+        "NOC.org – Basic Linux Security Checklist (april 2026)"
+      ]
+    },
+    {
+      "titel": "Privilege-escalatie via kernel- en systeemkwetsbaarheden",
+      "bevindingen": "In 2025 zijn meerdere kritieke privilege-escalatiekwetsbaarheden in de Linux-kernel actief uitgebuit. CVE-2024-1086 (nf_tables use-after-free) werd door ransomware-groepen gebruikt om van beperkte gebruiker naar root te escaleren. CVE-2025-21756 (vsock subsystem) maakte het mogelijk om vanuit een virtuele machine naar het hostsysteem te ontsnappen. Daarnaast toonden CVE-2025-6018 en CVE-2025-6019 een betrouwbare lokale privilege-escalatie via de udisks daemon.",
+      "bewezen": "Actief misbruik van CVE-2024-1086 is bevestigd door CISA (KEV-catalogus) en CIQ; CVE-2025-21756 is gedocumenteerd door Linux Journal en CIQ.",
+      "afgeleide_conclusie": "Zelfs op een correct geconfigureerd systeem kunnen kernel-kwetsbaarheden leiden tot volledige compromittering als updates niet tijdig worden toegepast.",
+      "bronnen": [
+        "CIQ – Linux kernel CVEs 2025",
+        "Linux Journal – The Most Critical Linux Kernel Breaches of 2025",
+        "LinuxSecurity – 7 Linux Kernel Vulnerabilities Exploited in 2025",
+        "CISA Known Exploited Vulnerabilities Catalog"
+      ]
+    }
+  ],
+  "consequenties_en_voorbeelden": [
+    {
+      "titel": "XZ Utils Backdoor (CVE-2024-3094)",
+      "onderzoek": "In maart 2024 werd een backdoor ontdekt in de XZ Utils-compressiebibliotheek (versies 5.6.0 en 5.6.1) die was ingevoegd door een kwaadwillende maintainer na een twee jaar durende social engineering-campagne. De backdoor maakte remote code execution via OpenSSH mogelijk en trof meerdere grote Linux-distributies.",
+      "wat_ging_mis": [
+        "Onvoldoende code-review bij het accepteren van bijdragen van nieuwe maintainers",
+        "Social engineering via sockpuppet-accounts om vertrouwen te winnen",
+        "De backdoor zat niet in de broncode maar werd geïnjecteerd tijdens het build-proces",
+        "Geautomatiseerde tests en CI/CD-pipelines detecteerden de obfuscated code niet"
+      ],
+      "impact": [
+        "Potentiële remote code execution op miljoenen Linux-systemen wereldwijd",
+        "Vertrouwenscrisis in het open-source supply chain-model",
+        "Meerdere distributies (Fedora, Debian testing, Kali, Arch) waren tijdelijk getroffen",
+        "CVSS-score van 10.0 (maximaal kritiek)"
+      ],
+      "bronnen": [
+        "Datadog Security Labs – The XZ Utils backdoor (CVE-2024-3094), april 2024",
+        "CrowdStrike – CVE-2024-3094 and XZ Upstream Supply Chain Attack",
+        "NIST NVD – CVE-2024-3094",
+        "SentinelOne – XZ Utils Backdoor analyse"
+      ]
+    },
+    {
+      "titel": "Ransomware-aanvallen via ongepatchte Linux-kernels (2025)",
+      "onderzoek": "Ransomware-groepen waaronder RansomHub, Akira en Qilin hebben in 2025 actief misbruik gemaakt van bekende Linux-kernel-kwetsbaarheden voor privilege-escalatie. Het aanvalspatroon bestond uit het verkrijgen van initiële toegang via gestolen credentials of kwetsbare services, gevolgd door exploitatie van CVE-2024-1086 om root-toegang te krijgen.",
+      "wat_ging_mis": [
+        "Vertraagde patching: enterprise patch-cycli van 30-60 dagen lieten miljoenen systemen blootgesteld",
+        "Publiek beschikbare exploit-code werd snel geweaponiseerd",
+        "Onvoldoende monitoring om post-exploitatie activiteiten te detecteren",
+        "Zwakke credentials als eerste toegangsvector"
+      ],
+      "impact": [
+        "Gemiddelde losgeldeisen van $5 miljoen bij aanvallen op Linux-hypervisors",
+        "Volledige versleuteling van datacenter-omgevingen",
+        "Qilin-groep trof meer dan 700 slachtoffers in 62 landen",
+        "Gemiddelde kosten van een datalek: $4,88 miljoen in 2024 (IBM)"
+      ],
+      "bronnen": [
+        "CIQ – Linux kernel CVEs 2025: what security leaders need to know",
+        "HashiCorp – The 2026 Linux Security Threat Landscape",
+        "IBM Cost of a Data Breach Report 2024/2025",
+        "Verizon Data Breach Investigations Report 2024"
+      ]
+    },
+    {
+      "titel": "Doorlopende SSH brute-force campagnes op Linux-servers",
+      "onderzoek": "AhnLab ASEC documenteert via honeypot-onderzoek dat Linux SSH-servers continu worden aangevallen met geautomatiseerde brute-force en dictionary attacks. In Q4 2025 was P2PInfect verantwoordelijk voor 80,4% van alle gedetecteerde aanvallen, gevolgd door Prometei (8,3%) en XMRig cryptominer (2,4%).",
+      "wat_ging_mis": [
+        "SSH-servers met wachtwoordauthenticatie in plaats van key-based authenticatie",
+        "Standaard poort 22 open op internet zonder rate limiting",
+        "Zwakke of standaard credentials (root/root, admin/password)",
+        "Geen gebruik van tools als fail2ban voor automatische blokkering"
+      ],
+      "impact": [
+        "Installatie van cryptominers, DDoS-bots en backdoors op gecompromitteerde systemen",
+        "Gecompromitteerde servers worden onderdeel van botnets",
+        "Dataverlies en ongeautoriseerde toegang tot gevoelige informatie",
+        "Reputatieschade wanneer gecompromitteerde servers worden gebruikt voor verdere aanvallen"
+      ],
+      "bronnen": [
+        "AhnLab ASEC – Statistics Report on Malware Targeting Linux SSH Servers Q4 2025",
+        "AhnLab ASEC – Statistical Report on Malware Targeting Linux SSH Servers Q1 2025",
+        "USENIX – Brute-Force SSH Attacks In The Wild And How To Stop Them",
+        "Elastic Security Labs – 2024 Global Threat Report"
+      ]
+    }
+  ],
+  "consequenties_conclusie": "De combinatie van geautomatiseerde aanvallen op SSH, actief uitgebuite kernel-kwetsbaarheden en supply chain-risico's maakt duidelijk dat Linux-beveiliging niet optioneel is. Zelfs basissystemen worden continu aangevallen, en misconfiguraties of vertraagde updates leiden direct tot compromittering.",
+  "risicos": {
+    "risico_matrix": {
+      "kans_schaal": {
+        "1": "Laag – Komt zelden voor",
+        "2": "Middel – Komt regelmatig voor",
+        "3": "Hoog – Komt vaak voor"
+      },
+      "impact_schaal": {
+        "1": "Laag – Beperkte gevolgen",
+        "2": "Middel – Merkbare schade",
+        "3": "Hoog – Ernstige schade (organisatie, mens, maatschappij)"
+      }
+    },
+    "lijst": [
+      {
+        "nr": 1,
+        "titel": "Compromittering via SSH brute-force aanvallen",
+        "kans": "3",
+        "impact": "3",
+        "score": "9",
+        "ranking": "1",
+        "oorzaak": [
+          "SSH-server met wachtwoordauthenticatie open op internet",
+          "Zwakke of standaard wachtwoorden",
+          "Geen rate limiting of intrusion prevention (zoals fail2ban)",
+          "Standaard poort 22 zonder aanvullende bescherming"
+        ],
+        "gevolg": [
+          "Volledige overname van het systeem door aanvallers",
+          "Installatie van malware, cryptominers of DDoS-bots",
+          "Gebruik van het systeem als springplank voor verdere aanvallen"
+        ],
+        "impact_detail": [
+          "89% van Linux endpoint-aanvallen betreft brute-force op SSH (Elastic 2024)",
+          "Gecompromitteerde systemen worden opgenomen in botnets",
+          "Dataverlies en mogelijke juridische aansprakelijkheid"
+        ]
+      },
+      {
+        "nr": 2,
+        "titel": "Privilege-escalatie door onjuiste bestandsrechten en sudo-configuratie",
+        "kans": "3",
+        "impact": "3",
+        "score": "9",
+        "ranking": "2",
+        "oorzaak": [
+          "Te brede bestandspermissies (chmod 777, wereldleesbare shadow-bestanden)",
+          "Onveilige sudo-configuratie (NOPASSWD: ALL)",
+          "Onbegrip van het Linux rechtenmodel bij beginners",
+          "Draaien van services als root in plaats van dedicated service-accounts"
+        ],
+        "gevolg": [
+          "Aanvallers kunnen van beperkte gebruiker naar root escaleren",
+          "Gevoelige bestanden (wachtwoorden, SSH-sleutels) worden blootgesteld",
+          "Volledige systeemcompromittering mogelijk zonder exploit"
+        ],
+        "impact_detail": [
+          "Wereldleesbare /etc/shadow in 12% van gecompromitteerde cloud-instances (AWS Security Hub)",
+          "79% van aanvallen in 2024 was malware-vrij en vertrouwde op misconfiguraties (CrowdStrike)",
+          "Privilege-escalatie is de primaire methode voor aanvallers na initiële toegang"
+        ]
+      },
+      {
+        "nr": 3,
+        "titel": "Systeemcompromittering door ontbrekende of vertraagde updates",
+        "kans": "3",
+        "impact": "2",
+        "score": "6",
+        "ranking": "3",
+        "oorzaak": [
+          "Onwetendheid over het belang van regelmatig updaten",
+          "Angst om systemen te breken door updates",
+          "Geen automatische updates geconfigureerd",
+          "Meer dan 52% van organisaties patcht niet binnen 30 dagen"
+        ],
+        "gevolg": [
+          "Bekende kwetsbaarheden blijven maandenlang exploiteerbaar",
+          "Ransomware-groepen maken actief gebruik van ongepatchte kernel-flaws",
+          "Systeem kan onderdeel worden van grootschalige aanvalscampagnes"
+        ],
+        "impact_detail": [
+          "5.530 kernel-CVE's in 2025, gemiddeld 8-9 per dag",
+          "Ongepatchte kwetsbaarheden betrokken bij 32% van ransomware-incidenten (Verizon DBIR)",
+          "CVE-2024-1086 werd actief uitgebuit in ransomware-campagnes (CISA KEV)"
+        ]
+      },
+      {
+        "nr": 4,
+        "titel": "Ongeautoriseerde toegang door ontbrekende firewallconfiguratie",
+        "kans": "2",
+        "impact": "3",
+        "score": "6",
+        "ranking": "4",
+        "oorzaak": [
+          "Standaard Linux-installaties activeren vaak geen firewall",
+          "Onnodige services draaien en luisteren op alle interfaces",
+          "Gebrek aan kennis over ufw, iptables of nftables bij beginners",
+          "Geen netwerksegmentatie toegepast"
+        ],
+        "gevolg": [
+          "Onbedoelde blootstelling van services aan het internet",
+          "Aanvallers kunnen kwetsbare services direct benaderen",
+          "Laterale beweging binnen het netwerk na initiële compromittering"
+        ],
+        "impact_detail": [
+          "33% van inbraken begint via een extern bereikbaar systeem (Mandiant M-Trends 2025)",
+          "Webshells vormen 49,6% van alle Linux-malware (Trend Micro)",
+          "Gemiddelde breakout-tijd van aanvallers is slechts 48 minuten (CrowdStrike)"
+        ]
+      },
+      {
+        "nr": 5,
+        "titel": "Supply chain-compromittering via onbetrouwbare softwarepakketten",
+        "kans": "2",
+        "impact": "3",
+        "score": "6",
+        "ranking": "5",
+        "oorzaak": [
+          "Installatie van software uit onofficiële of onbekende repositories",
+          "Geen verificatie van pakket-signatures of checksums",
+          "Typosquatting bij het installeren van packages via pip, npm of andere managers",
+          "Gebruik van verouderde of onbetrouwbare Docker-images"
+        ],
+        "gevolg": [
+          "Kwaadaardige code wordt ongemerkt op het systeem geïnstalleerd",
+          "Backdoors in veelgebruikte bibliotheken (zoals bij XZ Utils)",
+          "Compromittering van ontwikkelomgevingen en CI/CD-pipelines"
+        ],
+        "impact_detail": [
+          "XZ Utils-backdoor (CVE-2024-3094, CVSS 10.0) trof meerdere grote distributies",
+          "Supply chain-aanvallen vormen een groeiend aandeel van beveiligingsincidenten",
+          "Een enkele gecompromitteerde dependency kan duizenden downstream-projecten treffen"
+        ]
+      },
+      {
+        "nr": 6,
+        "titel": "Onveilig gebruik van root-account en gebrek aan gebruikersscheiding",
+        "kans": "3",
+        "impact": "2",
+        "score": "6",
+        "ranking": "6",
+        "oorzaak": [
+          "Standaard inloggen als root of overmatig gebruik van sudo",
+          "Geen aparte gebruikersaccounts voor verschillende taken",
+          "Beginners begrijpen het onderscheid tussen root en gewone gebruiker niet",
+          "Scripts draaien als root terwijl dit niet nodig is"
+        ],
+        "gevolg": [
+          "Menselijke fouten hebben maximale impact (bestanden verwijderen, configuratie beschadigen)",
+          "Malware die wordt uitgevoerd als root heeft volledige systeemtoegang",
+          "Geen audit trail van welke gebruiker welke actie heeft uitgevoerd"
+        ],
+        "impact_detail": [
+          "Menselijke fouten door misbruik van root-privileges zijn een top-oorzaak van downtime (HashiCorp)",
+          "Malware dat als root draait kan security-tools uitschakelen en persistentie bewerkstelligen",
+          "Het principle of least privilege wordt geschonden, waardoor de blast radius maximaal is"
+        ]
+      },
+      {
+        "nr": 7,
+        "titel": "Onvoldoende logging en monitoring",
+        "kans": "2",
+        "impact": "2",
+        "score": "4",
+        "ranking": "7",
+        "oorzaak": [
+          "Beginners controleren logs niet of weten niet waar ze staan",
+          "Geen alerting geconfigureerd voor verdachte activiteiten",
+          "Logbestanden worden niet bewaard of roteren te snel",
+          "Geen gebruik van tools zoals journalctl, logwatch of auditd"
+        ],
+        "gevolg": [
+          "Inbraken blijven weken tot maanden onopgemerkt",
+          "Geen forensisch bewijs beschikbaar na een incident",
+          "Onmogelijkheid om de omvang van een breach vast te stellen"
+        ],
+        "impact_detail": [
+          "Gemiddelde detectietijd van een breach: 181 dagen (IBM 2025)",
+          "Organisaties die breaches binnen 200 dagen containen besparen meer dan $1 miljoen (IBM)",
+          "Zonder logging is het onmogelijk om brute-force pogingen of ongeautoriseerde toegang te detecteren"
+        ]
+      }
+    ]
+  },
+  "maatregelen": {
+    "technisch": {
+      "items": [
+        "SSH beveiligen: wachtwoordauthenticatie uitschakelen, SSH-key-pairs gebruiken, fail2ban installeren en configureren, en een niet-standaard poort overwegen",
+        "Firewall configureren: ufw of nftables activeren en alleen benodigde poorten openen (deny-by-default beleid)",
+        "Bestandsrechten correct instellen: /etc/shadow op 640, SSH-sleutels op 600, restrictieve umask (027) instellen",
+        "Automatische updates inschakelen: unattended-upgrades (Debian/Ubuntu) of dnf-automatic (Fedora/RHEL) configureren voor beveiligingsupdates",
+        "Onnodige services uitschakelen: systemctl gebruiken om niet-benodigde daemons te stoppen en te disablen",
+        "SELinux of AppArmor in enforcing-modus draaien voor verplichte toegangscontrole",
+        "SUID/SGID-binaries auditen en onnodige setuid-bits verwijderen"
+      ],
+      "onderbouwing": "CIS Benchmarks voor Linux, NIST SP 800-123 (Guide to General Server Security), NOC.org Linux Security Checklist, LinuxSecurity.com best practices"
+    },
+    "proces": {
+      "items": [
+        "Wekelijks controleren op beschikbare systeemupdates en deze toepassen",
+        "Regelmatig (maandelijks) auditen van gebruikersaccounts, groepslidmaatschappen en bestandspermissies",
+        "Logbestanden periodiek reviewen op verdachte activiteiten (auth.log, syslog)",
+        "Bij installatie van software altijd de bron en pakket-signatures verifiëren",
+        "Incidentresponseprocedure opstellen voor het geval van een gedetecteerde inbreuk",
+        "Backups maken en periodiek testen of restore-procedures werken"
+      ],
+      "onderbouwing": "NIST Cybersecurity Framework, Verizon DBIR 2024 aanbevelingen, CIS Controls v8"
+    },
+    "organisatorisch": {
+      "items": [
+        "Security-awareness training voor alle Linux-gebruikers over veelvoorkomende aanvallen en misconfiguraties",
+        "Documenteren van de systeemconfiguratie en bijhouden van een baseline voor vergelijking",
+        "Principle of least privilege als organisatienorm hanteren: geen onnodige root-toegang toekennen",
+        "Verantwoordelijkheid voor patchmanagement expliciet beleggen bij een teamlid of rol",
+        "Gebruik van een gedeelde security-checklist bij het opzetten van nieuwe Linux-systemen"
+      ],
+      "onderbouwing": "CrowdStrike 2025 Global Threat Report, HashiCorp Linux Security Threat Landscape 2026, Security Compass – 5 Common Linux Misconfigurations"
+    }
+  },
+  "basisvaardigheden": {
+    "inleiding": "Studenten die met Linux werken moeten een minimaal niveau van security-bewustzijn, technische vaardigheden en veilig gedrag ontwikkelen om zichzelf en hun systemen te beschermen tegen de meest voorkomende aanvallen en misconfiguraties.",
+    "bewustzijn": {
+      "doel": "Studenten begrijpen waarom Linux-beveiliging essentieel is en herkennen de meest voorkomende dreigingen en aanvalspatronen.",
+      "minimale_kennis": [
+        "Weten dat Linux niet inherent veilig is en actief beheer vereist",
+        "Begrijpen hoe het Linux rechtenmodel werkt (gebruikers, groepen, permissies, root)",
+        "Kennis van de meest voorkomende aanvalsvectoren: SSH brute-force, privilege-escalatie, misconfiguratie",
+        "Weten wat het principle of least privilege inhoudt en waarom het belangrijk is",
+        "Begrijpen waarom regelmatig updaten essentieel is voor beveiliging",
+        "Kennis van supply chain-risico's bij het installeren van software uit externe bronnen"
+      ],
+      "herkenningsvaardigheid": [
+        "Herkennen van tekenen van een brute-force aanval in logbestanden (meerdere mislukte inlogpogingen)",
+        "Herkennen van te brede bestandspermissies (zoals 777 of wereldleesbare gevoelige bestanden)",
+        "Herkennen wanneer een systeem onnodig als root wordt gebruikt",
+        "Herkennen van verdachte processen of onbekende services die draaien op het systeem",
+        "Herkennen van het risico bij het toevoegen van onofficiële software-repositories"
+      ],
+      "toetsbare_leeruitkomsten": [
+        "De student kan uitleggen waarom het mythes is dat Linux geen beveiligingsmaatregelen nodig heeft, met verwijzing naar actuele dreigingsstatistieken",
+        "De student kan de drie meest voorkomende aanvalsvectoren op Linux-systemen benoemen en beschrijven",
+        "De student kan het Linux rechtenmodel uitleggen (owner/group/other, rwx, numerieke notatie)",
+        "De student kan uitleggen wat het principle of least privilege inhoudt en waarom root-gebruik geminimaliseerd moet worden"
+      ]
+    },
+    "vaardigheden": {
+      "doel": "Studenten kunnen een Linux-systeem op basisniveau beveiligen en onderhouden.",
+      "categorieen": [
+        {
+          "titel": "SSH-beveiliging",
+          "student_kan": [
+            "Een SSH-key-pair genereren en configureren voor authenticatie",
+            "Wachtwoordauthenticatie uitschakelen in sshd_config",
+            "fail2ban installeren en basisconfiguratie toepassen",
+            "SSH-logbestanden lezen en verdachte inlogpogingen herkennen"
+          ],
+          "toetsbaar": [
+            "Student demonstreert het opzetten van key-based SSH-authenticatie op een testsysteem",
+            "Student toont een werkende sshd_config met uitgeschakelde wachtwoordauthenticatie",
+            "Student kan in /var/log/auth.log brute-force pogingen aanwijzen"
+          ]
+        },
+        {
+          "titel": "Bestandsrechten en gebruikersbeheer",
+          "student_kan": [
+            "Bestandspermissies lezen, interpreteren en correct instellen met chmod en chown",
+            "Gebruikers en groepen aanmaken en beheren",
+            "De umask configureren voor veilige standaardpermissies",
+            "Controleren welke SUID/SGID-binaries op het systeem aanwezig zijn",
+            "Het sudoers-bestand veilig bewerken met visudo"
+          ],
+          "toetsbaar": [
+            "Student stelt correct de permissies in voor /etc/shadow (640), SSH-sleutels (600) en homedirectories (700)",
+            "Student kan met ls -la en stat de permissies van bestanden interpreteren en onveilige configuraties identificeren",
+            "Student maakt een gebruiker aan met beperkte sudo-rechten voor een specifiek commando"
+          ]
+        },
+        {
+          "titel": "Systeemonderhoud en updates",
+          "student_kan": [
+            "Beschikbare updates controleren en installeren via de package manager (apt, dnf)",
+            "Automatische beveiligingsupdates configureren",
+            "Draaiende services controleren en onnodige services uitschakelen met systemctl",
+            "Een host-based firewall configureren met ufw of nftables"
+          ],
+          "toetsbaar": [
+            "Student voert een volledige update-cyclus uit en kan verklaren welke pakketten zijn bijgewerkt",
+            "Student configureert unattended-upgrades of equivalent en verifieert de werking",
+            "Student configureert een firewall die alleen SSH en een webservice toelaat en al het overige blokkeert"
+          ]
+        },
+        {
+          "titel": "Logging en monitoring",
+          "student_kan": [
+            "Relevante logbestanden vinden en lezen (auth.log, syslog, journalctl)",
+            "Basiszoekopdrachten uitvoeren in logs om specifieke gebeurtenissen te vinden",
+            "Logwatch of een vergelijkbaar hulpmiddel installeren voor dagelijkse samenvattingen"
+          ],
+          "toetsbaar": [
+            "Student vindt en interpreteert mislukte SSH-inlogpogingen in de logbestanden",
+            "Student gebruikt journalctl om recente systeemgebeurtenissen te filteren op prioriteit"
+          ]
+        }
+      ]
+    },
+    "gedrag": {
+      "doel": "Studenten vertonen consistent veilig gedrag bij het werken met Linux-systemen.",
+      "gewenst_gedrag": [
+        "Standaard werken als gewone gebruiker en alleen sudo gebruiken wanneer noodzakelijk",
+        "Altijd de bron controleren voordat software wordt geïnstalleerd",
+        "Regelmatig systeemupdates uitvoeren (minimaal wekelijks)",
+        "Logbestanden periodiek controleren op ongewone activiteiten",
+        "Nooit wachtwoorden of SSH-sleutels delen of onbeschermd opslaan",
+        "Bij twijfel over een beveiligingsconfiguratie eerst documentatie raadplegen",
+        "Nieuwe systemen beveiligen voordat ze aan een netwerk worden verbonden"
+      ],
+      "observeerbaar_gedrag": [
+        "Student logt niet in als root maar gebruikt sudo voor specifieke commando's",
+        "Student controleert pakket-bronnen en installatieopdrachten voordat ze worden uitgevoerd",
+        "Student past updates toe bij het starten van een werksessie of na notificatie",
+        "Student past het principle of least privilege toe bij het instellen van bestandsrechten",
+        "Student slaat SSH-sleutels op met correcte permissies (600) en beveiligt ze optioneel met een passphrase"
+      ],
+      "toetsbare_leeruitkomsten": [
+        "De student demonstreert in een praktijksessie dat standaard als gewone gebruiker wordt gewerkt en sudo selectief wordt ingezet",
+        "De student laat zien dat bij het opzetten van een nieuw systeem eerst SSH, firewall en updates worden geconfigureerd voordat services worden gedeployed",
+        "De student kan in een code-review of peer-assessment onveilige configuraties identificeren en corrigeren"
+      ]
+    },
+    "minimale_competentie_eisen": [
+      "Kan een Linux-systeem opzetten met key-based SSH, actieve firewall en automatische beveiligingsupdates",
+      "Kan bestandspermissies correct instellen en interpreteren conform het principle of least privilege",
+      "Kan uitleggen waarom standaard als niet-root gebruiker gewerkt moet worden en demonstreert dit in de praktijk",
+      "Kan logbestanden raadplegen om beveiligingsgerelateerde gebeurtenissen te detecteren",
+      "Kan de drie meest voorkomende Linux-beveiligingsrisico's benoemen en beschrijven hoe deze te mitigeren"
+    ]
+  },
+  "samenvatting": {
+    "belangrijkste_risicos": [
+      "SSH brute-force aanvallen op systemen met wachtwoordauthenticatie (89% van Linux endpoint-aanvallen)",
+      "Privilege-escalatie door onjuiste bestandsrechten en sudo-misconfiguratie",
+      "Exploitatie van ongepatchte kernel-kwetsbaarheden (5.530 CVE's in 2025)",
+      "Supply chain-compromittering via onbetrouwbare softwarepakketten",
+      "Onbeschermde systemen door ontbrekende firewallconfiguratie"
+    ],
+    "belangrijkste_maatregelen": [
+      "SSH-key-authenticatie implementeren en wachtwoordlogin uitschakelen",
+      "Bestandsrechten correct configureren volgens het principle of least privilege",
+      "Automatische beveiligingsupdates inschakelen en regelmatig handmatig updaten",
+      "Host-based firewall activeren met een deny-by-default beleid",
+      "Logging en monitoring inrichten en periodiek controleren"
+    ],
+    "kerninzicht": "Linux-beveiliging begint bij de basis: SSH-hardening, correcte bestandsrechten, tijdige updates en een actieve firewall. Het merendeel van succesvolle aanvallen op Linux-systemen exploiteert geen geavanceerde zero-days maar bekende misconfiguraties en nalatigheid — precies het soort fouten dat beginnende gebruikers het vaakst maken."
+  },
+  "bronnen": [
+    {
+      "referentie": "Elastic Security Labs. (2024). 2024 Global Threat Report.",
+      "url": "https://www.elastic.co/security-labs/2024-global-threat-report"
+    },
+    {
+      "referentie": "AhnLab ASEC. (2025). Statistical Report on Malware Targeting Linux SSH Servers in Q1 2025.",
+      "url": "https://asec.ahnlab.com/en/87357/"
+    },
+    {
+      "referentie": "AhnLab ASEC. (2026). Statistics Report on Malware Targeting Linux SSH Servers in Q4 2025.",
+      "url": "https://asec.ahnlab.com/en/92004/"
+    },
+    {
+      "referentie": "CrowdStrike. (2025). 2025 Global Threat Report.",
+      "url": "https://www.crowdstrike.com/en-us/global-threat-report/"
+    },
+    {
+      "referentie": "CIQ. (2026). Linux kernel CVEs 2025: what security leaders need to know to prepare for 2026.",
+      "url": "https://ciq.com/blog/linux-kernel-cves-2025-what-security-leaders-need-to-know-to-prepare-for-2026/"
+    },
+    {
+      "referentie": "CommandLinux. (2026). Linux Malware And Vulnerability Statistics [2026 Updated].",
+      "url": "https://commandlinux.com/statistics/linux-malware-vulnerability-statistics/"
+    },
+    {
+      "referentie": "LinuxTeck. (2026). Linux Security Threats 2026: Why 'Linux Is Safe' Is Getting Servers Hacked.",
+      "url": "https://www.linuxteck.com/linux-security-threats-2026/"
+    },
+    {
+      "referentie": "LinuxSecurity.com. (2026). Linux Security 2026: Emerging Risks Impacting Cloud and IoT Infrastructure.",
+      "url": "https://linuxsecurity.com/news/server-security/linux-security-risks-and-protection"
+    },
+    {
+      "referentie": "HashiCorp. (2026). The 2026 Linux security threat landscape and strategic defense pillars.",
+      "url": "https://www.hashicorp.com/en/blog/the-linux-security-threat-landscape-and-strategic-defense-pillars"
+    },
+    {
+      "referentie": "Datadog Security Labs. (2024). The XZ Utils backdoor (CVE-2024-3094): Everything you need to know.",
+      "url": "https://securitylabs.datadoghq.com/articles/xz-backdoor-cve-2024-3094/"
+    },
+    {
+      "referentie": "CrowdStrike. (2024). CVE-2024-3094 and XZ Upstream Supply Chain Attack.",
+      "url": "https://www.crowdstrike.com/en-us/blog/cve-2024-3094-xz-upstream-supply-chain-attack/"
+    },
+    {
+      "referentie": "SentinelOne. (2024). XZ Utils Backdoor | Threat Actor Planned to Inject Further Vulnerabilities.",
+      "url": "https://www.sentinelone.com/blog/xz-utils-backdoor-threat-actor-planned-to-inject-further-vulnerabilities/"
+    },
+    {
+      "referentie": "NIST National Vulnerability Database. (2024). CVE-2024-3094.",
+      "url": "https://nvd.nist.gov/vuln/detail/cve-2024-3094"
+    },
+    {
+      "referentie": "Linux Journal. (2025). The Most Critical Linux Kernel Breaches of 2025 So Far.",
+      "url": "https://www.linuxjournal.com/content/most-critical-linux-kernel-breaches-2025-so-far"
+    },
+    {
+      "referentie": "LinuxSecurity.com. (2026). 7 Linux Kernel Vulnerabilities Exploited in 2025: CISA KEV Insights.",
+      "url": "https://linuxsecurity.com/news/security-vulnerabilities/7-linux-kernel-vulnerabilities-exploited-in-2025"
+    },
+    {
+      "referentie": "Mandiant. (2025). M-Trends 2025 Report.",
+      "url": null
+    },
+    {
+      "referentie": "Verizon. (2024). Data Breach Investigations Report 2024.",
+      "url": null
+    },
+    {
+      "referentie": "IBM Security. (2025). Cost of a Data Breach Report 2025.",
+      "url": null
+    },
+    {
+      "referentie": "Security Compass. (2024). 5 Common Linux Misconfigurations.",
+      "url": "https://www.securitycompass.com/blog/5-common-linux-misconfigurations/"
+    },
+    {
+      "referentie": "SecureFlag. (2023). Privilege Escalation in Linux – Security Knowledge Base.",
+      "url": "https://knowledge-base.secureflag.com/vulnerabilities/broken_authorization/privilege_escalation_linux.html"
+    },
+    {
+      "referentie": "NOC.org. (2026). Basic Linux Security Checklist.",
+      "url": "https://noc.org/learn/linux-security-checklist"
+    },
+    {
+      "referentie": "LinuxSecurity.com. (2026). Optimizing Linux Security for 2025: Strategies Against Modern Threats.",
+      "url": "https://linuxsecurity.com/features/effective-strategies-to-optimize-linux-security-in-2025"
+    },
+    {
+      "referentie": "USENIX. (2024). Brute-Force SSH Attacks In The Wild And How To Stop Them.",
+      "url": "https://www.usenix.org/system/files/nsdi24-singh-sachin.pdf"
+    },
+    {
+      "referentie": "Cyber Crimes Watch. (2026). Linux Security in 2026: Threat Landscape, Trending Attacks, and How to Harden Your Servers.",
+      "url": "https://www.cybercrimeswatch.com/3181/linux-security-threats-attacks-server-hardening-guide/"
+    }
+  ]
+}

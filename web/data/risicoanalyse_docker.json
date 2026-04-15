@@ -1,0 +1,562 @@
+{
+  "metadata": {
+    "titel": "Risicoanalyse Docker",
+    "project": "CYBERWIJZER",
+    "thema": "Docker",
+    "auteur": "AI-agent (Cyberwijzer)",
+    "datum": "15-04-2026",
+    "template_versie": "0.1",
+    "versie": "0.1"
+  },
+  "versiebeheer": [
+    {
+      "versie": "0.1",
+      "datum": "15-04-2026",
+      "wijzigingen": "Initiële versie (AI-gegenereerd)",
+      "auteur": "AI-agent"
+    }
+  ],
+  "beschrijving_thema": {
+    "inleiding": "Docker is een open-source containerisatieplatform waarmee softwareontwikkelaars applicaties en hun afhankelijkheden kunnen verpakken in geïsoleerde, draagbare containers. Containers maken gebruik van de Linux-kernel van het hostsysteem en bieden daarmee een lichtgewicht alternatief voor volledige virtuele machines. Docker Hub fungeert als het grootste publieke containerregister ter wereld met meer dan 15 miljard image-downloads in 2024 en ruim 13 miljoen actieve ontwikkelaars. De technologie speelt een centrale rol in moderne DevOps- en CI/CD-workflows en vormt de basis voor containerorchestratieplatforms zoals Kubernetes. Doordat containers een gedeelde kernel gebruiken en images via publieke registers worden gedistribueerd, introduceert Docker een uniek aanvalsoppervlak dat verschilt van traditionele softwaredeployment.",
+    "gebruik": {
+      "toepassingen": [
+        "Applicatieontwikkeling en testen in geïsoleerde omgevingen",
+        "Microservices-architecturen en cloud-native applicaties",
+        "CI/CD-pipelines voor geautomatiseerd bouwen en deployen",
+        "Lokale ontwikkelomgevingen reproduceerbaar maken",
+        "Packaging van AI/ML-workloads en dataprocessing-taken",
+        "Deployment op cloud-infrastructuren (AWS, Azure, GCP)"
+      ],
+      "rol_in_processen": [
+        "Bouwen van container images via Dockerfiles in de bouwfase",
+        "Opslaan en distribueren van images via Docker Hub of private registries",
+        "Uitvoeren van containers op ontwikkelwerkstations en productieservers",
+        "Orkestreren van meerdere containers via Docker Compose of Kubernetes",
+        "Automatisch scannen van images op kwetsbaarheden in CI/CD-pipelines"
+      ]
+    },
+    "conclusie": "Docker is een fundamenteel onderdeel van de moderne softwareontwikkelketen en daarmee een aantrekkelijk doelwit voor aanvallers die via supply chain-aanvallen, misconfiguraties of runtime-kwetsbaarheden toegang proberen te krijgen tot systemen en data."
+  },
+  "onderzoek": [
+    {
+      "titel": "Kwetsbaarheden in container images",
+      "bevindingen": "Uit een grootschalig wetenschappelijk onderzoek gepubliceerd op de ACM Web Conference 2025 blijkt dat 93,7% van de geanalyseerde Docker Hub-images bekende kwetsbaarheden bevat. Eerdere cijfers van Red Hat (2024) en andere bronnen bevestigen dit beeld: rapporten tonen consequent aan dat meer dan 75–85% van de productie-images high- of critical-severitykwetsbaarheden bevat. Verouderde basesoftware, ongepatchte dependencies en het gebruik van de 'latest'-tag in plaats van immutable image-digests zijn de voornaamste oorzaken. De ACM-studie identificeerde bovendien 4.437 images met gelekte secrets en 24 aantoonbaar kwaadaardige images die samen 334 downstream images infecteerden.",
+      "bewezen": "Wetenschappelijk onderzoek (ACM WWW 2025) toont aan dat 93,7% van een steekproef van 33.952 Docker Hub-images bekende kwetsbaarheden bevat en dat kwaadaardige images zich via de image dependency-keten kunnen verspreiden.",
+      "afgeleide_conclusie": "Omdat ontwikkelaars images vaak zonder verificatie gebruiken als basislaag (FROM-instructie), neemt de kans op het onbewust introduceren van kwetsbaarheden in productieomgevingen sterk toe.",
+      "bronnen": [
+        "ACM WWW 2025 – Dr. Docker: A Large-Scale Security Measurement of Docker Image Ecosystem",
+        "Red Hat State of Container Security Report 2024"
+      ]
+    },
+    {
+      "titel": "Blootgestelde secrets in Docker images",
+      "bevindingen": "Een scan van Docker Hub door beveiligingsonderzoeker Flare in november 2025 vond 10.456 container images met blootgestelde credentials, verspreid over 205 namespaces en meer dan 100 organisaties waaronder een Fortune 500-bedrijf. Bijna 4.000 van de gelekte secrets betroffen AI model API-keys; daarnaast werden AWS-, Azure- en GCP-cloudreferenties en databasewachtwoorden aangetroffen. Onderzoek toont aan dat 42% van de gelekte images vijf of meer secrets per image bevatten. Ontwikkelaars lekken secrets doordat ze .env-bestanden kopiëren naar images of credentials hardcoderen in Dockerfiles, waarna de secrets via Docker Hub publiek toegankelijk worden, zelfs nadat de container is verwijderd.",
+      "bewezen": "Flare's grootschalige scan (november 2025) documenteert 10.456 Docker Hub-images met exposed credentials die eigendom zijn van meer dan 100 identificeerbare organisaties.",
+      "afgeleide_conclusie": "Omdat een enkel image met vijf of meer secrets een gehele CI/CD-pipeline of cloudomgeving kan compromitteren, is de potentiële schade per incident disproportioneel groot ten opzichte van de relatief eenvoudige oorzaak.",
+      "bronnen": [
+        "Flare Security Research – Docker Hub Secret Exposure Study (november 2025)",
+        "eSecurity Planet – Flare Finds 10,000 Docker Hub Images Exposing Sensitive Secrets (december 2025)"
+      ]
+    },
+    {
+      "titel": "Container escape via runtime-kwetsbaarheden",
+      "bevindingen": "Meerdere kritieke kwetsbaarheden in de Docker-runtime (runc, BuildKit, Moby) maken het mogelijk voor aanvallers om uit een container te ontsnappen en code op het hostsysteem uit te voeren. CVE-2024-21626 (runc) stelde aanvallers in staat om via een gelekte bestandsdescriptor toegang te krijgen tot het hostsysteem, ook vanuit een verder veilige container. CVE-2025-9074 (CVSS 9.3) maakte het voor een kwaadaardige container in Docker Desktop mogelijk om de Docker Engine API te benaderen en nieuwe containers te starten zonder dat de Docker-socket was gemount. CVE-2026-34040 (CVSS 8.8) in Docker Engine stelt aanvallers in staat autorisatieplugins te omzeilen via een oversized HTTP-verzoek, waarna een geprivilegieerde container met toegang tot het hostsysteem kan worden aangemaakt.",
+      "bewezen": "Docker's eigen beveiligingsmededelingen en SecurityWeek documenteren meerdere container escape-kwetsbaarheden in 2024–2026, waaronder CVE-2024-21626 en CVE-2025-9074 met CVSS-scores van respectievelijk 8.6 en 9.3.",
+      "afgeleide_conclusie": "Omdat containers een gedeelde kernel gebruiken, is een succesvolle container escape in feite gelijk aan volledige compromitering van het hostsysteem, wat de impact van runtimekwetsbaarheden fundamenteel vergroot ten opzichte van traditionele applicatiekwetsbaarheden.",
+      "bronnen": [
+        "Docker Security Announcements – docs.docker.com (2024–2026)",
+        "SecurityWeek – Docker Desktop Vulnerability Leads to Host Compromise (augustus 2025)"
+      ]
+    },
+    {
+      "titel": "Misconfiguraties en overmatige privileges",
+      "bevindingen": "Onderzoek van Red Hat (2024) toont aan dat 40% van de beveiligingsincidenten in containeromgevingen direct te herleiden zijn naar misconfiguraties. Het gebruik van de --privileged-flag, het mounten van de Docker-socket (/var/run/docker.sock) in een container, en het uitvoeren van containers als root-gebruiker zijn de meest voorkomende gevaarlijke configuraties. De OWASP Docker Security Cheat Sheet documenteert uitgebreid hoe deze standaard developer-shortcuts direct leiden tot container escape, privilege escalation en volledige hostsysteem-compromitering. CrowdStrike rapporteerde in 2021 over de Doki-malwarefamilie die expliciet gebruik maakt van misconfigureerde Docker-containers als initieel infectievector.",
+      "bewezen": "Red Hat's State of Kubernetes Security Report 2024 stelt dat 40% van gedetecteerde beveiligingsproblemen in container/Kubernetes-configuraties lag; OWASP en CrowdStrike documenteren specifieke misconfiguraties en reële exploits.",
+      "afgeleide_conclusie": "Misconfiguraties zijn systematisch vaker de oorzaak van succesvolle aanvallen dan zero-day exploits, wat betekent dat training en secure-by-default configuraties een grotere beveiligingswinst opleveren dan uitsluitend patching.",
+      "bronnen": [
+        "OWASP Docker Security Cheat Sheet – cheatsheetseries.owasp.org",
+        "Red Hat State of Kubernetes Security Report 2024"
+      ]
+    },
+    {
+      "titel": "Supply chain-aanvallen via Docker Hub",
+      "bevindingen": "Docker Hub wordt actief misbruikt voor de verspreiding van kwaadaardige container images. Uit onderzoek van Flare (december 2025) bleek dat een cluster van 64 kwaadaardige images cryptomining-software bevatte, verspreid over meerdere Monero-wallets, met miljoenen pulls. In augustus 2025 ontdekte beveiligingsonderzoeker Binarly dat tientallen officiële Debian-gebaseerde Docker Hub-images nog altijd de XZ Utils-backdoor (CVE-2024-3094, CVSS 10.0) bevatten, maanden na de publieke bekendmaking in maart 2024. De ACM-studie (2025) documenteert hoe aanvalspropagatie via de image dependency-keten werkt: een gecompromitteerde basisimage infecteert al zijn downstream images automatisch.",
+      "bewezen": "Flare (2025), Binarly/The Hacker News (augustus 2025) en de ACM WWW 2025-studie documenteren aantoonbaar kwaadaardige images op Docker Hub en de mechanismen van aanvalspropagatie via de supply chain.",
+      "afgeleide_conclusie": "Omdat CI/CD-pipelines Docker Hub-images vaak automatisch en zonder handmatige verificatie pullen, kan een eenmalig gecompromitteerde upstream-image een groot aantal downstream organisaties tegelijkertijd compromitteren.",
+      "bronnen": [
+        "Flare – Cryptomining Supply-Chain Abuse on Docker Hub (december 2025)",
+        "The Hacker News – Researchers Spot XZ Utils Backdoor in Dozens of Docker Hub Images (augustus 2025)"
+      ]
+    }
+  ],
+  "consequenties_en_voorbeelden": [
+    {
+      "titel": "XZ Utils backdoor in Docker Hub images (CVE-2024-3094)",
+      "onderzoek": "In maart 2024 werd ontdekt dat een kwaadaardige bijdrager gedurende twee jaar vertrouwen opbouwde bij het xz-utils open source project voordat hij een backdoor introduceerde in versies 5.6.0 en 5.6.1 (CVSS 10.0). In augustus 2025 stelde beveiligingsonderzoeker Binarly vast dat tientallen officiële Debian-gebaseerde Docker Hub-images de backdoor nog altijd bevatten, maanden na publieke bekendmaking.",
+      "wat_ging_mis": [
+        "Een kwaadaardige open source-bijdrager infiltreerde een veelgebruikte systeembibliotheek via social engineering over een periode van twee jaar",
+        "Docker Hub-images werden niet automatisch herbouwd en gescand na de publieke kwetsbaarheidsbekendmaking",
+        "Ontwikkelaars die mutable tags (zoals 'debian:bookworm') gebruikten in plaats van immutable digests erfden automatisch de gecompromitteerde library",
+        "De backdoor was ontworpen om te activeren via SSH, waardoor ongeautoriseerde remote code-uitvoering mogelijk werd"
+      ],
+      "impact": [
+        "Duizenden organisaties draaiden maandenlang onbewust backdoored containers in productie",
+        "Potentieel ongeautoriseerde remote access via SSH op alle systemen met de geïnfecteerde images",
+        "Vertrouwen in publieke container-registries en open source supply chain werd structureel aangetast",
+        "Vertraagde detectie toonde aan dat conventionele versietracking onvoldoende is voor binaire-niveau monitoring"
+      ],
+      "bronnen": [
+        "The Hacker News – Researchers Spot XZ Utils Backdoor in Dozens of Docker Hub Images (augustus 2025)",
+        "SOC Prime – CVE-2025-9074 Critical Vulnerability in Docker Desktop (augustus 2025)"
+      ]
+    },
+    {
+      "titel": "Cryptomining via geconfigureerde Docker API (Doki-malware, 2021)",
+      "onderzoek": "CrowdStrike Intelligence documenteerde in 2021 hoe de Doki-malwarefamilie gebruik maakte van misconfigureerde, publiek blootgestelde Docker Engine API's om toegang te krijgen tot containers en vervolgens cryptomining-workloads te installeren. Aanvallers vonden de blootgestelde Docker API's via internet-scans, zonder dat authenticatie vereist was.",
+      "wat_ging_mis": [
+        "De Docker Engine API werd zonder authenticatie of TLS blootgesteld aan het publieke internet",
+        "Containers draaiden met onnodige privileges die laterale beweging mogelijk maakten",
+        "Er was geen monitoring aanwezig om ongeautoriseerde container-deployments te detecteren",
+        "Standaard Docker-configuraties staan API-toegang toe zonder aanvullende beveiligingsmaatregelen"
+      ],
+      "impact": [
+        "Computercapaciteit werd ongeoorloofd gebruikt voor cryptocurrency-mining (Monero)",
+        "Financiële schade door verhoogde cloud-kosten en resourceverbruik",
+        "Potentiële datalekkage via toegang tot bestanden op het hostsysteem",
+        "Reputatieschade en mogelijke compliance-overtredingen voor getroffen organisaties"
+      ],
+      "bronnen": [
+        "CrowdStrike – Exploitation of Misconfigured Image Containers (2021, bijgewerkt 2025)",
+        "Cloud Native Now – Docker Security in 2025: Best Practices (februari 2025)"
+      ]
+    },
+    {
+      "titel": "Massale secrets-lekkage via Docker Hub (Flare, november 2025)",
+      "onderzoek": "In november 2025 publiceerde beveiligingsbedrijf Flare de resultaten van een scan van Docker Hub waarbij 10.456 container images met blootgestelde credentials werden aangetroffen in 205 namespaces van meer dan 100 organisaties, waaronder een Fortune 500-bedrijf en meerdere bedrijven in financiële dienstverlening en gezondheidszorg.",
+      "wat_ging_mis": [
+        "Ontwikkelaars kopieerden .env-bestanden met productiecredentials onbedoeld naar Docker images",
+        "Secrets werden hardgecodeerd in Dockerfiles en zijn traceerbaar in de image-history, ook na verwijdering uit de Dockerfile",
+        "Afwezigheid van geautomatiseerde secret-detectie in de build-pipeline",
+        "Gebrek aan bewustzijn dat Docker image-layers permanent opgeslagen credentials bevatten, ook na 'overschrijven'"
+      ],
+      "impact": [
+        "Blootgestelde AWS-, Azure- en GCP-cloudreferenties gaven aanvallers potentieel toegang tot productieomgevingen",
+        "Bijna 4.000 gelekte AI API-keys konden worden misbruikt voor ongeautoriseerd gebruik van kostbare AI-diensten",
+        "Databasewachtwoorden in 89 accounts gaven directe toegang tot productiedata",
+        "De getroffen organisaties hadden geen zicht op de blootstelling omdat de images buiten hun eigen monitoringperimeter stonden"
+      ],
+      "bronnen": [
+        "Flare Security Research – Docker Hub Secret Exposure Study (november 2025)",
+        "eSecurity Planet – Flare Finds 10,000 Docker Hub Images Exposing Sensitive Secrets (december 2025)"
+      ]
+    },
+    {
+      "titel": "Container escape via CVE-2025-9074 in Docker Desktop",
+      "onderzoek": "In augustus 2025 werd CVE-2025-9074 (CVSS 9.3) gepubliceerd: een kritieke kwetsbaarheid in Docker Desktop voor Windows en macOS waarbij een kwaadaardige container de Docker Engine API kon benaderen via het interne subnet (192.168.65.7:2375), zonder dat de Docker-socket was gemount en zelfs als Enhanced Container Isolation (ECI) was ingeschakeld.",
+      "wat_ging_mis": [
+        "De Docker Engine API was intern bereikbaar zonder authenticatie, ook vanuit containers",
+        "Enhanced Container Isolation (ECI) bood geen bescherming tegen deze specifieke aanvalsvector",
+        "Op Windows met WSL-backend konden hostschijven worden gemount met de rechten van de Docker Desktop-gebruiker",
+        "De kwetsbaarheid was eenvoudig te exploiteren met drie regels Python-code"
+      ],
+      "impact": [
+        "Een kwaadaardige container kon nieuwe containers starten en het hostsysteem mounten",
+        "Ongeautoriseerde toegang tot gebruikersbestanden op het hostsysteem was mogelijk",
+        "Privilege escalation naar beheerdersrechten op Windows was haalbaar",
+        "Aanvallers konden volledige controle over de Docker-omgeving overnemen via SSRF-aanvallen"
+      ],
+      "bronnen": [
+        "SecurityWeek – Docker Desktop Vulnerability Leads to Host Compromise (augustus 2025)",
+        "Docker Security Announcements – docs.docker.com"
+      ]
+    }
+  ],
+  "consequenties_conclusie": "De gedocumenteerde incidenten tonen aan dat Docker-beveiligingsrisico's zelden geïsoleerd blijven: een gecompromitteerde container image, een gelekt credential of een misconfiguratie kan leiden tot volledige compromitering van het hostsysteem, cloud-infrastructuur of de gehele softwaretoeleveringsketen. Menselijke fouten (misconfiguraties en hardgecodeerde secrets) zijn daarbij structureel vaker de directe oorzaak dan zero-day exploits.",
+  "risicos": {
+    "risico_matrix": {
+      "kans_schaal": {
+        "1": "Laag – Komt zelden voor",
+        "2": "Middel – Komt regelmatig voor",
+        "3": "Hoog – Komt vaak voor"
+      },
+      "impact_schaal": {
+        "1": "Laag – Beperkte gevolgen",
+        "2": "Middel – Merkbare schade",
+        "3": "Hoog – Ernstige schade (organisatie, mens, maatschappij)"
+      }
+    },
+    "lijst": [
+      {
+        "nr": 1,
+        "titel": "Kwetsbare of kwaadaardige container images (supply chain)",
+        "kans": "3",
+        "impact": "3",
+        "score": "9",
+        "ranking": "1",
+        "oorzaak": [
+          "93,7% van Docker Hub-images bevat bekende kwetsbaarheden (ACM WWW 2025)",
+          "Gebruik van mutable tags (zoals 'latest') in plaats van immutable image-digests",
+          "Afwezigheid van geautomatiseerde image-scanning in CI/CD-pipelines",
+          "Kwaadaardige actoren distribueren bewust geïnfecteerde images via Docker Hub",
+          "Downstream images erven kwetsbaarheden automatisch van basisimages"
+        ],
+        "gevolg": [
+          "Uitvoering van malware (cryptominers, backdoors, ransomware) in productieomgevingen",
+          "Ongeautoriseerde remote code-uitvoering via backdoored componenten",
+          "Laterale beweging naar andere containers, het hostsysteem of de cloud-infrastructuur",
+          "Langdurige aanwezigheid van aanvallers zonder detectie"
+        ],
+        "impact_detail": [
+          "Volledige compromitering van de softwaretoeleveringsketen",
+          "Diefstal van intellectueel eigendom, klantdata en bedrijfsgeheimen",
+          "Reputatieschade en verlies van klantvertrouwen",
+          "Financiële schade door ongeoorloofd resourceverbruik en herstelkosten",
+          "Mogelijke compliance-overtredingen (AVG, NIS2, ISO 27001)"
+        ]
+      },
+      {
+        "nr": 2,
+        "titel": "Blootgestelde secrets en credentials in Docker images",
+        "kans": "3",
+        "impact": "3",
+        "score": "9",
+        "ranking": "1",
+        "oorzaak": [
+          "Hardcoderen van API-keys, wachtwoorden en tokens in Dockerfiles of .env-bestanden",
+          "Onbekendheid met het feit dat Docker image-layers permanent secrets bewaren, ook na 'overschrijven'",
+          "Afwezigheid van pre-commit hooks of CI/CD-checks voor secret-detectie",
+          "Publiek pushen van images naar Docker Hub zonder controle op inhoud",
+          "Flare (2025): 10.456 images met exposed secrets aangetroffen in één maand scannen"
+        ],
+        "gevolg": [
+          "Directe toegang tot cloud-infrastructuur (AWS, Azure, GCP) via gestolen credentials",
+          "Ongeautoriseerde toegang tot productiedatabases",
+          "Misbruik van AI API-keys voor grootschalig ongeoorloofd gebruik",
+          "Laterale beweging door gebruik van gestolen credentials in andere systemen"
+        ],
+        "impact_detail": [
+          "Financiële schade door misbruik van cloud- en AI-diensten",
+          "Datalekken met gevolgen onder de AVG (meldplicht, boetes)",
+          "Volledige overname van CI/CD-pipelines en softwarerelease-processen",
+          "Langdurige blootstelling door onbekendheid van de gelekte credentials",
+          "42% van de gelekte images bevat vijf of meer secrets per image (Flare 2025)"
+        ]
+      },
+      {
+        "nr": 3,
+        "titel": "Containerescape via runtime-kwetsbaarheden",
+        "kans": "2",
+        "impact": "3",
+        "score": "6",
+        "ranking": "3",
+        "oorzaak": [
+          "Kwetsbaarheden in runc, BuildKit en Moby (CVE-2024-21626, CVE-2025-9074, CVE-2026-34040)",
+          "Containers gebruiken een gedeelde kernel met het hostsysteem",
+          "Uitgesteld patchen van Docker Engine en Docker Desktop",
+          "Containers draaien als root, wat container escape kritischer maakt",
+          "Ongeauthenticeerde Docker Engine API intern bereikbaar vanuit containers (CVE-2025-9074)"
+        ],
+        "gevolg": [
+          "Volledige toegang tot het hostsysteem na succesvolle container escape",
+          "Overname van de gehele Docker-omgeving inclusief alle andere containers",
+          "Installatie van persistente malware op hostniveau",
+          "Omzeilen van alle containerbeveiligingsmaatregelen"
+        ],
+        "impact_detail": [
+          "Ernstige gevolgen voor de vertrouwelijkheid, integriteit en beschikbaarheid van het hostsysteem",
+          "In multi-tenant omgevingen: isolatiedoorbraak met impact op andere klanten",
+          "Volledige hostsysteem-compromitering vergelijkbaar met directe systeeminbraak",
+          "CVE-2025-9074 had CVSS-score 9.3; CVE-2026-34040 CVSS 8.8 (The Hacker News 2026)"
+        ]
+      },
+      {
+        "nr": 4,
+        "titel": "Misconfiguraties en overmatige privileges",
+        "kans": "3",
+        "impact": "2",
+        "score": "6",
+        "ranking": "3",
+        "oorzaak": [
+          "Gebruik van --privileged-flag als 'snelle oplossing' voor permissieproblemen",
+          "Mounten van de Docker-socket (/var/run/docker.sock) in containers voor Docker-in-Docker builds",
+          "Containers draaien als root-gebruiker zonder noodzaak",
+          "Afwezigheid van resource-limieten (CPU, geheugen, processen) in container-configuraties",
+          "Red Hat 2024: 40% van beveiligingsincidenten is direct te herleiden naar misconfiguraties"
+        ],
+        "gevolg": [
+          "Privilege escalation van containerproces naar hostroot",
+          "Volledige Docker-omgevingsovertaking via gemounte Docker-socket",
+          "Denial-of-service door containers zonder resourcelimieten",
+          "Ongeautoriseerde toegang tot gevoelige hostbestanden via volume mounts"
+        ],
+        "impact_detail": [
+          "Merkbare schade aan de integriteit en beschikbaarheid van de omgeving",
+          "Misbruik van computercapaciteit voor cryptomining of andere kwaadaardige activiteiten",
+          "Verhoogd risico bij combinatie met andere kwetsbaarheden (privilege escalation-keten)",
+          "89% van organisaties ervaarde minstens één Kubernetes/container security-incident in 2024 (Red Hat)"
+        ]
+      },
+      {
+        "nr": 5,
+        "titel": "Onveilige blootstelling van de Docker Engine API",
+        "kans": "2",
+        "impact": "3",
+        "score": "6",
+        "ranking": "3",
+        "oorzaak": [
+          "Docker daemon geconfigureerd om te luisteren op TCP-poort 2375 zonder TLS of authenticatie",
+          "Docker-socket gemount in containers of bereikbaar via interne subnetten",
+          "Autorisatieplugins omzeild via CVE-2026-34040 (CVSS 8.8) door oversized HTTP-verzoeken",
+          "Onbekendheid met de gevolgen van het blootstellen van de Docker API"
+        ],
+        "gevolg": [
+          "Volledige controle over alle containers en images op de host door aanvaller",
+          "Starten van geprivilegieerde containers met toegang tot het hostsysteem",
+          "Exfiltratie van alle data die verwerkt wordt door de draaiende containers",
+          "Permanent achterdeurtje via kwaadaardige container-deployment"
+        ],
+        "impact_detail": [
+          "Gelijk aan root-toegang op het hostsysteem voor een aanvaller met API-toegang",
+          "Gedocumenteerde aanvallen via blootgestelde Docker API voor cryptomining (CrowdStrike 2021)",
+          "CVE-2026-34040 maakt AuthZ-plugins (de primaire beveiligingslaag van de API) omzeilbaar",
+          "Ernstige gevolgen voor vertrouwelijkheid, integriteit en beschikbaarheid van alle services"
+        ]
+      }
+    ]
+  },
+  "maatregelen": {
+    "technisch": {
+      "items": [
+        "Gebruik minimale, hardened basisimages (distroless of Alpine) om het aanvalsoppervlak te verkleinen",
+        "Pin images op immutable SHA256-digests in plaats van mutable tags zoals 'latest'",
+        "Integreer geautomatiseerde image-scanners (Trivy, Grype, Docker Scout) als verplichte CI/CD-stap",
+        "Gebruik Docker Content Trust (DCT) of Sigstore/cosign voor image-signing en verificatie",
+        "Voer containers uit als non-root gebruiker (USER <uid> in Dockerfile, minimaal UID 1000)",
+        "Gebruik Docker rootless mode of --userns-remap om de blast radius van container escapes te beperken",
+        "Implementeer read-only filesystems voor containers die geen schrijftoegang nodig hebben (--read-only)",
+        "Stel resource-limieten in (--memory, --cpus, --ulimit) om denial-of-service te voorkomen",
+        "Verwijder alle onnodige Linux capabilities (--cap-drop ALL, voeg alleen benodigde capabilities terug toe)",
+        "Versleutel de Docker Engine API met TLS en vereist client-certificaatautenticatie; schakel TCP-poort 2375 uit",
+        "Gebruik multi-stage builds om build-tools en tijdelijke bestanden uit de productie-image te verwijderen",
+        "Stel seccomp- en AppArmor-profielen in om systeemaanroepen van containers te beperken",
+        "Gebruik runtime-beveiligingstools (Falco, Tetragon) voor detectie van afwijkend containergedrag",
+        "Gebruik secret management-tools (HashiCorp Vault, Docker Secrets, AWS Secrets Manager) in plaats van omgevingsvariabelen of Dockerfiles voor gevoelige data"
+      ],
+      "onderbouwing": "OWASP Docker Security Cheat Sheet; Docker Security Documentation; NIST SP 800-190 (Application Container Security Guide); CIS Docker Benchmark"
+    },
+    "proces": {
+      "items": [
+        "Implementeer een verplicht image-scanbeleid: geen deployment zonder schoon scanrapport",
+        "Voer een Software Bill of Materials (SBOM) in voor alle productie-images om de dependency-keten inzichtelijk te maken",
+        "Stel een patch-SLA in: kritieke kwetsbaarheden (CVSS ≥9.0) binnen 24 uur, high (CVSS ≥7.0) binnen 7 dagen",
+        "Gebruik private registries met toegangscontrole in plaats van publieke Docker Hub voor productie-images",
+        "Voer regelmatige audits uit van Dockerfiles, docker-compose-bestanden en container-configuraties op bekende antipatterns",
+        "Voer pre-commit secret-detectie in (GitGuardian, truffleHog, detect-secrets) om secrets voor commit te detecteren",
+        "Documenteer en handhaaf een 'least privilege'-beleid voor container-configuraties",
+        "Voer periodieke penetratietests uit op de containeromgeving inclusief escape-scenarios",
+        "Zorg voor een incident response-procedure specifiek voor containeromgevingen"
+      ],
+      "onderbouwing": "Red Hat State of Container Security Report 2024; Flare Docker Hub Secret Exposure Study 2025; CIS Docker Benchmark v1.6"
+    },
+    "organisatorisch": {
+      "items": [
+        "Zorg voor verplichte training in Docker-beveiliging voor alle ontwikkelaars, met nadruk op misconfiguraties en secret management",
+        "Wijs een verantwoordelijke aan (DevSecOps-engineer of security champion) voor het containerplatform",
+        "Stel een intern approved image registry (private registry) in als enige toegestane bron voor productie-images",
+        "Implementeer een 'shift-left security'-cultuur: beveiliging is onderdeel van de ontwikkelcyclus, niet een eindcheck",
+        "Zorg voor bewustzijn rond supply chain-risico's: behandel publieke Docker Hub-images als potentieel onbetrouwbaar",
+        "Volg de CIS Docker Benchmark en NIST SP 800-190-richtlijnen als beveiligingsbasislijn voor de organisatie",
+        "Rapporteer containerbeveiliging als vast onderdeel van security dashboards aan management"
+      ],
+      "onderbouwing": "NIST SP 800-190 Application Container Security Guide; ENISA Threat Landscape for Supply Chain Attacks; Red Hat State of Container Security Report 2024"
+    }
+  },
+  "basisvaardigheden": {
+    "inleiding": "Studenten softwareontwikkeling op HBO/MBO-niveau die werken met Docker moeten begrijpen dat containerisatie een fundamenteel ander beveiligingsmodel introduceert dan traditionele applicatieontwikkeling, en dat veilig gebruik van Docker specifieke kennis, technieken en gedragspatronen vereist.",
+    "bewustzijn": {
+      "doel": "Studenten begrijpen de unieke beveiligingsrisico's van Docker en herkennen gevaarlijke situaties in de praktijk.",
+      "minimale_kennis": [
+        "Docker gebruikt een gedeelde kernel: een container escape is gelijk aan toegang tot het hostsysteem",
+        "Meer dan 90% van publieke Docker Hub-images bevat bekende kwetsbaarheden (ACM WWW 2025)",
+        "Secrets in Dockerfiles of .env-files worden permanent opgeslagen in image-layers en zijn zichtbaar voor iedereen met toegang tot het image",
+        "De --privileged-flag en het mounten van /var/run/docker.sock geven een container volledige controle over het hostsysteem",
+        "Supply chain-aanvallen via Docker Hub zijn gedocumenteerd en actief: kwaadaardige images imiteren legitieme tools",
+        "Mutable tags (zoals 'latest') garanderen geen consistente of veilige builds; immutable digests zijn de veilige standaard"
+      ],
+      "herkenningsvaardigheid": [
+        "Herkennen van gevaarlijke Dockerfile-patronen: hardgecodeerde wachtwoorden, gebruik van 'latest'-tag, uitvoeren als root",
+        "Herkennen van onveilige docker-run-parameters: --privileged, -v /var/run/docker.sock:/var/run/docker.sock, --network host",
+        "Onderscheid kunnen maken tussen officiële, geverifieerde en onbekende Docker Hub-images",
+        "Begrijpen wat een CVSS-score betekent en wanneer een kwetsbaarheid in een image kritisch is",
+        "Herkennen van warningmeldingen van image-scanners (Trivy, Docker Scout) en begrijpen wat actie vereist"
+      ],
+      "toetsbare_leeruitkomsten": [
+        "De student kan aan de hand van een gegeven Dockerfile minimaal drie beveiligingsproblemen identificeren en benoemen",
+        "De student kan uitleggen waarom de --privileged-flag gevaarlijk is en welk alternatief van toepassing is",
+        "De student kan het verschil uitleggen tussen een mutable tag en een immutable digest en aangeven waarom dit relevant is voor beveiliging",
+        "De student kan beschrijven hoe een supply chain-aanval via Docker Hub werkt aan de hand van een concreet voorbeeld"
+      ]
+    },
+    "vaardigheden": {
+      "doel": "Studenten kunnen veilige Docker-configuraties ontwerpen en implementeren en geautomatiseerde beveiligingscontroles toepassen in een CI/CD-pipeline.",
+      "categorieen": [
+        {
+          "titel": "Veilige Dockerfile-opstelling",
+          "student_kan": [
+            "Een multi-stage Dockerfile schrijven die build-tools uitsluit van de productie-image",
+            "Een non-root gebruiker configureren in een Dockerfile (USER-instructie met numerieke UID)",
+            "Basisimages pinnen op een specifieke SHA256-digest in plaats van een mutable tag",
+            "Onnodige packages en tools weglaten uit de productie-image om het aanvalsoppervlak te minimaliseren",
+            "Secrets niet hardcoderen in Dockerfiles maar aanleveren via build-args met Docker Secrets of environment variables op runtime"
+          ],
+          "toetsbaar": [
+            "De student levert een Dockerfile aan die door een Dockerfile-linter (hadolint) geen errors of warnings van niveau 'error' produceert",
+            "De student kan aantonen dat de productie-image geen build-tools, testbestanden of credentials bevat via 'docker inspect' of image-analyse",
+            "De student kan demonstreren dat de container als non-root gebruiker draait via 'docker exec whoami'"
+          ]
+        },
+        {
+          "titel": "Image-scanning en kwetsbaarheidsbeheer",
+          "student_kan": [
+            "Een image-scan uitvoeren met Trivy of Docker Scout en de output interpreteren",
+            "Het verschil uitleggen tussen een false positive en een echte kwetsbaarheid in een scanrapport",
+            "Een image-scanstap toevoegen als verplichte CI/CD-stap die de pipeline blokkeert bij kritieke bevindingen",
+            "Beslissen welke kwetsbaarheden acceptabel zijn (accepted risk) en welke direct gepatcht moeten worden"
+          ],
+          "toetsbaar": [
+            "De student voert een Trivy-scan uit op een opgegeven image en presenteert een overzicht van kritieke en high-severity kwetsbaarheden",
+            "De student kan in een CI/CD-configuratie (GitHub Actions of GitLab CI) een werkende image-scanstap toevoegen die de pipeline blokkeert bij CRITICAL-bevindingen"
+          ]
+        },
+        {
+          "titel": "Veilige container-configuratie en runtime",
+          "student_kan": [
+            "Een docker-compose.yml-bestand configureren zonder --privileged en met expliciete capability-drops",
+            "Resource-limieten instellen (memory, cpu) in een docker-compose.yml of docker-run-commando",
+            "Docker Secrets of omgevingsvariabelen via een externe secrets-manager gebruiken in plaats van hardgecodeerde waarden",
+            "De Docker-socket niet mounten en begrijpen waarom dat gevaarlijk is",
+            "Een container configureren met een read-only filesystem en expliciete tmpfs-mounts voor schrijfdoeleinden"
+          ],
+          "toetsbaar": [
+            "De student levert een docker-compose.yml aan waarbij de resulterende container als non-root draait, geen onnodige capabilities heeft en resource-limieten zijn geconfigureerd",
+            "De student kan aantonen dat geen secrets aanwezig zijn in de image-layers via 'docker history' en 'docker inspect'"
+          ]
+        }
+      ]
+    },
+    "gedrag": {
+      "doel": "Studenten vertonen structureel secure-by-default gedrag bij het werken met Docker, ook zonder expliciete instructie.",
+      "gewenst_gedrag": [
+        "Altijd de bron van een Docker Hub-image verifiëren (officieel, geverifieerd publisher, of eigen registry) voordat gebruik",
+        "Nooit productie-credentials, API-keys of wachtwoorden opslaan in Dockerfiles, docker-compose-bestanden of image-layers",
+        "Standaard uitvoeren van containers als non-root, tenzij er een gedocumenteerde reden is voor root-toegang",
+        "Image-scans uitvoeren voordat een image wordt gepusht naar een registry of gedeployed",
+        "Melden van gevonden beveiligingsproblemen in gedeelde images of configuraties aan het team of de maintainer",
+        "Docker Engine en Docker Desktop actueel houden door regelmatig te updaten"
+      ],
+      "observeerbaar_gedrag": [
+        "Student controleert de publisher-badge en pull-statistieken van een Docker Hub-image voordat gebruik in een project",
+        "Student voert een image-scan uit als vanzelfsprekende stap in het ontwikkelproces, ook buiten CI/CD",
+        "Student geeft bij code review feedback op onveilige Docker-configuraties (hardgecodeerde secrets, privileged-containers)",
+        "Student gebruikt een .dockerignore-bestand om gevoelige bestanden uit te sluiten van de build-context",
+        "Student vraagt om een motivatie wanneer een teamgenoot --privileged of docker.sock wil mounten"
+      ],
+      "toetsbare_leeruitkomsten": [
+        "De student kan in een code review aantonen dat hij/zij minimaal drie beveiligingsproblemen in een gegeven Docker-configuratie heeft geïdentificeerd en constructief feedback heeft gegeven",
+        "De student kan in een practicum demonstreren dat zijn/haar Docker-omgeving geen containers draait als root, geen onnodige capabilities heeft en alle images gescand zijn",
+        "De student rapporteert een gevonden kwetsbaarheid in een gedeelde image of Dockerfile aan de docent of een klasgenoot"
+      ]
+    },
+    "minimale_competentie_eisen": [
+      "De student kan uitleggen wat een container escape is en waarom het een ernstig risico vormt (mondeling of schriftelijk, minimaal 3 correcte argumenten)",
+      "De student schrijft een Dockerfile die geen hardgecodeerde secrets bevat, de applicatie als non-root uitvoert en een specifieke basisimage-versie gebruikt",
+      "De student kan een image-scan uitvoeren met Trivy of een vergelijkbare tool en de kritieke bevindingen interpreteren en prioriteren",
+      "De student kan de twee meest gevaarlijke Docker-misconfiguraties (--privileged en docker.sock mount) benoemen, uitleggen wat de impact is en een veilig alternatief aangeven",
+      "De student past in een CI/CD-pipeline een geautomatiseerde beveiligingscheck toe die de pipeline blokkeert bij kritieke kwetsbaarheden"
+    ]
+  },
+  "samenvatting": {
+    "belangrijkste_risicos": [
+      "Kwetsbare en kwaadaardige container images via Docker Hub (93,7% van images bevat kwetsbaarheden; supply chain-aanvallen actief gedocumenteerd)",
+      "Blootgestelde secrets en credentials hardgecodeerd in Docker images (10.456+ gevallen in één maand, Flare 2025)",
+      "Container escapes via runtime-kwetsbaarheden in runc/BuildKit/Docker Engine (CVSS 8.8–9.3, meerdere CVE's in 2024–2026)",
+      "Misconfiguraties en overmatige privileges als primaire aanvalsvector (40% van incidenten, Red Hat 2024)",
+      "Ongeauthenticeerde blootstelling van de Docker Engine API"
+    ],
+    "belangrijkste_maatregelen": [
+      "Geautomatiseerde image-scanning (Trivy, Docker Scout) als verplichte, blokkerende CI/CD-stap",
+      "Non-root containers, capability-drops en resource-limieten als standaard configuratie",
+      "Secrets management via externe tools (Vault, Docker Secrets); nooit hardcoderen in Dockerfiles",
+      "Image-digests pinnen in plaats van mutable tags; gebruik van private registry voor productie",
+      "Docker Engine en Docker Desktop actueel houden; kritieke patches binnen 24 uur toepassen",
+      "Runtime-monitoring met Falco of vergelijkbaar voor detectie van afwijkend containergedrag"
+    ],
+    "kerninzicht": "Docker-beveiliging faalt vrijwel altijd door menselijke fouten en niet door onbekende zero-day exploits: misconfiguraties, hardgecodeerde secrets en ongecontroleerd gebruik van publieke images zijn de dominante risicofactoren. De meest effectieve beveiligingsinvestering is daarom een combinatie van geautomatiseerde tooling in de CI/CD-pipeline en structurele bewustwording bij ontwikkelaars."
+  },
+  "bronnen": [
+    {
+      "referentie": "ACM Web Conference 2025 – Dr. Docker: A Large-Scale Security Measurement of Docker Image Ecosystem. Proceedings of the ACM on Web Conference 2025. DOI: 10.1145/3696410.3714653",
+      "url": "https://dl.acm.org/doi/10.1145/3696410.3714653"
+    },
+    {
+      "referentie": "Red Hat (2024). State of Kubernetes Security Report 2024. Red Hat, Inc.",
+      "url": "https://www.redhat.com/en/resources/state-kubernetes-security-report"
+    },
+    {
+      "referentie": "OWASP (2024). Docker Security Cheat Sheet. OWASP Cheat Sheet Series.",
+      "url": "https://cheatsheetseries.owasp.org/cheatsheets/Docker_Security_Cheat_Sheet.html"
+    },
+    {
+      "referentie": "Docker Inc. (2024–2026). Security Announcements. Docker Documentation.",
+      "url": "https://docs.docker.com/security/security-announcements/"
+    },
+    {
+      "referentie": "Flare Security Research (2025, december). Docker Hub Secret Exposure Study: Over 10,000 images with exposed secrets. Flare.io.",
+      "url": "https://flare.io/learn/resources/blog/cryptomining-supply-chain-abuse-docker-hub-malware"
+    },
+    {
+      "referentie": "Arghire, I. (2025, augustus). Docker Desktop Vulnerability Leads to Host Compromise (CVE-2025-9074). SecurityWeek.",
+      "url": "https://www.securityweek.com/docker-desktop-vulnerability-leads-to-host-compromise/"
+    },
+    {
+      "referentie": "The Hacker News (2026, april). Docker CVE-2026-34040 Lets Attackers Bypass Authorization and Gain Host Access.",
+      "url": "https://thehackernews.com/2026/04/docker-cve-2026-34040-lets-attackers.html"
+    },
+    {
+      "referentie": "The Hacker News (2025, augustus). Researchers Spot XZ Utils Backdoor in Dozens of Docker Hub Images, Fueling Supply Chain Risks.",
+      "url": "https://thehackernews.com/2025/08/researchers-spot-xz-utils-backdoor-in.html"
+    },
+    {
+      "referentie": "CrowdStrike (2025). Exploitation of Misconfigured Image Containers. CrowdStrike Cybersecurity 101.",
+      "url": "https://www.crowdstrike.com/en-us/cybersecurity-101/cloud-security/image-container-exploitation/"
+    },
+    {
+      "referentie": "SOC Prime (2025, augustus). CVE-2025-9074: Critical Vulnerability in Docker Desktop Enables Local Container Access to Docker Engine API via Subnet.",
+      "url": "https://socprime.com/blog/cve-2025-9074-docker-desktop-vulnerability/"
+    },
+    {
+      "referentie": "KLEAP Institute of Information Security / Madire, S. (2026, februari). Docker & Kubernetes Vulnerabilities: Securing Containers in 2025–2026. Medium.",
+      "url": "https://learnkiis.medium.com/docker-kubernetes-vulnerabilities-securing-containers-in-2025-2026-76628c1fc2c3"
+    },
+    {
+      "referentie": "eSecurity Planet (2025, december). Flare Finds 10,000 Docker Hub Images Exposing Sensitive Secrets.",
+      "url": "https://www.esecurityplanet.com/threats/flare-finds-10000-docker-hub-images-exposing-sensitive-secrets/"
+    },
+    {
+      "referentie": "Docker Inc. (2024, februari). Docker Security Advisory: Multiple Vulnerabilities in runc, BuildKit, and Moby. Docker Blog.",
+      "url": "https://www.docker.com/blog/docker-security-advisory-multiple-vulnerabilities-in-runc-buildkit-and-moby/"
+    },
+    {
+      "referentie": "Practical DevSecOps (2026, januari). 17 New Container Security Vulnerabilities You Should Know.",
+      "url": "https://www.practical-devsecops.com/container-security-vulnerabilities/"
+    },
+    {
+      "referentie": "NIST (2017). SP 800-190: Application Container Security Guide. National Institute of Standards and Technology.",
+      "url": "https://doi.org/10.6028/NIST.SP.800-190"
+    },
+    {
+      "referentie": "Aikido Security (2026, januari). 9 Common Docker Container Security Vulnerabilities & Fixes.",
+      "url": "https://www.aikido.dev/blog/docker-container-security-vulnerabilities"
+    }
+  ]
+}

@@ -1,0 +1,573 @@
+{
+  "metadata": {
+    "titel": "Risicoanalyse",
+    "project": "CYBERWIJZER",
+    "thema": "Visual Studio / IDE-gebruik",
+    "auteur": "AI-agent (Cyberwijzer)",
+    "datum": "15-04-2026",
+    "template_versie": "0.1",
+    "versie": "0.1"
+  },
+  "versiebeheer": [
+    {
+      "versie": "0.1",
+      "datum": "15-04-2026",
+      "wijzigingen": "Initiële versie (AI-gegenereerd)",
+      "auteur": "AI-agent"
+    }
+  ],
+  "beschrijving_thema": {
+    "inleiding": "Visual Studio en Visual Studio Code zijn de meest gebruikte Integrated Development Environments (IDE's) ter wereld voor softwareontwikkeling. Ze bieden uitgebreide functionaliteit via een ecosysteem van duizenden extensies, geïntegreerde AI-codeassistenten zoals GitHub Copilot, debuggers, versiebeheer en terminaltoegang. IDE's fungeren als het centrale knooppunt waar broncode wordt geschreven, credentials worden beheerd, en verbinding wordt gemaakt met build-pipelines, cloudservices en repositories. Door deze centrale rol vormen IDE's een aantrekkelijk doelwit voor aanvallers en een potentieel startpunt voor supply chain-compromittering.",
+    "gebruik": {
+      "toepassingen": [
+        "Schrijven, bewerken en debuggen van broncode in diverse programmeertalen",
+        "Beheer van versiebeheer via Git-integratie",
+        "Gebruik van extensies voor productiviteit, linting, formattering en AI-assistentie",
+        "Verbinding met cloud-omgevingen, CI/CD-pipelines en container-orchestratie",
+        "Beheer van configuratiebestanden, omgevingsvariabelen en API-sleutels",
+        "AI-gestuurde codegeneratie en codereviews via Copilot, Cursor of Windsurf"
+      ],
+      "rol_in_processen": [
+        "Centraal ontwikkelgereedschap in de software development lifecycle (SDLC)",
+        "Toegangspoort tot broncode-repositories en deployment-infrastructuur",
+        "Platform voor het installeren en uitvoeren van extensies met systeemtoegang",
+        "Interface voor AI-codeassistenten die lokale bestanden en credentials benaderen",
+        "Schakel in de software supply chain tussen ontwikkelaar en productie"
+      ]
+    },
+    "conclusie": "IDE's zijn uitgegroeid tot netwerkverbonden systemen met uitgebreide systeemtoegang. Een gecompromitteerde IDE of extensie kan direct leiden tot diefstal van credentials, injectie van kwetsbare code en compromittering van de gehele software supply chain."
+  },
+  "onderzoek": [
+    {
+      "titel": "Kwaadaardige IDE-extensies als supply chain-aanvalsvector",
+      "bevindingen": "In 2025 is een verviervoudiging waargenomen in het aantal detecties van kwaadaardige VS Code-extensies. De GlassWorm-campagne infecteerde minstens 72 extensies op Open VSX en verspreidde zich zelfstandig via gestolen credentials. Een nep-Prettier-extensie leverde via een multi-stage aanvalsketen de OctoRAT-malware af. Extensies draaien zonder sandbox en erven de volledige rechten van de ontwikkelaar.",
+      "bewezen": "Meerdere gedocumenteerde campagnes (GlassWorm, TigerJack, OctoRAT) tonen aan dat de VS Code Marketplace en Open VSX actief worden misbruikt voor het verspreiden van malware via extensies.",
+      "afgeleide_conclusie": "Het ontbreken van een permissiemodel en effectieve sandbox in VS Code maakt extensies tot een structureel beveiligingsrisico dat vergelijkbaar is met de vroege app-store-problemen op mobiele platformen.",
+      "bronnen": [
+        "The Hacker News – GlassWorm Supply-Chain Attack Abuses 72 Open VSX Extensions (maart 2026)",
+        "Hunt.io – Malicious VSCode Extension Launches Multi-Stage Attack Chain with Anivia Loader and OctoRAT (december 2025)",
+        "The Hacker News – Self-Spreading GlassWorm Infects VS Code Extensions (oktober 2025)",
+        "Koi Security – GlassWorm oorspronkelijke analyse (oktober 2025)"
+      ]
+    },
+    {
+      "titel": "Gelekte secrets in extensie-pakketten",
+      "bevindingen": "Wiz Research ontdekte meer dan 550 gevalideerde secrets in meer dan 500 VS Code-extensies, waaronder meer dan 100 marketplace publishing-tokens. Met deze tokens konden aanvallers direct kwaadaardige updates pushen naar de volledige installatiebasis van 150.000 gebruikers. Extensiepakketten (.vsix) kunnen eenvoudig worden uitgepakt en geïnspecteerd, maar uitgevers realiseren zich vaak niet dat alle inhoud publiek toegankelijk is.",
+      "bewezen": "Wiz Research heeft 550+ gevalideerde secrets gedocumenteerd verspreid over 500+ extensies van honderden publishers, inclusief AI-provider tokens en marketplace-publicatietokens.",
+      "afgeleide_conclusie": "Het massale lekken van secrets in extensies toont aan dat zelfs ogenschijnlijk veilige extensies (zoals thema's) het aanvalsoppervlak vergroten en als distributiemechanisme voor malware kunnen dienen.",
+      "bronnen": [
+        "Wiz Research – Supply Chain Risk in VSCode Extension Marketplaces (oktober 2025)",
+        "The Hacker News – Over 100 VS Code Extensions Exposed Developers to Hidden Supply Chain Risks (oktober 2025)",
+        "BlueOptima – VS Code Extension Security Risks: The Supply Chain That Auto-Updates (januari 2026)"
+      ]
+    },
+    {
+      "titel": "Kwetsbaarheden in verificatie- en vertrouwensmechanismen van extensie-marktplaatsen",
+      "bevindingen": "OX Security ontdekte dat verificatiecontroles in VS Code omzeild konden worden, waardoor kwaadaardige extensies het 'geverifieerd'-icoon behielden. Vier kwetsbaarheden in populaire extensies (Code Runner, Markdown Preview Enhanced, Live Server) met gezamenlijk 128 miljoen downloads maakten remote code execution en data-exfiltratie mogelijk. Maintainers reageerden maandenlang niet op responsible disclosure.",
+      "bewezen": "CVE-2025-65715, CVE-2025-65716 en CVE-2025-65717 zijn toegewezen door MITRE en betreffen extensies met gezamenlijk meer dan 128 miljoen downloads die RCE en data-exfiltratie mogelijk maken.",
+      "afgeleide_conclusie": "Het ontbreken van een effectief accountability framework voor extensiebeveiliging en het uitblijven van tijdige patches door maintainers vormt een systemisch probleem in het IDE-extensie-ecosysteem.",
+      "bronnen": [
+        "BleepingComputer – Flaws in popular VSCode extensions expose developers to attacks (februari 2026)",
+        "Infosecurity Magazine – Flaws in Popular IDE Extensions Allow Data Exfiltration (februari 2026)",
+        "The Hacker News – New Flaw in IDEs Like Visual Studio Code Lets Malicious Extensions Bypass Verified Status (juli 2025)"
+      ]
+    },
+    {
+      "titel": "Onveilige codegeneratie door AI-assistenten in IDE's",
+      "bevindingen": "Onderzoek toont aan dat 40-62% van door AI gegenereerde code kwetsbaarheden bevat. Georgetown University (CSET) vond dat circa 48% van gegenereerde code compileerbaar maar onveilig was. Een studie op ACM TOSEM rapporteerde dat 29,5% van Python- en 24,2% van JavaScript-snippets gegenereerd door Copilot beveiligingszwakheden bevatten. Ontwikkelaars die AI-assistenten gebruiken zijn aantoonbaar overmoediger over de veiligheid van hun code.",
+      "bewezen": "Meerdere peer-reviewed en academische studies bevestigen dat AI-codegeneratie structureel onveilige patronen produceert, waaronder SQL-injectie, hardcoded secrets en zwakke cryptografie.",
+      "afgeleide_conclusie": "De combinatie van snellere codegeneratie en verhoogd vertrouwen bij ontwikkelaars leidt tot een vergroot risico dat onveilige code ongecontroleerd in productie terechtkomt.",
+      "bronnen": [
+        "Georgetown University CSET – Cybersecurity Risks of AI-Generated Code (november 2024)",
+        "ACM TOSEM – Security Weaknesses of Copilot-Generated Code in GitHub Projects (2025)",
+        "The Register – Using AI to code does not mean your code is more secure (maart 2026)",
+        "Apiiro – AI-Generated Code Security: Risks and Opportunities (april 2025)"
+      ]
+    },
+    {
+      "titel": "Credential-blootstelling op developer workstations",
+      "bevindingen": "Developer workstations zijn dichte concentratiepunten voor credentials, API-sleutels en sessietokens. GitGuardian rapporteert dat 6,4% van repositories met Copilot actief secrets lekt, 40% hoger dan het gemiddelde. Het Verizon DBIR 2025 bevestigt dat gestolen credentials het meest voorkomende initiële toegangspunt zijn bij 22% van alle datalekken, en bij 88% van aanvallen op webapplicaties.",
+      "bewezen": "Het Verizon DBIR 2025 documenteert dat gestolen credentials de meest voorkomende initiële aanvalsvector zijn, en GitGuardian bevestigt dat AI-geassisteerde repositories disproportioneel meer secrets lekken.",
+      "afgeleide_conclusie": "Omdat IDE's directe toegang bieden tot credentials, SSH-sleutels, cloudconfiguraties en broncode, maakt compromittering van de IDE-omgeving een breed scala aan vervolgaanvallen mogelijk.",
+      "bronnen": [
+        "Verizon – 2025 Data Breach Investigations Report (mei 2025)",
+        "GitGuardian – GitHub Copilot Security and Privacy (december 2025)",
+        "GitGuardian – Protecting Developers Means Protecting Their Secrets (maart 2026)",
+        "Snyk – Why 28 million credentials leaked on GitHub in 2025 (april 2026)"
+      ]
+    },
+    {
+      "titel": "Kwetsbaarheden in Visual Studio zelf",
+      "bevindingen": "In 2025 zijn 12 beveiligingskwetsbaarheden gepubliceerd voor Microsoft Visual Studio. CVE-2025-21178 betrof een Remote Code Execution-kwetsbaarheid met een CVSS-score van 8.8, veroorzaakt door een heap-based buffer overflow. In juli 2025 werden meerdere kwetsbaarheden gepatcht waaronder privilege-escalatie via link following (CVE-2025-49739). Copilot-gerelateerde kwetsbaarheden (CVE-2025-62449 en CVE-2025-62453) toonden risico's van AI-outputvalidatie.",
+      "bewezen": "Microsoft heeft in 2025 meerdere beveiligingsupdates uitgebracht voor kritieke kwetsbaarheden in Visual Studio, gedocumenteerd via CVE-registraties en Patch Tuesday-mededelingen.",
+      "afgeleide_conclusie": "Zelfs de IDE als softwareproduct vormt een aanvalsoppervlak dat regelmatig gepatcht moet worden; het openen van onvertrouwde bestanden in een ongeüpdatete IDE kan leiden tot remote code execution.",
+      "bronnen": [
+        "Visual Studio Magazine – IDE Irony: Coding Errors Cause Critical Vulnerability (januari 2025)",
+        "Stack.watch – Microsoft Visual Studio Security Vulnerabilities in 2025/2026",
+        "Tenable – Security Updates for Microsoft Visual Studio Products (juli 2025)",
+        "CyberPress – GitHub Copilot and Visual Studio Vulnerabilities (november 2025)"
+      ]
+    }
+  ],
+  "consequenties_en_voorbeelden": [
+    {
+      "titel": "GlassWorm supply chain-worm via VS Code-extensies",
+      "onderzoek": "In oktober 2025 ontdekte Koi Security een zelfverspreidende malware genaamd GlassWorm die minstens 14 VS Code-extensies infecteerde via de Open VSX en Microsoft Marketplace. De malware stal npm-, GitHub- en Git-credentials, draineerde 49 cryptocurrency-wallets en installeerde verborgen VNC-servers voor permanente toegang.",
+      "wat_ging_mis": [
+        "Extensies draaien zonder sandbox met volledige systeemtoegang",
+        "Automatische updates distribueerden kwaadaardige code zonder gebruikersinteractie",
+        "Onzichtbare Unicode-tekens verborgen de schadelijke payload in de broncode",
+        "Gestolen credentials werden automatisch hergebruikt om nieuwe extensies te compromitteren"
+      ],
+      "impact": [
+        "Circa 35.800 downloads van geïnfecteerde extensies",
+        "Diefstal van ontwikkelaarcredentials en cryptocurrency",
+        "Zelfverspreidend mechanisme maakte exponentiële groei van infecties mogelijk",
+        "Developer workstations werden misbruikt als proxy-servers voor criminele activiteiten"
+      ],
+      "bronnen": [
+        "The Hacker News – Self-Spreading GlassWorm Infects VS Code Extensions (oktober 2025)",
+        "Fluid Attacks – GlassWorm supply chain attack analyse (oktober 2025)",
+        "The Hacker News – GlassWorm Supply-Chain Attack Abuses 72 Open VSX Extensions (maart 2026)"
+      ]
+    },
+    {
+      "titel": "Nep-Prettier extensie met OctoRAT-malware",
+      "onderzoek": "In november 2025 werd een nep-extensie genaamd 'prettier-vscode-plus' gepubliceerd op de officiële VS Code Marketplace. De extensie imiteerde de populaire Prettier-formatter en leverde via een multi-stage aanvalsketen de Anivia-loader en OctoRAT remote access trojan af op developer machines.",
+      "wat_ging_mis": [
+        "De marketplace-controles lieten een kwaadaardige extensie door die een vertrouwde tool imiteerde",
+        "De extensie werd binnen vier uur verwijderd, maar het aanvalspatroon is herhaalbaar",
+        "Ontwikkelaars installeren extensies op basis van naam en uiterlijk zonder broncode-inspectie"
+      ],
+      "impact": [
+        "Volledige remote access tot geïnfecteerde developer machines",
+        "Mogelijkheid tot laterale beweging binnen organisatienetwerken",
+        "Toegang tot broncode, API-sleutels en build-pipeline-credentials"
+      ],
+      "bronnen": [
+        "Hunt.io – Malicious VSCode Extension Launches Multi-Stage Attack Chain (december 2025)",
+        "Visual Studio Magazine – Threat Actors Keep Weaponizing VS Code Extensions (december 2025)"
+      ]
+    },
+    {
+      "titel": "Wiz-onderzoek naar gelekte secrets in 500+ extensies",
+      "onderzoek": "Wiz Research ontdekte dat meer dan 500 VS Code-extensies hardcoded secrets bevatten, waaronder publishing-tokens waarmee aanvallers kwaadaardige updates konden pushen naar de volledige installatiebasis van getroffen extensies. De gecombineerde installatiebasis bedroeg 150.000 installaties.",
+      "wat_ging_mis": [
+        "Extensie-ontwikkelaars bundelden per ongeluk credentials in .vsix-pakketten",
+        "Zelfs thema-extensies zonder code bleken publishing-tokens te bevatten",
+        "Er was geen platformmechanisme om gelekte tokens te detecteren of te revoken"
+      ],
+      "impact": [
+        "Aanvallers konden vertrouwde extensies kapen en malware distribueren via auto-update",
+        "150.000 installaties direct kwetsbaar voor supply chain-compromittering",
+        "AI-provider secrets (OpenAI, Anthropic, etc.) werden blootgesteld"
+      ],
+      "bronnen": [
+        "Wiz Research – Supply Chain Risk in VSCode Extension Marketplaces (oktober 2025)",
+        "The Hacker News – Over 100 VS Code Extensions Exposed Developers (oktober 2025)"
+      ]
+    }
+  ],
+  "consequenties_conclusie": "De incidenten tonen aan dat het IDE-extensie-ecosysteem een actief geëxploiteerd aanvalsoppervlak is geworden. Het gebrek aan sandboxing, gebrekkige verificatiemechanismen en automatische updates creëren een omgeving waarin een enkele gecompromitteerde extensie kan leiden tot organisatiebrede compromittering.",
+  "risicos": {
+    "risico_matrix": {
+      "kans_schaal": {
+        "1": "Laag – Komt zelden voor",
+        "2": "Middel – Komt regelmatig voor",
+        "3": "Hoog – Komt vaak voor"
+      },
+      "impact_schaal": {
+        "1": "Laag – Beperkte gevolgen",
+        "2": "Middel – Merkbare schade",
+        "3": "Hoog – Ernstige schade (organisatie, mens, maatschappij)"
+      }
+    },
+    "lijst": [
+      {
+        "nr": 1,
+        "titel": "Installatie van kwaadaardige of gecompromitteerde IDE-extensies",
+        "kans": "3",
+        "impact": "3",
+        "score": "9",
+        "ranking": "1",
+        "oorzaak": [
+          "Extensies draaien zonder sandbox met volledige systeemrechten",
+          "Marketplace-verificatie biedt onvoldoende bescherming tegen impersonatie",
+          "Automatische updates distribueren kwaadaardige code zonder gebruikersbevestiging",
+          "Ontwikkelaars installeren extensies op basis van populariteit zonder broncode-inspectie"
+        ],
+        "gevolg": [
+          "Diefstal van credentials, SSH-sleutels en API-tokens",
+          "Installatie van remote access trojans (RAT) op developer machines",
+          "Zelfverspreiding via gestolen publishing-tokens naar andere extensies"
+        ],
+        "impact_detail": [
+          "Compromittering van de gehele software supply chain",
+          "Laterale beweging binnen organisatienetwerken",
+          "Financiële schade door cryptocurrency-diefstal en ransomware"
+        ]
+      },
+      {
+        "nr": 2,
+        "titel": "Lekken van secrets en credentials via de IDE-omgeving",
+        "kans": "3",
+        "impact": "3",
+        "score": "9",
+        "ranking": "2",
+        "oorzaak": [
+          "Hardcoded credentials in broncode, configuratiebestanden en .env-bestanden",
+          "AI-assistenten die secrets opnemen in gegenereerde code",
+          "Extensies die tokens en API-sleutels onveilig cachen op schijf",
+          "Ontwikkelaars die credentials meegeven in AI-prompts"
+        ],
+        "gevolg": [
+          "Ongeautoriseerde toegang tot databases, cloudservices en API's",
+          "Blootstelling van organisatie-credentials in publieke repositories",
+          "Kettingreactie van compromittering via hergebruikte credentials"
+        ],
+        "impact_detail": [
+          "Verizon DBIR 2025: gestolen credentials waren initiële vector bij 22% van alle datalekken",
+          "GitGuardian: 6,4% van Copilot-repositories lekt actief secrets",
+          "Gemiddelde kosten van een datalek: $4,45 miljoen (IBM)"
+        ]
+      },
+      {
+        "nr": 3,
+        "titel": "Introductie van kwetsbare code door AI-codeassistenten",
+        "kans": "3",
+        "impact": "2",
+        "score": "6",
+        "ranking": "3",
+        "oorzaak": [
+          "AI-modellen trainen op historische codebases die onveilige patronen bevatten",
+          "Ontwikkelaars vertrouwen op AI-suggesties zonder adequate security-review",
+          "AI-assistenten missen contextbewustzijn voor beveiligingseisen",
+          "Prompt injection via kwaadaardige bestanden kan AI-suggesties manipuleren"
+        ],
+        "gevolg": [
+          "Introductie van OWASP Top 10-kwetsbaarheden zoals SQL-injectie en XSS",
+          "Hardcoded secrets in gegenereerde code",
+          "Overerving van kwetsbare of verouderde dependencies"
+        ],
+        "impact_detail": [
+          "Georgetown CSET: circa 48% van AI-gegenereerde code bevat kwetsbaarheden",
+          "ACM-studie: 29,5% van Python-snippets uit Copilot bevat beveiligingszwakheden",
+          "Perry et al.: ontwikkelaars met AI-assistentie zijn overmoediger over codeveiligheid"
+        ]
+      },
+      {
+        "nr": 4,
+        "titel": "Niet-geüpdatete IDE-software met bekende kwetsbaarheden",
+        "kans": "2",
+        "impact": "3",
+        "score": "6",
+        "ranking": "4",
+        "oorzaak": [
+          "Ontwikkelaars stellen IDE-updates uit om workflow-onderbreking te voorkomen",
+          "Organisaties missen beleid voor het patchen van ontwikkeltools",
+          "Kwetsbaarheden in de IDE zelf worden minder urgent beschouwd dan productie-patches"
+        ],
+        "gevolg": [
+          "Remote code execution bij het openen van kwaadaardig gecraftede bestanden",
+          "Privilege-escalatie via link following-kwetsbaarheden",
+          "Blootstelling aan command injection-aanvallen"
+        ],
+        "impact_detail": [
+          "CVE-2025-21178: CVSS 8.8, remote code execution in Visual Studio",
+          "12 gepubliceerde kwetsbaarheden voor Visual Studio in 2025",
+          "Kwetsbaarheden in Copilot-integratie (CVE-2025-62449, CVE-2025-62453)"
+        ]
+      },
+      {
+        "nr": 5,
+        "titel": "Manipulatie van AI-assistenten via prompt injection en rules file backdoors",
+        "kans": "2",
+        "impact": "2",
+        "score": "4",
+        "ranking": "5",
+        "oorzaak": [
+          "AI-configuratiebestanden (rules files) worden impliciet vertrouwd",
+          "Onzichtbare Unicode-tekens kunnen kwaadaardige instructies verbergen",
+          "Kwaadaardige README's of commentaren in repositories kunnen AI-suggesties beïnvloeden"
+        ],
+        "gevolg": [
+          "AI genereert code met opzettelijke backdoors of kwetsbaarheden",
+          "Omzeiling van beveiligingscontroles in gegenereerde code",
+          "Data-exfiltratie via door AI gegenereerde debug- of logcode"
+        ],
+        "impact_detail": [
+          "Pillar Security documenteerde de 'Rules File Backdoor'-techniek voor Copilot en Cursor",
+          "OWASP rangschikt prompt injection als #1 LLM-risico",
+          "Gemanipuleerde AI-output kan onopgemerkt door traditionele codereviews glippen"
+        ]
+      },
+      {
+        "nr": 6,
+        "titel": "Onvoldoende beveiliging van de developer workstation",
+        "kans": "2",
+        "impact": "2",
+        "score": "4",
+        "ranking": "6",
+        "oorzaak": [
+          "Developer laptops bevatten SSH-sleutels, cloudcredentials en broncode maar missen vaak adequate monitoring",
+          "BYOD-beleid leidt tot inconsistente beveiligingshouding",
+          "IDE-instellingen en shell-profielen slaan omgevingsvariabelen op in platte tekst"
+        ],
+        "gevolg": [
+          "Infostealer-malware oogst lokaal opgeslagen credentials",
+          "Gecompromitteerde workstation geeft toegang tot build-pipelines en productieomgevingen",
+          "Onbeheerde apparaten ontsnappen aan organisatorische beveiligingsmaatregelen"
+        ],
+        "impact_detail": [
+          "Verizon DBIR 2025: 46% van gecompromitteerde systemen was onbeheerd",
+          "Infostealers compromitteerden 30% van zakelijke en 46% van onbeheerde apparaten",
+          "15% van medewerkers benadert GenAI-tools op zakelijke apparaten, 72% via persoonlijk e-mail"
+        ]
+      }
+    ]
+  },
+  "maatregelen": {
+    "technisch": {
+      "items": [
+        "Implementeer een gecentraliseerde allowlist voor goedgekeurde IDE-extensies binnen de organisatie",
+        "Schakel automatische extensie-updates uit en voer handmatige review uit vóór installatie van updates",
+        "Gebruik pre-commit hooks (ggshield, TruffleHog, Gitleaks) om secrets te detecteren voordat ze in versiebeheer terechtkomen",
+        "Integreer SAST- en SCA-scanning in de IDE en CI/CD-pipeline voor zowel menselijke als AI-gegenereerde code",
+        "Gebruik ephemere, kortlevende credentials en secrets managers (HashiCorp Vault, Doppler, Infisical) in plaats van hardcoded secrets",
+        "Dwing volledige schijfversleuteling en endpoint detection & response (EDR) af op alle developer workstations",
+        "Houd de IDE en alle extensies up-to-date via een gestructureerd patchmanagement-proces"
+      ],
+      "onderbouwing": "OWASP Top 10 2025 (A03 Software Supply Chain Failures), Wiz Research extensie-analyse, GitGuardian pre-commit scanning best practices, NIST SP 800-218 Secure Software Development Framework"
+    },
+    "proces": {
+      "items": [
+        "Voer security-review uit op alle AI-gegenereerde code voordat deze wordt gemerged",
+        "Implementeer een vetting-proces voor nieuwe extensies met controle op publisher-reputatie, broncode en permissies",
+        "Stel een incident response-runbook op voor gelekte credentials inclusief rotatie- en revocatie-procedures",
+        "Neem developer tools op in het organisatiebrede vulnerability management-programma",
+        "Voer periodieke audits uit op geïnstalleerde extensies en verwijder ongebruikte of verdachte extensies"
+      ],
+      "onderbouwing": "Verizon DBIR 2025 aanbevelingen, OWASP Secure Software Development Lifecycle, OX Security responsible disclosure-bevindingen"
+    },
+    "organisatorisch": {
+      "items": [
+        "Ontwikkel en handhaaf een organisatiebeleid voor het gebruik van IDE-extensies en AI-codeassistenten",
+        "Train ontwikkelaars in het herkennen van supply chain-aanvallen en het veilig gebruik van AI-assistenten",
+        "Stel minimale beveiligingseisen vast voor developer workstations (encryptie, EDR, OS-patching, MFA)",
+        "Monitor ongebruikelijk gedrag van IDE-processen zoals onverwacht netwerkverkeer of extensie-installaties",
+        "Scheid ontwikkel-, staging- en productiecredentials en beperk rechten volgens het least privilege-principe"
+      ],
+      "onderbouwing": "NIST SP 800-218, Verizon DBIR 2025 credential management-aanbevelingen, OWASP Top 10 2025 supply chain security guidance"
+    }
+  },
+  "basisvaardigheden": {
+    "inleiding": "Studenten die softwareontwikkeling studeren op HBO/MBO-niveau moeten de beveiligingsrisico's van hun ontwikkelomgeving begrijpen, herkennen en adequaat mitigeren als onderdeel van hun dagelijkse werkproces.",
+    "bewustzijn": {
+      "doel": "Studenten begrijpen dat hun IDE en developer workstation een kritiek onderdeel vormen van de software supply chain en een doelwit zijn voor aanvallers.",
+      "minimale_kennis": [
+        "De student kan uitleggen waarom IDE-extensies een beveiligingsrisico vormen doordat ze zonder sandbox met volledige systeemrechten draaien",
+        "De student kan beschrijven hoe supply chain-aanvallen via IDE-extensies werken (typosquatting, impersonatie, gecompromitteerde updates)",
+        "De student kan uitleggen waarom AI-gegenereerde code niet automatisch veilig is en welke typen kwetsbaarheden veelvoorkomend zijn",
+        "De student kan toelichten waarom hardcoded credentials gevaarlijk zijn en hoe ze worden geëxploiteerd",
+        "De student kan de relevantie van OWASP Top 10 categorie A03 (Software Supply Chain Failures) uitleggen in relatie tot IDE-gebruik"
+      ],
+      "herkenningsvaardigheid": [
+        "De student herkent tekenen van een verdachte extensie (onbekende publisher, lage reputatie, brede permissie-eisen, recent gepubliceerd)",
+        "De student herkent hardcoded secrets in broncode en configuratiebestanden",
+        "De student herkent veelvoorkomende kwetsbaarheden in AI-gegenereerde code (SQL-injectie, XSS, ontbrekende inputvalidatie)",
+        "De student herkent risicosignalen bij het openen van onbekende projecten in de IDE"
+      ],
+      "toetsbare_leeruitkomsten": [
+        "De student kan in een case study minimaal drie supply chain-risico's van IDE-extensies identificeren en beschrijven",
+        "De student kan bij een gegeven codesnippet aangeven of er sprake is van gelekte credentials en uitleggen wat het risico is",
+        "De student kan de OWASP Top 10 categorie voor supply chain-risico's benoemen en relateren aan IDE-gebruik"
+      ]
+    },
+    "vaardigheden": {
+      "doel": "Studenten kunnen veilig werken met een IDE, extensies beoordelen, secrets beheren en AI-gegenereerde code reviewen op beveiliging.",
+      "categorieen": [
+        {
+          "titel": "Veilig extensiebeheer",
+          "student_kan": [
+            "Een extensie beoordelen op betrouwbaarheid door publisher, downloadaantal, broncode en permissies te controleren",
+            "Automatische extensie-updates configureren of uitschakelen afhankelijk van het organisatiebeleid",
+            "Een audit uitvoeren op geïnstalleerde extensies en ongebruikte of verdachte extensies verwijderen"
+          ],
+          "toetsbaar": [
+            "De student voert een audit uit op een IDE-omgeving en identificeert minimaal twee risicovolle extensies met onderbouwing",
+            "De student configureert extensie-updateinstellingen conform een gegeven beveiligingsbeleid"
+          ]
+        },
+        {
+          "titel": "Secrets management",
+          "student_kan": [
+            "Omgevingsvariabelen en secrets managers gebruiken in plaats van hardcoded credentials",
+            "Pre-commit hooks installeren en configureren voor het detecteren van secrets",
+            "Een .gitignore correct configureren om te voorkomen dat gevoelige bestanden worden gecommit"
+          ],
+          "toetsbaar": [
+            "De student configureert een pre-commit hook die secrets detecteert en demonstreert dat een commit met een API-sleutel wordt geblokkeerd",
+            "De student vervangt hardcoded credentials in een project door omgevingsvariabelen of een secrets manager"
+          ]
+        },
+        {
+          "titel": "Security review van AI-gegenereerde code",
+          "student_kan": [
+            "AI-gegenereerde code reviewen op veelvoorkomende kwetsbaarheden (OWASP Top 10)",
+            "Beveiligingsgerichte prompts formuleren die veilige codepatronen bevorderen",
+            "SAST-tools gebruiken om kwetsbaarheden in gegenereerde code te identificeren"
+          ],
+          "toetsbaar": [
+            "De student identificeert minimaal twee beveiligingskwetsbaarheden in een door AI gegenereerde codesnippet en stelt correcties voor",
+            "De student demonstreert het gebruik van een SAST-tool op een codebase met AI-gegenereerde code"
+          ]
+        }
+      ]
+    },
+    "gedrag": {
+      "doel": "Studenten hanteren een security-first mentaliteit bij het gebruik van hun IDE en ontwikkelomgeving.",
+      "gewenst_gedrag": [
+        "Installeer alleen extensies die noodzakelijk zijn en verifieer de bron en publisher vóór installatie",
+        "Review alle AI-gegenereerde code op beveiliging voordat je deze accepteert of commit",
+        "Sla nooit credentials op in broncode of configuratiebestanden; gebruik altijd een secrets manager",
+        "Houd de IDE en extensies up-to-date en voer updates tijdig uit",
+        "Meld verdachte extensies of ongebruikelijk IDE-gedrag bij het beveiligingsteam"
+      ],
+      "observeerbaar_gedrag": [
+        "De student controleert de publisher en reviews van een extensie voordat deze wordt geïnstalleerd",
+        "De student becommentarieert beveiligingsaspecten bij het reviewen van AI-gegenereerde code in pull requests",
+        "De student gebruikt omgevingsvariabelen voor credentials in alle persoonlijke projecten",
+        "De student heeft een beperkt en gedocumenteerd aantal extensies geïnstalleerd"
+      ],
+      "toetsbare_leeruitkomsten": [
+        "Tijdens een praktijkopdracht demonstreert de student veilig extensiebeheer door alleen goedgekeurde extensies te gebruiken",
+        "In een code review identificeert de student beveiligingsproblemen in AI-gegenereerde code en stelt verbeteringen voor",
+        "De student levert een project op zonder hardcoded credentials, geverifieerd door een pre-commit scan"
+      ]
+    },
+    "minimale_competentie_eisen": [
+      "De student kan uitleggen waarom IDE-extensies een supply chain-risico vormen en kan minimaal twee recente incidenten beschrijven",
+      "De student kan een IDE-omgeving inrichten met pre-commit hooks voor secrets-detectie en demonstreren dat deze werken",
+      "De student kan AI-gegenereerde code beoordelen op minimaal drie typen beveiligingskwetsbaarheden",
+      "De student kan het principe van least privilege toepassen op credential-beheer in ontwikkelprojecten",
+      "De student kan een extensie-audit uitvoeren en beargumenteerd aangeven welke extensies een beveiligingsrisico vormen"
+    ]
+  },
+  "samenvatting": {
+    "belangrijkste_risicos": [
+      "Kwaadaardige of gecompromitteerde IDE-extensies als supply chain-aanvalsvector (score: 9)",
+      "Lekken van secrets en credentials via de IDE-omgeving (score: 9)",
+      "Introductie van kwetsbare code door AI-codeassistenten (score: 6)",
+      "Niet-geüpdatete IDE-software met bekende kwetsbaarheden (score: 6)"
+    ],
+    "belangrijkste_maatregelen": [
+      "Gecentraliseerde allowlist en vetting-proces voor IDE-extensies",
+      "Pre-commit hooks en secrets managers voor credential-bescherming",
+      "Verplichte security review van alle AI-gegenereerde code met SAST-tooling",
+      "Gestructureerd patchmanagement voor IDE's en extensies"
+    ],
+    "kerninzicht": "De IDE is geëvolueerd van een lokaal tekstverwerkingsprogramma naar een netwerkverbonden platform met uitgebreide systeemtoegang. Het extensie-ecosysteem, AI-codeassistenten en de concentratie van credentials op developer workstations maken de IDE tot een van de meest kritieke en tegelijk meest onderbeschermde schakels in de moderne software supply chain."
+  },
+  "bronnen": [
+    {
+      "referentie": "The Hacker News. (2025, oktober 24). Self-Spreading 'GlassWorm' Infects VS Code Extensions in Widespread Supply Chain Attack.",
+      "url": "https://thehackernews.com/2025/10/self-spreading-glassworm-infects-vs.html"
+    },
+    {
+      "referentie": "The Hacker News. (2026, maart 14). GlassWorm Supply-Chain Attack Abuses 72 Open VSX Extensions to Target Developers.",
+      "url": "https://thehackernews.com/2026/03/glassworm-supply-chain-attack-abuses-72.html"
+    },
+    {
+      "referentie": "Hunt.io. (2025, december 3). Malicious VSCode Extension Launches Multi-Stage Attack Chain with Anivia Loader and OctoRAT.",
+      "url": "https://hunt.io/blog/malicious-vscode-extension-anivia-octorat-attack-chain"
+    },
+    {
+      "referentie": "Wiz Research. (2025, oktober 15). Supply Chain Risk in VSCode Extension Marketplaces.",
+      "url": "https://www.wiz.io/blog/supply-chain-risk-in-vscode-extension-marketplaces"
+    },
+    {
+      "referentie": "The Hacker News. (2025, oktober 31). Over 100 VS Code Extensions Exposed Developers to Hidden Supply Chain Risks.",
+      "url": "https://thehackernews.com/2025/10/over-100-vs-code-extensions-exposed.html"
+    },
+    {
+      "referentie": "BleepingComputer. (2026, februari 18). Flaws in popular VSCode extensions expose developers to attacks.",
+      "url": "https://www.bleepingcomputer.com/news/security/flaws-in-popular-vscode-extensions-expose-developers-to-attacks/"
+    },
+    {
+      "referentie": "Infosecurity Magazine. (2026, februari 19). Flaws in Popular IDE Extensions Allow Data Exfiltration.",
+      "url": "https://www.infosecurity-magazine.com/news/vulnerabilities-vs-code-cursor/"
+    },
+    {
+      "referentie": "The Hacker News. (2025, juli 1). New Flaw in IDEs Like Visual Studio Code Lets Malicious Extensions Bypass Verified Status.",
+      "url": "https://thehackernews.com/2025/07/new-flaw-in-ides-like-visual-studio.html"
+    },
+    {
+      "referentie": "Visual Studio Magazine. (2025, januari 17). IDE Irony: Coding Errors Cause 'Critical' Vulnerability in Visual Studio.",
+      "url": "https://visualstudiomagazine.com/articles/2025/01/17/coding-errors-cause-critical-vulnerability-in-visual-studio.aspx"
+    },
+    {
+      "referentie": "Tenable. (2025, juli). Security Updates for Microsoft Visual Studio Products (July 2025).",
+      "url": "https://www.tenable.com/plugins/nessus/241959"
+    },
+    {
+      "referentie": "CyberPress. (2025, november 12). GitHub Copilot and Visual Studio Vulnerabilities Allow Attackers to Bypass Security Features.",
+      "url": "https://cyberpress.org/github-copilot-and-visual-studio-vulnerabilities/"
+    },
+    {
+      "referentie": "Georgetown University CSET. (2024, november). Cybersecurity Risks of AI-Generated Code.",
+      "url": "https://cset.georgetown.edu/wp-content/uploads/CSET-Cybersecurity-Risks-of-AI-Generated-Code.pdf"
+    },
+    {
+      "referentie": "ACM Transactions on Software Engineering and Methodology. (2025). Security Weaknesses of Copilot-Generated Code in GitHub Projects: An Empirical Study.",
+      "url": "https://dl.acm.org/doi/10.1145/3716848"
+    },
+    {
+      "referentie": "The Register. (2026, maart 26). Using AI to code does not mean your code is more secure.",
+      "url": "https://www.theregister.com/2026/03/26/ai_coding_assistant_not_more_secure/"
+    },
+    {
+      "referentie": "Apiiro. (2025, april 1). AI-Generated Code Security: Security Risks and Opportunities.",
+      "url": "https://apiiro.com/blog/ai-generated-code-security/"
+    },
+    {
+      "referentie": "GitGuardian. (2025, december 5). GitHub Copilot Security and Privacy: Key Risks and Best Practices.",
+      "url": "https://blog.gitguardian.com/github-copilot-security-and-privacy/"
+    },
+    {
+      "referentie": "GitGuardian. (2026, maart 3). Protecting Developers Means Protecting Their Secrets.",
+      "url": "https://blog.gitguardian.com/protecting-developers-secrets/"
+    },
+    {
+      "referentie": "Snyk. (2026, april). Why 28 million credentials leaked on GitHub in 2025, and what to do about it.",
+      "url": "https://snyk.io/articles/state-of-secrets/"
+    },
+    {
+      "referentie": "Verizon. (2025, mei). 2025 Data Breach Investigations Report.",
+      "url": "https://www.verizon.com/business/resources/reports/dbir/"
+    },
+    {
+      "referentie": "Pillar Security. (2025). New Vulnerability in GitHub Copilot and Cursor: How Hackers Can Weaponize Code Agents.",
+      "url": "https://www.pillar.security/blog/new-vulnerability-in-github-copilot-and-cursor-how-hackers-can-weaponize-code-agents"
+    },
+    {
+      "referentie": "Fluid Attacks. (2025, oktober 24). GlassWorm supply chain attack.",
+      "url": "https://fluidattacks.com/blog/glassworm-vs-code-extensions-supply-chain-attack"
+    },
+    {
+      "referentie": "Visual Studio Magazine. (2025, december 8). Threat Actors Keep Weaponizing VS Code Extensions.",
+      "url": "https://visualstudiomagazine.com/articles/2025/12/08/threat-actors-keep-weaponizing-vs-code-extensions.aspx"
+    },
+    {
+      "referentie": "OWASP Foundation. (2025). OWASP Top 10:2025.",
+      "url": "https://owasp.org/Top10/2025/"
+    },
+    {
+      "referentie": "Knostic. (2026, januari 5). IDE Extensions: The Weakest Link in AI Coding Security.",
+      "url": "https://www.knostic.ai/blog/integrated-development-environment-security"
+    },
+    {
+      "referentie": "Stack.watch. (2026). Microsoft Visual Studio Security Vulnerabilities.",
+      "url": "https://stack.watch/product/microsoft/visual-studio/"
+    }
+  ]
+}

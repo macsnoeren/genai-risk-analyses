@@ -1,0 +1,433 @@
+{
+  "metadata": {
+    "titel": "Risicoanalyse",
+    "project": "CYBERWIJZER",
+    "thema": "Versiebeheer met Git",
+    "auteur": "Maurice Snoeren",
+    "datum": "02-04-2026",
+    "template_versie": "0.1",
+    "versie": "0.1"
+  },
+
+  "versiebeheer": [
+    {
+      "versie": "0.1",
+      "datum": "02-04-2026",
+      "wijzigingen": "Initiële versie",
+      "auteur": "Maurice Snoeren"
+    }
+  ],
+
+  "beschrijving_thema": {
+    "inleiding": "Versiebeheer met Git is een fundamentele techniek binnen moderne softwareontwikkeling. Git is een distributed version control system (DVCS) waarmee ontwikkelaars code kunnen beheren, wijzigingen kunnen volgen en samenwerking mogelijk wordt gemaakt. Tools zoals Git command line, GitHub Desktop, GitKraken en platforms zoals GitHub faciliteren deze processen.",
+    "gebruik": {
+      "toepassingen": [
+        "Codebeheer en samenwerking",
+        "Branching en merging",
+        "CI/CD-integratie (bijv. via GitHub Actions)",
+        "Release management en audit trails"
+      ],
+      "rol_in_processen": [
+        "DevOps pipelines",
+        "Software supply chain",
+        "Code review processen"
+      ]
+    },
+    "conclusie": "Git is niet alleen een tool, maar een kritische infrastructuurcomponent in softwareontwikkeling. Hierdoor hebben fouten of kwetsbaarheden directe impact op security."
+  },
+
+  "onderzoek": [
+    {
+      "titel": "Secret leakage als dominant risico",
+      "bevindingen": "Volgens GitHub worden secrets (API keys, tokens, wachtwoorden) vaak per ongeluk in repositories opgeslagen en blijven deze aanwezig in de Git history, zelfs na verwijdering. OWASP bevestigt dat secret leakage een veelvoorkomende en ernstige kwetsbaarheid is, waarbij exploitatie eenvoudig is en impact hoog. Onderzoek toont dat miljoenen secrets jaarlijks worden gelekt, wat leidt tot datalekken, systeemtoegang en financiële schade.",
+      "bewezen": "Secret leakage is een structureel en grootschalig probleem.",
+      "afgeleide_conclusie": "Git faciliteert dit risico doordat commits persistent en reproduceerbaar zijn.",
+      "bronnen": ["GitHub Docs, z.d.", "OWASP, 2025", "GitGuardian, 2026"]
+    },
+    {
+      "titel": "Persistentie van data in Git",
+      "bevindingen": "Git slaat alle wijzigingen historisch op. Hierdoor blijven secrets beschikbaar in oude commits en verspreiden ze zich via forks en backups. Secrets blijven toegankelijk in Git history en verwijdering na commit is onvoldoende.",
+      "bewezen": "Git-architectuur maakt data persistent.",
+      "afgeleide_conclusie": "Menselijke fouten krijgen langdurige impact.",
+      "bronnen": ["GitHub Docs, z.d.", "OWASP, z.d."]
+    },
+    {
+      "titel": "Menselijke fouten en misconfiguraties",
+      "bevindingen": "Onderzoek toont dat developer fouten leiden tot langdurige blootstelling van gevoelige data. Voorbeelden zijn verkeerde repository visibility, hardcoded credentials en onjuist gebruik van tools.",
+      "bewezen": "Menselijke fouten zijn een primaire oorzaak.",
+      "afgeleide_conclusie": "Tooling (CLI vs GUI) is minder relevant dan kennisniveau en gedrag.",
+      "bronnen": ["Help Net Security, 2024"]
+    },
+    {
+      "titel": "Beperkingen van detectietools",
+      "bevindingen": "Wetenschappelijk onderzoek toont dat secret detection tools false positives en false negatives hebben en detectie dus onvolledig is.",
+      "bewezen": "Tooling is niet volledig betrouwbaar.",
+      "afgeleide_conclusie": "Afhankelijkheid van tools zonder procesmaatregelen creëert schijnveiligheid.",
+      "bronnen": ["Basak et al., 2023"]
+    },
+    {
+      "titel": "Verspreiding buiten repositories",
+      "bevindingen": "Onderzoek toont dat circa 28% van leaks ontstaat buiten repositories, bijvoorbeeld via tools en logs.",
+      "bewezen": "Git is onderdeel van een breder ecosysteem.",
+      "afgeleide_conclusie": "Risicoanalyse moet verder gaan dan alleen repositories.",
+      "bronnen": ["GitGuardian, 2026"]
+    }
+  ],
+
+  "consequenties_en_voorbeelden": [
+    {
+      "titel": "Massale secret leakage op Git-platformen",
+      "onderzoek": "Miljoenen secrets publiek beschikbaar, vaak jarenlang actief.",
+      "wat_ging_mis": [
+        "Credentials in code",
+        "Onvoldoende controle"
+      ],
+      "impact": [
+        "Ongeautoriseerde toegang",
+        "Cloudmisbruik",
+        "Financiële schade"
+      ],
+      "bronnen": ["GitGuardian, 2026"]
+    },
+    {
+      "titel": "Exposed secrets bij grote organisaties",
+      "onderzoek": "Bedrijven zoals Cisco en Mozilla hadden actieve secrets in repositories.",
+      "wat_ging_mis": [
+        "Onvoldoende scanning",
+        "Legacy code"
+      ],
+      "impact": [
+        "Toegang tot gevoelige systemen",
+        "Reputatieschade"
+      ],
+      "bronnen": ["Help Net Security, 2024"]
+    },
+    {
+      "titel": "Secret leakage via issue trackers",
+      "onderzoek": "Secrets worden ook gelekt via GitHub issues.",
+      "wat_ging_mis": [
+        "Gebruikers posten logs en config"
+      ],
+      "impact": [
+        "Directe blootstelling credentials"
+      ],
+      "bronnen": ["Rahman et al., 2026"]
+    }
+  ],
+  "consequenties_conclusie": "Incidenten ontstaan zelden door Git zelf, maar door gebruik, processen en gedrag.",
+
+  "risicos": {
+    "risico_matrix": {
+      "kans_schaal": {
+        "1": "Laag – Komt zelden voor",
+        "2": "Middel – Komt regelmatig voor",
+        "3": "Hoog – Komt vaak voor"
+      },
+      "impact_schaal": {
+        "1": "Laag – Beperkte gevolgen",
+        "2": "Middel – Merkbare schade",
+        "3": "Hoog – Ernstige schade (organisatie, mens, maatschappij)"
+      }
+    },
+    "lijst": [
+      {
+        "nr": 1,
+        "titel": "Secret leakage",
+        "kans": 3,
+        "impact": 3,
+        "score": 9,
+        "ranking": 1,
+        "oorzaak": [
+          "Hardcoded credentials",
+          "Onbewuste commits"
+        ],
+        "gevolg": [
+          "Ongeautoriseerde toegang"
+        ],
+        "impact_detail": [
+          "Datalekken, financiële schade"
+        ]
+      },
+      {
+        "nr": 2,
+        "titel": "Persistentie van gevoelige data",
+        "kans": 3,
+        "impact": 3,
+        "score": 9,
+        "ranking": 1,
+        "oorzaak": [
+          "Git history"
+        ],
+        "gevolg": [
+          "Langdurige blootstelling"
+        ],
+        "impact_detail": [
+          "Compliance risico's"
+        ]
+      },
+      {
+        "nr": 3,
+        "titel": "Misconfiguratie van repositories",
+        "kans": 2,
+        "impact": 3,
+        "score": 6,
+        "ranking": 2,
+        "oorzaak": [
+          "Verkeerde instellingen"
+        ],
+        "gevolg": [
+          "Publieke toegang"
+        ],
+        "impact_detail": [
+          "Verlies van intellectueel eigendom"
+        ]
+      },
+      {
+        "nr": 4,
+        "titel": "Supply chain aanvallen",
+        "kans": 2,
+        "impact": 3,
+        "score": 6,
+        "ranking": 2,
+        "oorzaak": [
+          "Vertrouwen in externe code",
+          "Kwaadwillende insiders die code schrijven"
+        ],
+        "gevolg": [
+          "Malware injectie",
+          "Backdoors"
+        ],
+        "impact_detail": [
+          "Grootschalige compromittatie"
+        ]
+      },
+      {
+        "nr": 5,
+        "titel": "Ontbreken van security in requirements",
+        "kans": 2,
+        "impact": 2,
+        "score": 4,
+        "ranking": 3,
+        "oorzaak": [
+          "Focus op snelheid",
+          "Gebrek aan kennis"
+        ],
+        "gevolg": [
+          "Geen policies voor secrets"
+        ],
+        "impact_detail": [
+          "Structurele kwetsbaarheid"
+        ],
+        "opmerking": "Dit risico is organisatorisch, niet technisch."
+      }
+    ]
+  },
+
+  "maatregelen": {
+    "technisch": {
+      "items": [
+        "Secret scanning tools",
+        "Push protection",
+        "Gebruik van secrets managers"
+      ],
+      "onderbouwing": "Onderbouwd door GitHub en OWASP."
+    },
+    "proces": {
+      "items": [
+        "Secure SDLC (NIST/OWASP)",
+        "Verplichte code reviews",
+        "CI/CD beveiliging"
+      ],
+      "onderbouwing": "Afgeleide conclusie op basis van best practices."
+    },
+    "organisatorisch": {
+      "items": [
+        "Security opnemen in requirements",
+        "Training developers",
+        "Governance op repositories"
+      ],
+      "onderbouwing": "Essentieel voor mitigatie van menselijke fouten."
+    }
+  },
+
+  "basisvaardigheden": {
+    "inleiding": "Deze basisvaardigheden beschrijven wat studenten minimaal moeten beheersen om veilig met Git en versiebeheer te werken. De nadruk ligt op observeerbaar gedrag, concrete vaardigheden en toetsbaarheid, gekoppeld aan cybersecurity risico's.",
+    "bewustzijn": {
+      "doel": "Studenten begrijpen waar de risico's van Git vandaan komen en kunnen deze herkennen in praktijksituaties.",
+      "minimale_kennis": [
+        "Wat secrets zijn (API keys, tokens, wachtwoorden, SSH keys)",
+        "Waarom secrets in Git extra risico vormen (persistente geschiedenis en verspreiding via forks)",
+        "Dat Git onderdeel is van de software supply chain",
+        "Wat de impact is van publieke repositories, gelekte credentials en misbruik van CI/CD pipelines",
+        "Waarom verwijderen van gevoelige data uit Git vaak niet voldoende is"
+      ],
+      "herkenningsvaardigheid": [
+        "Code met hardcoded credentials",
+        "Een repository die per ongeluk public staat",
+        "Logs of configbestanden met gevoelige informatie",
+        "CI/CD pipelines die secrets bevatten"
+      ],
+      "toetsbare_leeruitkomsten": [
+        "Student kan minimaal 3 concrete Git-gerelateerde risico's uitleggen",
+        "Student kan uitleggen waarom Git history een securityprobleem kan zijn",
+        "Student herkent een secret in code of configuratie"
+      ]
+    },
+    "vaardigheden": {
+      "doel": "Studenten kunnen Git op een veilige manier toepassen en nemen security mee in hun werkwijze.",
+      "categorieen": [
+        {
+          "titel": "Veilig omgaan met secrets",
+          "student_kan": [
+            "Secrets herkennen in code en configuraties",
+            ".env bestanden gebruiken voor gevoelige data",
+            ".gitignore correct instellen",
+            "Voorkomen dat secrets worden gecommit",
+            "Gelekte secrets verwijderen uit Git history (basisniveau)"
+          ],
+          "toetsbaar": [
+            "Student commit géén secrets",
+            "Student gebruikt .gitignore correct",
+            "Student kan uitleggen hoe secrets buiten Git worden gehouden"
+          ]
+        },
+        {
+          "titel": "Correct gebruik van Git (security-context)",
+          "student_kan": [
+            "Verschil toepassen tussen public en private repositories",
+            "Veilig werken met branches en pull requests",
+            "Commits controleren vóór push"
+          ],
+          "toetsbaar": [
+            "Student gebruikt pull requests i.p.v. direct pushen",
+            "Student controleert commits op gevoelige data"
+          ]
+        },
+        {
+          "titel": "Toegangsbeheer (Access control)",
+          "student_kan": [
+            "Het principe van least privilege toepassen",
+            "Repository-permissies correct instellen",
+            "Werken met SSH keys i.p.v. wachtwoorden"
+          ],
+          "toetsbaar": [
+            "Student stelt correcte rechten in bij groepsproject",
+            "Student gebruikt geen gedeelde accounts"
+          ]
+        },
+        {
+          "titel": "CI/CD en automatisering (basisniveau)",
+          "student_kan": [
+            "Uitleggen dat CI/CD pipelines toegang hebben tot secrets",
+            "Secrets veilig configureren (environment variables)",
+            "Voorkomen dat secrets in logs verschijnen"
+          ],
+          "toetsbaar": [
+            "Student plaatst geen secrets in scripts",
+            "Student kan uitleggen hoe secrets veilig gebruikt worden in pipelines"
+          ]
+        },
+        {
+          "titel": "Security-by-design (ontwerpvaardigheden)",
+          "student_kan": [
+            "Security meenemen bij het opzetten van repositories en workflows",
+            "Keuzes maken over repository visibility, toegangsbeheer en opslag van secrets"
+          ],
+          "toetsbaar": [
+            "Student kan een veilige Git workflow ontwerpen",
+            "Student onderbouwt keuzes vanuit securityperspectief"
+          ]
+        },
+        {
+          "titel": "Incident response (basisniveau)",
+          "student_kan": [
+            "Herkennen dat een secret gelekt is",
+            "Passende acties uitvoeren: secret verwijderen, key roteren, impact inschatten"
+          ],
+          "toetsbaar": [
+            "Student voert correct herstelproces uit na een gesimuleerd incident"
+          ]
+        }
+      ]
+    },
+    "gedrag": {
+      "doel": "Studenten vertonen veilig en verantwoordelijk gedrag bij het gebruik van Git.",
+      "gewenst_gedrag": [
+        "Commit nooit bewust secrets",
+        "Controleert werk vóór push (self-check)",
+        "Volgt security alerts en waarschuwingen op",
+        "Neemt verantwoordelijkheid bij fouten",
+        "Meldt securityproblemen actief",
+        "Kiest niet automatisch voor snelheid boven veiligheid"
+      ],
+      "observeerbaar_gedrag": [
+        "Student corrigeert eigen fouten (bijv. verwijdert gelekte secret + rotate key)",
+        "Student negeert geen waarschuwingen van tools",
+        "Student vraagt hulp bij twijfel over security",
+        "Student past best practices consequent toe"
+      ],
+      "toetsbare_leeruitkomsten": [
+        "Student handelt correct bij een securityfout",
+        "Student toont securitybewust gedrag tijdens projecten",
+        "Student kan eigen keuzes onderbouwen vanuit security"
+      ]
+    },
+    "minimale_competentie_eisen": [
+      "Geen secrets committen",
+      "Git-risico's correct kunnen uitleggen",
+      "Repositories veilig configureren (public/private + access control)",
+      "Security meenemen in workflow (niet achteraf)",
+      "Correct reageren op securityproblemen"
+    ]
+  },
+
+  "samenvatting": {
+    "belangrijkste_risicos": [
+      "Secret leakage (hoogste impact en frequentie)",
+      "Persistentie van data",
+      "Menselijke fouten",
+      "Ontbrekende security in ontwerp"
+    ],
+    "belangrijkste_maatregelen": [
+      "Secret management",
+      "Secure SDLC",
+      "Training en awareness"
+    ],
+    "kerninzicht": "De grootste risico's van Git ontstaan niet door de technologie zelf, maar door menselijke fouten, ontbrekende security-eisen en verkeerde prioritering. Git versterkt deze fouten door zijn persistente en gedistribueerde karakter."
+  },
+
+  "bronnen": [
+    {
+      "referentie": "GitHub. (z.d.). Secret leakage risks.",
+      "url": "https://docs.github.com"
+    },
+    {
+      "referentie": "GitHub. (z.d.). Secret security & risk assessment.",
+      "url": null
+    },
+    {
+      "referentie": "OWASP. (2025). Secret Leakage (NHI Top 10).",
+      "url": null
+    },
+    {
+      "referentie": "OWASP. (z.d.). DevSecOps Guideline – Secrets Management.",
+      "url": null
+    },
+    {
+      "referentie": "Help Net Security. (2024). Developer errors expose sensitive data.",
+      "url": null
+    },
+    {
+      "referentie": "GitGuardian. (2026). State of Secrets Sprawl Report.",
+      "url": null
+    },
+    {
+      "referentie": "Basak, S. K., et al. (2023). Secret detection tools study.",
+      "url": null
+    },
+    {
+      "referentie": "Rahman, M. N., et al. (2026). IssueGuard: Secret leak prevention.",
+      "url": null
+    }
+  ]
+}
