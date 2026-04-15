@@ -118,6 +118,12 @@
             text-align: center;
             border: 1px solid #ddd;
         }
+        select {
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            margin-right: 10px;
+        }
         @media print {
             .file-controls { display: none; }
         }
@@ -127,32 +133,68 @@
     <div class="container">
         <div class="file-controls">
             <p style="margin-top: 0; font-size: 0.9em; color: #666;">Selecteer een JSON analyse bestand om het rapport weer te geven:</p>
+            <select id="json-file-select">
+                <option value="">-- Kies een analyse --</option>
+            </select>
+            <span style="margin: 0 10px;">of upload:</span>
             <input type="file" id="json-file-input" accept=".json">
         </div>
     </div>
 
     <div class="container" id="report-container">
-        <h1>Laden van Risicoanalyse...</h1>
+        <h1>Risicoanalyse Rapport</h1>
+        <p style="text-align: center;">Selecteer een analyse uit de lijst hierboven of upload een JSON bestand om te beginnen.</p>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            fetch('../documentation/example.json') // Adjust path if necessary
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    return response.json();
-                })
-                .then(data => renderReport(data))
-                .catch(error => {
-                    console.error('Fout bij het laden van de JSON:', error);
-                    document.getElementById('report-container').innerHTML = `
-                        <h1 style="color: #e74c3c;">Kon example.json niet automatisch laden.</h1>
-                        <p>Dit komt waarschijnlijk door de <strong>CORS-beveiliging</strong> omdat je het bestand direct vanaf je schijf opent.</p>
-                        <p>Gebruik de knop hierboven om een bestand handmatig te selecteren.</p>
-                    `;
-                });
+            const container = document.getElementById('report-container');
+            const select = document.getElementById('json-file-select');
+
+            // Lijst van beschikbare bestanden in de /data directory
+            const availableFiles = [
+                { name: '.NET en programmeertalen', file: 'risicoanalyse_dotnet.json' },
+                { name: 'Docker', file: 'risicoanalyse_docker.json' },
+                { name: 'Visual Studio / IDE-gebruik', file: 'risicoanalyse-visual-studio-ide.json' },
+                { name: 'Microsoft 365', file: 'risicoanalyse_microsoft365.json' },
+                { name: 'Linux (basissecurity)', file: 'risicoanalyse_linux.json' },
+                { name: 'Deployment met Azure', file: 'risicoanalyse_azure_deployment.json' }
+            ];
+
+            // Vul de select lijst
+            availableFiles.forEach(item => {
+                const option = document.createElement('option');
+                option.value = 'data/' + item.file;
+                option.textContent = item.name;
+                select.appendChild(option);
+            });
+
+            function loadJsonFromServer(url) {
+                container.innerHTML = '<h1>Laden...</h1>';
+                fetch(url)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => renderReport(data))
+                    .catch(error => {
+                        console.error('Fout bij het laden van de JSON:', error);
+                        container.innerHTML = `
+                            <h1 style="color: #e74c3c;">Kon het bestand niet laden.</h1>
+                            <p>Bestand: <code>${url}</code></p>
+                            <p>Fout: ${error.message}</p>
+                            <p><em>Zorg ervoor dat de bestanden in de <strong>data/</strong> map op de server staan.</em></p>
+                        `;
+                    });
+            }
+
+            select.addEventListener('change', function() {
+                if (this.value) {
+                    loadJsonFromServer(this.value);
+                }
+            });
 
             // Luister naar handmatige bestandsuploads
             document.getElementById('json-file-input').addEventListener('change', function(e) {
