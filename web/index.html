@@ -190,7 +190,6 @@
             <div style="font-size: 0.8rem; opacity: 0.8;">Risicoanalyse Dashboard</div>
         </div>
         <div class="sidebar-scroll-area">
-            <div class="sidebar-section-label">Rapporten</div>
             <ul class="report-list" id="report-list">
                 <!-- Dynamisch gevuld -->
             </ul>
@@ -231,32 +230,48 @@
             const sidebarToc = document.getElementById('sidebar-toc');
 
             // Lijst van beschikbare bestanden in de /data directory
-            const availableFiles = [
-                { name: '.NET en programmeertalen', file: 'risicoanalyse_dotnet.json' },
-                { name: 'Docker', file: 'risicoanalyse_docker.json' },
-                { name: 'Visual Studio / IDE-gebruik', file: 'risicoanalyse-visual-studio-ide.json' },
-                { name: 'Microsoft 365', file: 'risicoanalyse_microsoft365.json' },
-                { name: 'Linux (basissecurity)', file: 'risicoanalyse_linux.json' },
-                { name: 'Deployment met Azure', file: 'risicoanalyse_azure_deployment.json' }
+            const reportGroups = [
+                {
+                    folder: 'Algemeen',
+                    files: [
+                        { name: 'Git Versiebeheer (Voorbeeld)', path: 'data/example.json' }
+                    ]
+                },
+                {
+                    folder: 'Leerjaar 1',
+                    files: [
+                        { name: '.NET en programmeertalen', path: 'data/Leerjaar 1/risicoanalyse_dotnet.json' },
+                        { name: 'Docker', path: 'data/Leerjaar 1/risicoanalyse_docker.json' },
+                        { name: 'Visual Studio / IDE-gebruik', path: 'data/Leerjaar 1/risicoanalyse-visual-studio-ide.json' },
+                        { name: 'Microsoft 365', path: 'data/Leerjaar 1/risicoanalyse_microsoft365.json' },
+                        { name: 'Linux (basissecurity)', path: 'data/Leerjaar 1/risicoanalyse_linux.json' },
+                        { name: 'Deployment met Azure', path: 'data/Leerjaar 1/risicoanalyse_azure_deployment.json' }
+                    ]
+                }
             ];
 
             // Vul de sidebar lijst
-            availableFiles.forEach(item => {
-                const li = document.createElement('li');
-                li.className = 'report-item';
-                li.textContent = item.name;
-                li.onclick = () => {
-                    // Update active state
-                    document.querySelectorAll('.report-item').forEach(el => el.classList.remove('active'));
-                    li.classList.add('active');
-                    
-                    // Reset sidebar TOC
-                    sidebarToc.innerHTML = '';
-                    sidebarTocContainer.style.display = 'none';
-                    
-                    loadJsonFromServer('data/' + item.file);
-                };
-                reportList.appendChild(li);
+            reportGroups.forEach(group => {
+                const label = document.createElement('div');
+                label.className = 'sidebar-section-label';
+                label.textContent = group.folder;
+                reportList.appendChild(label);
+
+                group.files.forEach(item => {
+                    const li = document.createElement('li');
+                    li.className = 'report-item';
+                    li.textContent = item.name;
+                    li.onclick = () => {
+                        document.querySelectorAll('.report-item').forEach(el => el.classList.remove('active'));
+                        li.classList.add('active');
+                        
+                        sidebarToc.innerHTML = '';
+                        sidebarTocContainer.style.display = 'none';
+                        
+                        loadJsonFromServer(item.path);
+                    };
+                    reportList.appendChild(li);
+                });
             });
 
             function loadJsonFromServer(url) {
