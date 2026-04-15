@@ -125,6 +125,7 @@
             display: flex;
             justify-content: center;
             scroll-behavior: smooth;
+            min-width: 0; /* Voorkomt dat flex-items buiten de container treden */
         }
 
         .report-container {
@@ -161,7 +162,12 @@
         }
         h3 { font-size: 1.3rem; margin-top: 1.5rem; color: var(--primary-color); }
         
-        table { width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 0.95rem; }
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin: 24px 0; 
+            font-size: 0.95rem;
+        }
         th, td { border: 1px solid var(--border-color); padding: 14px; text-align: left; }
         th { background-color: #fcfcfc; font-weight: 600; color: #555; }
 
@@ -195,6 +201,49 @@
             .sidebar { display: none; }
             .main-content { padding: 0; background: none; }
             .report-container { box-shadow: none; padding: 0; max-width: 100%; }
+        }
+
+        /* Tablet Layout Improvements */
+        @media (max-width: 1024px) {
+            :root { --sidebar-width: 260px; }
+            .report-container { padding: 40px; }
+        }
+
+        /* Mobile Layout Improvements */
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+                height: auto;
+            }
+            .sidebar {
+                width: 100%;
+                height: auto;
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+            }
+            .sidebar-scroll-area {
+                max-height: 300px;
+            }
+            .main-content {
+                padding: 20px 10px;
+            }
+            .report-container {
+                padding: 30px 20px;
+                box-shadow: none;
+            }
+            h1 { font-size: 1.8rem; }
+            h2 { font-size: 1.4rem; margin-top: 2.5rem; }
+            
+            .metadata-table td:first-child {
+                width: 120px;
+            }
+            
+            /* Zorg dat tabellen scrollbaar zijn op mobiel */
+            table {
+                display: block;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
         }
     </style>
 </head>
