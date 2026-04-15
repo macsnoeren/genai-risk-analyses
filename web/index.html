@@ -138,29 +138,44 @@
         }
 
         /* Typography & Components */
-        h1, h2, h3, h4 { 
-            color: var(--primary-color); 
-            margin-top: 2rem; 
-            scroll-margin-top: 30px;
+        h1, h2, h3, h4 {
+            color: var(--primary-color);
+            margin-top: 2.5rem;
+            scroll-margin-top: 40px;
+            font-weight: 700;
         }
-        h1 { font-size: 2.25rem; border-bottom: 3px solid var(--accent-color); padding-bottom: 1rem; text-align: center; margin-top: 0; }
-        h2 { font-size: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; color: var(--accent-color); }
+        h1 { 
+            font-size: 2.5rem; 
+            border-bottom: 4px solid var(--accent-color); 
+            padding-bottom: 1.5rem; 
+            text-align: center; 
+            margin-top: 0;
+            margin-bottom: 2rem;
+        }
+        h2 { 
+            font-size: 1.75rem; 
+            border-bottom: 1px solid var(--border-color); 
+            padding-bottom: 0.75rem; 
+            color: var(--accent-color);
+            margin-top: 4rem;
+        }
+        h3 { font-size: 1.3rem; margin-top: 1.5rem; color: var(--primary-color); }
         
-        table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 0.9rem; }
-        th, td { border: 1px solid var(--border-color); padding: 12px; text-align: left; }
-        th { background-color: #f8f9fa; font-weight: 600; }
+        table { width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 0.95rem; }
+        th, td { border: 1px solid var(--border-color); padding: 14px; text-align: left; }
+        th { background-color: #fcfcfc; font-weight: 600; color: #555; }
 
-        .metadata-table { width: auto; margin: 0 auto 30px auto; min-width: 400px; }
-        .metadata-table td:first-child { font-weight: 600; color: #666; width: 150px; }
+        .metadata-table { width: 100%; margin-bottom: 40px; border-top: 3px solid var(--accent-color); }
+        .metadata-table td:first-child { font-weight: 600; color: var(--primary-color); background-color: #fafbfc; width: 220px; }
 
-        .section { margin-bottom: 40px; }
+        .section { margin-bottom: 50px; }
         .sub-section {
             margin-left: 0;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
             padding: 20px;
-            background: #fbfcfd;
+            background: #fdfdfe;
             border-radius: 8px;
-            border: 1px solid #edf2f7;
+            border: 1px solid #f0f3f6;
         }
 
         .source-list { font-size: 0.85rem; color: #666; padding-left: 20px; }
